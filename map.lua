@@ -63,8 +63,10 @@ end
 -- @param p is a point and v is a direction vector for the point
 function Map.collide(p, v)
     -- back the o up pixel by pixel
+    -- return mid_air for mid-air collisions
     local tile = tile_layer(pixel_to_tile(p.getX(), p.getY()))
     local new_v = v
+    local mid_air
 
     if tile ~= nil then
         new_v = Vector(0, 0)
@@ -77,7 +79,14 @@ function Map.collide(p, v)
         tile = tile_layer(pixel_to_tile(p.getX(), p.getY()))
     end
 
-    return p, new_v
+    ground_tile = tile_layer(pixel_to_tile(p.getX(), p.getY() + 1))
+    mid_air = ground_tile == nil
+
+    return {
+        p = p,
+        v = new_v,
+        mid_air = mid_air
+    }
 end
 
 ---------------------------------------------------------------------------------------------------

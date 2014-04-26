@@ -1,12 +1,18 @@
 
 Player = function (point)
     local p, v = point.copy(), Vector(0, 0)
-    local speed = 500
+    local speed, is_jumping = 100, true
+    local forces = {
+        key = Vector(0, 0),
+        gravity = Vector(0, 0.1)
+    }
 
     local keypressed = function (key)
+        if key == "right" then forces.key.setX(1) end
+        if key == "left"  then forces.key.setX(-1) end
     end
 
-    slowDown = function (dt, get, set)
+    local slowDown = function (dt, get, set)
         if (get() == 0) then
         elseif (get() > 0) then
             set(math.max(get() - 1 * dt, 0))
@@ -15,34 +21,29 @@ Player = function (point)
         end
     end
 
+    local isJumping = function ()
+        return is_jumping
+    end
+
     local update = function (dt, map)
-        local is_moving = love.keyboard.isDown("down", "up", "right", "left")
+        if (forces.key ~= nil) then
+            v = v.plus(forces.key)
 
-        if (is_moving) then
-            if love.keyboard.isDown("right") then
-                v.setX(math.min(v.getX() + 1 * dt, 1))
-            elseif love.keyboard.isDown("left") then
-                v.setX(math.max(v.getX() - 1 * dt, -1))
-            else
-                slowDown(dt, v.getX, v.setX)
+            if isJumping() then
+                v = v.plus(forces.gravity) 
             end
-
-            if love.keyboard.isDown("down") then
-                v.setY(math.min(v.getY() + 1 * dt, 1))
-            elseif love.keyboard.isDown("up") then
-                v.setY(math.max(v.getY() - 1 * dt, -1))
-            else
-                slowDown(dt, v.getY, v.setY)
-            end
-        else
-            slowDown(dt, v.getX, v.setX)
-            slowDown(dt, v.getY, v.setY)
         end
 
         p.setY(p.getY() + v.getY() * dt * speed)
         p.setX(p.getX() + v.getX() * dt * speed)
 
-        p, v = map.collide(p, v)
+        collision  = map.collide(p, v)
+        p          = collision.p
+        v          = collision.v
+        is_jumping = collision.mid_air
+
+        forces.key.setX(0)
+        forces.key.setY(0)
     end
 
     local draw = function ()

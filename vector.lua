@@ -66,12 +66,21 @@ Vector = Klass((function ()
         p.to_unit = function ()
             local mag = p.length()
 
+            if mag == 0 then return Vector(0, 0) end
+
             return Vector(p.getX() / mag, p.getY() / mag)
         end
 
-        p.times = function (o)
+        p.dot = function (o)
             local x = p.getX() * o.getX()
             local y = p.getY() * o.getY()
+
+            return constructor(x, y)
+        end
+
+        p.plus = function (o)
+            local x = p.getX() + o.getX()
+            local y = p.getY() + o.getY()
 
             return constructor(x, y)
         end
