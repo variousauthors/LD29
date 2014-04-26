@@ -39,7 +39,7 @@ function Map.draw()
     
     -- Limit the draw range 
     if global.limitDrawing then 
-        map:autoDrawRange(ftx, fty, global.scale, -100) 
+        map:autoDrawRange(ftx, fty, global.scale, -40) 
     else 
         map:autoDrawRange(ftx, fty, global.scale, 50) 
     end
@@ -57,7 +57,7 @@ function Map.draw()
 end
 
 function pixel_to_tile (pixel_x, pixel_y)
-    return math.ceil(pixel_x / map.tileWidth), math.ceil(pixel_y / map.tileHeight)
+    return math.ceil((pixel_x) / (map.tileWidth * global.scale)), math.ceil((pixel_y) / (map.tileHeight * global.scale))
 end
 
 -- @param p is a point and v is a direction vector for the point

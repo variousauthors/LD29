@@ -13,7 +13,7 @@ global.benchmark = false        -- If true the map is drawn 20 times instead of 
 global.useBatch = false         -- If true then the layers are rendered with sprite batches
 global.tx = 0                   -- X translation of the screen
 global.ty = 0                   -- Y translation of the screen
-global.scale = 1                -- Scale of the screen
+global.scale = 2                -- Scale of the screen
 
 
 ---------------------------------------------------------------------------------------------------

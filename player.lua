@@ -2,15 +2,29 @@
 Player = function (point)
     local p, v = point.copy(), Vector(0, 0)
     local speed, is_jumping = 100, true
+    local draw_w = 16
+    local draw_h = 16
+
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 0.5),
+        gravity    = Vector(0, 0.7),
         resistance = Vector(0.3, 0.3)
     }
 
+    local collision_points = { Point(p.getX() + draw_w, p.getY() + draw_h) }
+
+    local serialize = function ()
+        return {
+            x = p.getX(),
+            y = p.getX(),
+            v = v,
+            collision_points = collision_points,
+        }
+    end
+
     local keypressed = function (key)
         if is_jumping then return end
-        if love.keyboard.isDown("up") then forces.key.setY(-10) end
+        if love.keyboard.isDown("up") then forces.key.setY(-15) end
     end
 
     local slowDown = function (dt, get, set)
@@ -41,8 +55,8 @@ Player = function (point)
 
     local setKeyForces = function ()
         if love.keyboard.isDown("right", "left") then
-            if love.keyboard.isDown("left") then forces.key.setX(-0.5) end
-            if love.keyboard.isDown("right") then forces.key.setX(0.5) end
+            if love.keyboard.isDown("left") then forces.key.setX(-0.4) end
+            if love.keyboard.isDown("right") then forces.key.setX(0.4) end
         end
     end
 
@@ -80,7 +94,7 @@ Player = function (point)
     local draw = function ()
         local r, g, b = love.graphics.getColor()
         love.graphics.setColor(255, 0, 0)
-        love.graphics.rectangle("fill", p.getX(), p.getY(), 16, 16)
+        love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
 
         love.graphics.setColor(r, g, b)
     end
