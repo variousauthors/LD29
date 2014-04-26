@@ -11,13 +11,19 @@ Player = function (point)
         resistance = Vector(0.3, 0.3)
     }
 
-    local collision_points = { Point(p.getX() + draw_w, p.getY() + draw_h) }
+    -- these are offsets from the Player's x, y
+    local collision_points = {
+        {
+            x = -draw_w,
+            y = -draw_h
+        }
+    }
 
     local serialize = function ()
         return {
             x = p.getX(),
-            y = p.getX(),
-            v = v,
+            y = p.getY(),
+            v = { x = v.getX(), y = v.getY() },
             collision_points = collision_points,
         }
     end
@@ -82,7 +88,7 @@ Player = function (point)
         p.setY(p.getY() + v.getY() * dt * speed)
         p.setX(p.getX() + v.getX() * dt * speed)
 
-        collision  = map.collide(p, v)
+        collision  = map.collide(p, v, serialize())
         p          = collision.p
         v          = collision.v
         is_jumping = collision.mid_air
