@@ -3,7 +3,7 @@
 local loader     = require("vendor/AdvTiledLoader.Loader")
 loader.path      = "assets/maps/"
 local map        = loader.load("map.tmx")
-local tile_layer = map.layers["collision"]
+local tile_layer = map.layers["obstacle"]
 
 -- Our example class
 local Map = {}
