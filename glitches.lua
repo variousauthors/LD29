@@ -80,9 +80,9 @@ Glitches = function ()
 
     -- Public Interface
     return {
-        load_layer = load_layer,
+        load_layer        = load_layer,
         get_glitch_coords = get_glitch_coords,
         generate_glitches = generate_glitches,
-        modify_layer = modify_layer
+        modify_layer      = modify_layer
     }
 end
