@@ -1,7 +1,10 @@
 
+-- constructor for Players!
 Player = function (point)
     local p, v = point.copy(), Vector(0, 0)
     local speed, is_jumping = 100, true
+
+    -- height/width of the sprite's shape
     local draw_w = 16
     local draw_h = 16
 
@@ -11,7 +14,8 @@ Player = function (point)
         resistance = Vector(0.3, 0.3)
     }
 
-    -- these are offsets from the Player's x, y
+    -- these are offsets from the Player's x, y as describe
+    -- in Map.collide. Later there will be 4+ of these
     local collision_points = {
         {
             x = -draw_w,
@@ -28,28 +32,30 @@ Player = function (point)
         }
     end
 
+    -- this is for "one-off" keypresses. So like, jump,
+    -- or throw fireball
     local keypressed = function (key)
         if is_jumping then return end
+
         if love.keyboard.isDown("up") then forces.key.setY(-15) end
     end
 
-    local slowDown = function (dt, get, set)
-        if (get() == 0) then
-        elseif (get() > 0) then
-            set(math.max(get() - 1 * dt, 0))
-        else
-            set(math.min(get() + 1 * dt, 0))
+    -- this is for forces that get set continuously while the key is down
+    local setKeyForces = function ()
+        if love.keyboard.isDown("right", "left") then
+            if love.keyboard.isDown("left") then forces.key.setX(-0.4) end
+            if love.keyboard.isDown("right") then forces.key.setX(0.4) end
         end
     end
 
-    local isJumping = function ()
-        return is_jumping
-    end
-
+    -- ha ha, naive physics for the win! Without some kind of "drag" the
+    -- player would just keep going in whatever direction they pressed,
+    -- with no way of stopping!
     local drag = function (v)
         local x, y   = v.getX(), v.getY()
         local rx, ry = forces.resistance.getX(), forces.resistance.getX()
 
+        -- drag "drags" the x, y values towards 0
         if x > 0 then x = math.max(x - rx, 0)
         else          x = math.min(x + rx, 0) end
 
@@ -59,40 +65,41 @@ Player = function (point)
         return Vector(x, y)
     end
 
-    local setKeyForces = function ()
-        if love.keyboard.isDown("right", "left") then
-            if love.keyboard.isDown("left") then forces.key.setX(-0.4) end
-            if love.keyboard.isDown("right") then forces.key.setX(0.4) end
-        end
+    local isJumping = function ()
+        return is_jumping
     end
 
+    -- the beef!
     local update = function (dt, map)
         setKeyForces()
 
+        -- here is where we sum up all the forces acting on the player
+        -- and determine their v (what does v stand for? Vector? Velocity?
+        -- No clue!)
         if (forces.key ~= nil) then
             v = v.plus(forces.key)
 
+            -- we turn off gravity when the player is not "jumping/falling"
+            -- in order to avoid jitter
             if isJumping() then
                 v = v.plus(forces.gravity)
             end
 
-            print("===")
-            print(v.getX())
-            print(v.getY())
-            print("===")
             v = drag(v)
-            print(v.getX())
-            print(v.getY())
         end
 
+        -- update position optimistically
         p.setY(p.getY() + v.getY() * dt * speed)
         p.setX(p.getX() + v.getX() * dt * speed)
 
-        collision  = map.collide(p, v, serialize())
+        -- if there is a collision, then we will overwrite
+        -- the optimistic position
+        collision  = map.collide(serialize())
         p          = collision.p
         v          = collision.v
         is_jumping = collision.mid_air
 
+        -- this is a thing
         forces.key.setX(0)
         forces.key.setY(0)
     end
@@ -105,6 +112,7 @@ Player = function (point)
         love.graphics.setColor(r, g, b)
     end
 
+    -- lean public interface of Player is pretty lean
     return {
         update     = update,
         draw       = draw,

@@ -5,28 +5,29 @@ loader.path      = "assets/maps/"
 local map        = loader.load("map.tmx")
 local tile_layer = map.layers["obstacle"]
 
--- Our example class
+-- So, this whole file I basically just stole from the examples in the 
+-- tile library. That's why the code is so weird. In the days to come
+-- I will change this so that Map is a constructor and we can make multiple
+-- maps with different qualities.
+--
+-- Also on the TODO list is pulling the collision code out of here.
 local Map = {}
 
----------------------------------------------------------------------------------------------------
 -- Resets the example
--- puts the player in her starting position
 function Map.reset()
     -- tx and ty are the offset of the tilemap
     global.tx = 0
     global.ty = 0
-    displayTime = 0
 end
 
----------------------------------------------------------------------------------------------------
--- Update the display time for the character control instructions
+-- at some point we will probably want code in here
 function Map.update(dt)
 
 end
 
----------------------------------------------------------------------------------------------------
 -- Called from love.draw()
 function Map.draw()
+    -- this code is mainly copied from an example
 
     -- Set sprite batches if they are different than the settings.
     map.useSpriteBatch = global.useBatch
@@ -36,55 +37,74 @@ function Map.draw()
     love.graphics.push()
     love.graphics.scale(global.scale)
     love.graphics.translate(ftx, fty)
-    
+
     -- Limit the draw range 
     if global.limitDrawing then 
         map:autoDrawRange(ftx, fty, global.scale, -40) 
     else 
         map:autoDrawRange(ftx, fty, global.scale, 50) 
     end
-    
+
     -- Queue our guy to be drawn after the tile he's on and then draw the map.
     local maxDraw = global.benchmark and 20 or 1
     for i=1,maxDraw do 
         map:draw() 
     end
     love.graphics.rectangle("line", map:getDrawRange())
-    
+
     -- Reset the scale and translation.
     love.graphics.pop()
-    
+
 end
 
+-- the player's position is a point (x, y) in pixels, but I couldn't
+-- find a function in the tile library that lets us ask for "the tile
+-- around these pixels" So for now I'm just converting, but later I
+-- will implement such a lookup.
 function pixel_to_tile (pixel_x, pixel_y)
     return math.ceil((pixel_x) / (map.tileWidth * global.scale)), math.ceil((pixel_y) / (map.tileHeight * global.scale))
 end
 
--- @param p is a point and v is a direction vector for the point
-function Map.collide(p, v, o)
+-- data is a serialization of some object. I guess I'm just being a dick,
+-- but I don't like passing references to objects. I prefer to serialize
+-- the data and pass that... probably this is dumb, but only time will tell.
+function Map.collide(data)
     -- back the o up pixel by pixel
     -- return mid_air for mid-air collisions
-    local p = Point(o.x, o.y)
-    local v = Vector(o.v.x, o.v.y)
+    local p      = Point(data.x, data.y)
+    local v      = Vector(data.v.x, data.v.y)
 
-    local tile = tile_layer(pixel_to_tile(p.getX() + o.collision_points[1].x, p.getY() + o.collision_points[1].y))
+    -- collision points are single pixels on the sprite that collide
+    -- at the moment there is just one. The actual data is an offset
+    -- from the position of the sprite, so like a 16px square sprite at
+    -- 0, 0 will have 4 collision points at (0, 0), (16, 0), (0, 16), (16, 16)
+    -- but at the moment we just use one of these
+    local offset = data.collision_points[1] -- WARNING lua arrays are 1 indexed... :/
+
+    local tile  = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
     local new_v = v
     local mid_air
 
+    -- if there is a collision, then we will want to halt the incoming object
     if tile ~= nil then
         new_v = Vector(0, 0)
     end
 
+    -- the "algorithm" is to push the object back in the direction it came until
+    -- there is no longer a collision :/
     while (tile ~= nil) do
         p.setX(p.getX() - v.getX())
         p.setY(p.getY() - v.getY())
 
-        tile = tile_layer(pixel_to_tile(p.getX() + o.collision_points[1].x, p.getY() + o.collision_points[1].y))
+        tile = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
     end
 
-    ground_tile = tile_layer(pixel_to_tile(p.getX() + o.collision_points[1].x, p.getY() + o.collision_points[1].y + 1))
-    mid_air = ground_tile == nil
+    -- if there is no tile directly beneath the collision point, then the player
+    -- is in mid-air (this is used in the player code)
+    ground_tile = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y + 1))
+    mid_air     = ground_tile == nil
 
+    -- the results of the collision
     return {
         p = p,
         v = new_v,

@@ -20,6 +20,7 @@ Klass = function (_construct, tcurtsnoc_)
     return constructor
 end
 
+-- a point!
 Point = Klass((function ()
     local constructor = function (x, y)
         local x, y = x, y
@@ -52,17 +53,19 @@ Point = Klass((function ()
     return constructor, copy
 end)())
 
+-- a vector is a glorified point!
 Vector = Klass((function ()
     local constructor
 
     _constructor = function (x, y)
         local p = Point(x, y)
 
+        -- this is the "magnitude" of the vector, or its length as a line
         p.length = function ()
             return math.sqrt(p.getX() ^ 2 + p.getY() ^ 2)
         end
 
-        -- returns a new vector with a length of 1
+        -- returns a new vector with a length of 1, for stuff
         p.to_unit = function ()
             local mag = p.length()
 
@@ -71,6 +74,7 @@ Vector = Klass((function ()
             return Vector(p.getX() / mag, p.getY() / mag)
         end
 
+        -- some operators like dot and plus. Write more as you need them
         p.dot = function (o)
             local x = p.getX() * o.getX()
             local y = p.getY() * o.getY()

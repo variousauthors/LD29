@@ -6,7 +6,7 @@ end
 require("player")
 require("vector")
 
--- Some global stuff that the examples use.
+-- globals having to do with the tile library
 global = {}
 global.limitDrawing = true      -- If true then the drawing range example is shown
 global.benchmark = false        -- If true the map is drawn 20 times instead of 1
@@ -16,8 +16,8 @@ global.ty = 0                   -- Y translation of the screen
 global.scale = 2                -- Scale of the screen
 
 
----------------------------------------------------------------------------------------------------
--- Load the examples
+-- we store the levels in a table and I expect when there are more of them we will just
+-- iterate
 local maps = {
     require("map")
 }
@@ -27,26 +27,18 @@ local fps = 0                   -- Frames Per Second
 local fpsCount = 0              -- FPS count of the current second
 local fpsTime = 0               -- Keeps track of the elapsed time
 
----------------------------------------------------------------------------------------------------
 -- Reset the current example
 if maps[num].reset then maps[num].reset() end
 
 local origin, player
 
 function love.load()
-    origin = Point(0, 0)
+    origin = Point(0, 0) -- somehow I just feel safer having a global "origin"
     start  = Point(origin.getX() + 200, origin.getY() + 200)
     player = Player(start)
 end
 
----------------------------------------------------------------------------------------------------
 function love.update(dt)
-    -- Camera follows the player's position as long as the player is moving "forward"
-
---  if love.keyboard.isDown("up") then global.ty = global.ty + 250*dt end
---  if love.keyboard.isDown("down") then global.ty = global.ty - 250*dt end
---  if love.keyboard.isDown("left") then global.tx = global.tx + 250*dt end
---  if love.keyboard.isDown("right") then global.tx = global.tx - 250*dt end
 
     player.update(dt, maps[num])
 
@@ -54,7 +46,6 @@ function love.update(dt)
     if maps[num].update then maps[num].update(dt) end
 end
 
----------------------------------------------------------------------------------------------------
 function love.keypressed(k)
     -- quit
     if k == 'escape' then
@@ -67,12 +58,10 @@ function love.keypressed(k)
     if maps[num].keypressed then maps[num].keypressed(k) end
 end
 
----------------------------------------------------------------------------------------------------
 function love.draw()
 
     -- Draw our map
     maps[num].draw()
     player.draw()
-
 end
 
