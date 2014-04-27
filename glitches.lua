@@ -13,8 +13,8 @@ Glitches = function ()
     local map_layer, tile_list = nil, nil
     --hacky RNG seeding/init
     local rng = love.math.newRandomGenerator(os.time())
-    rng: random()
-    rng: random()
+    rng:random()
+    rng:random()
 
     -- loads a map layer and populates a tile list for creating glitches
     local load_layer = function (layer_in)
