@@ -1,0 +1,7 @@
+[submodule "AdvTiledLoader"]
+  path = vendor/AdvTiledLoader
+  url = git@github.com:Kadoba/Advanced-Tiled-Loader.git
+
+[submodule "inspect"]
+  path = vendor/inspect
+  url = git@github.com:kikito/inspect.lua.git
