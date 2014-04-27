@@ -85,7 +85,12 @@ Glitches = function(param)
     local generate_glitches = function(num_glitches, shape)
         for i = 1, num_glitches, 1 do
             local x, y, p = unpack(tile_list[rng:random(1, #tile_list)])
-            add_cross_glitch(x, y, p)
+            -- shape defaults to a cross, but "single" is an option
+            if (shape == "single") then
+                glitch_coords_add(x, y, p)
+            else
+                add_cross_glitch(x, y, p)
+            end
         end
     end
 
