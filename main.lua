@@ -29,9 +29,34 @@ time = 0
 -- we store the levels in a table and I expect when there are more of them we will just
 -- iterate
 local Map = require("map")
+
 local maps = {
-    LevelOne("map1-1.tmx"),
-    Map("map2-1.tmx")
+    LevelOne("map1-1.tmx", {
+        doors = {
+            {
+                coords = { 204, 12 },
+                event  = "onVictory"
+            }
+        }
+    }),
+
+    SubsequentLevels("map2-1.tmx", {
+        doors = {
+            {
+                coords = { 204, 12 },
+                event  = "onVictory"
+            }
+        }
+    }),
+
+    SubsequentLevels("map2-1.tmx", {
+        doors = {
+            {
+                coords = { 204, 12 },
+                event  = "onVictory"
+            }
+        }
+    })
 }
 
 local num = 1                   -- The map we're currently on

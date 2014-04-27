@@ -10,6 +10,7 @@ loader.path      = "assets/images/maps/"
 -- maps with different qualities.
 --
 -- Also on the TODO list is pulling the collision code out of here.
+--
 
 Map = function (tmx)
     local map         = loader.load(tmx)
@@ -18,6 +19,8 @@ Map = function (tmx)
     local map_resets  = 0
     local is_finished = false
     local proceed_handler, death_handler, victory_handler
+
+    local events = {}
 
     glitches.load_layer(tile_layer)
 
@@ -150,6 +153,14 @@ Map = function (tmx)
         if victory_handler ~= nil then victory_handler() end
     end
 
+    -- TODO this is necessary because I want to dynamically send
+    -- messages like "onDeath" but haven't been able to use
+    -- a self variable. In the future I could do self["onVictory"]
+    -- but for now I do callbacks["onVictory"]
+    local callbacks = {}
+    callbacks["onDeath"]   = onDeath
+    callbacks["onVictory"] = onVictory
+
     local proceed = function ()
         proceed_handler()
     end
@@ -165,8 +176,12 @@ Map = function (tmx)
             is_dead = true
         end
 
-        if tile_x == 204 then
-            onVictory()
+        -- if we've collided with an event tile, then we need to
+        -- process the event
+        if events[tile_x] ~= nil and events[tile_x][tile_y] ~= nil then
+            local callback = callbacks[events[tile_x][tile_y]]
+
+            callback()
         end
 
         -- if there is a collision, then we will want to halt the incoming object
@@ -244,14 +259,18 @@ Map = function (tmx)
         setVictoryHandler = setVictoryHandler,
         setDeathHandler   = setDeathHandler,
         setProceedHandler = setProceedHandler,
+        setEvents         = setEvents,
 
+        glitch            = glitch,
         reset             = reset,
         proceed           = proceed
     }
 end
 
-LevelOne = function (tmx)
+LevelOne = function (tmx, options)
     local map = Map(tmx)
+
+    map.setEvents(options.doors)
 
     map.setDeathHandler(function ()
 
@@ -277,7 +296,7 @@ end
 SubsequentLevels = function (tmx, options)
     local map = Map(tmx)
 
-    map.setDoors(options.doors)
+    map.setEvents(options.doors)
 
     map.setDeathHandler(function ()
         map.setFinished(true)
@@ -291,7 +310,6 @@ SubsequentLevels = function (tmx, options)
         map.setFinished(true)
 
         map.setProceedHandler(function ()
-            print("in proceed handler")
             -- you aren't finished here mario...
             map.setFinished(false)
 
