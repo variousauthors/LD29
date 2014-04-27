@@ -1,4 +1,7 @@
 require("glitches")
+            --glitches.generate_glitches(20)
+            --glitches.modify_layer()
+
 
 -- Setup
 local loader     = require("vendor/AdvTiledLoader.Loader")
@@ -11,14 +14,19 @@ loader.path      = "assets/images/maps/"
 --
 -- Also on the TODO list is pulling the collision code out of here.
 
-
-Map = function ()
-    local map        = loader.load("map.tmx")
-    local tile_layer = map.layers["obstacle"]
-    local glitches   = Glitches()
-    local map_resets = 0
+Map = function (tmx)
+    local map         = loader.load(tmx)
+    local tile_layer  = map.layers["obstacle"]
+    local glitches    = Glitches()
+    local map_resets  = 0
+    local is_finished = false
+    local proceed_handler
 
     glitches.load_layer(tile_layer)
+
+    local isFinished = function ()
+        return is_finished
+    end
 
     -- Resets the example
     local reset = function ()
@@ -26,12 +34,6 @@ Map = function ()
         global.tx = 0
         global.ty = 0
 
-        if map_resets > 0 then
-            glitches.generate_glitches(20)
-            glitches.modify_layer()
-        end
-
-        map_resets = map_resets + 1
     end
 
     -- at some point we will probably want code in here
@@ -106,11 +108,48 @@ Map = function ()
         return x, y
     end
 
-    local resolveCollision = function (p, v, offset)
-        tile_x, tile_y = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
-        local tile     = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
-        local new_v    = v
+    local deathHandler = function ()
+        is_finished = true
 
+        -- mario is dead, start over with no glitches
+        proceed_handler = function ()
+            print("deathHandler->proceed")
+            is_finished = false
+
+            reset()
+        end
+    end
+
+    local victoryHandler = function ()
+        is_finished = true
+
+        proceed_handler = function ()
+            print("no op")
+            -- NOP because we want to change worlds
+        end
+    end
+
+    local proceed = function ()
+        print("default")
+
+        proceed_handler()
+    end
+
+    local resolveCollision = function (p, v, offset)
+        tile_x, tile_y       = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
+        local tile           = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
+        local new_v, is_dead = v, false
+        
+        -- this 14 will need to be based on the map bounds
+        if tile_y > 14 then
+            print("tile greater than 14")
+            deathHandler()
+            is_dead = true
+        end
+
+        if tile_x == 204 then
+            victoryHandler()
+        end
 
         -- if there is a collision, then we will want to halt the incoming object
         if tile ~= nil then
@@ -129,7 +168,7 @@ Map = function ()
             count = count + 1
         end
 
-        return p, new_v
+        return p, new_v, is_dead
     end
 
     -- data is a serialization of some object. I guess I'm just being a dick,
@@ -138,10 +177,10 @@ Map = function ()
     local collide = function (data)
         -- back the o up pixel by pixel
         -- return mid_air for mid-air collisions
-        local p      = Point(data.x, data.y)
-        local v      = Vector(data.v.x, data.v.y)
-        local x, y   = primary_direction(v) -- index at which to start collision detection
-        local new_v  = v
+        local p              = Point(data.x, data.y)
+        local v              = Vector(data.v.x, data.v.y)
+        local x, y           = primary_direction(v) -- index at which to start collision detection
+        local new_v, is_dead = v, false
 
         -- collision points are single pixels on the sprite that collide
         -- at the moment there is just one. The actual data is an offset
@@ -150,17 +189,16 @@ Map = function ()
         -- but at the moment we just use one of these
         local offset = data.collision_points[x][y]
 
-        p, new_v = resolveCollision(p, v, offset)
+        p, new_v, is_dead = resolveCollision(p, v, offset)
 
         -- iterate over all collision points looking fro secondary collition
         for i, c1 in pairs(data.collision_points) do
             for j, c2 in pairs(data.collision_points[i]) do
 
                 offset = data.collision_points[i][j]
-                p, new_v   = resolveCollision(p, new_v, offset)
+                p, new_v, is_dead = resolveCollision(p, new_v, offset)
             end
         end
-
 
         -- if there is no tile directly beneath the collision point, then the player
         -- is in mid-air (this is used in the player code)
@@ -172,15 +210,18 @@ Map = function ()
         return {
             p = p,
             v = new_v,
-            mid_air = mid_air
+            mid_air = mid_air,
+            is_dead = is_dead
         }
     end
     -- public interface for map
     return {
-        update  = update,
-        draw    = draw,
-        collide = collide,
-        reset   = reset
+        update     = update,
+        draw       = draw,
+        collide    = collide,
+        reset      = reset,
+        isFinished = isFinished,
+        proceed    = proceed
     }
 end
 

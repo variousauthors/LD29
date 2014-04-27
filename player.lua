@@ -1,8 +1,9 @@
 
 -- constructor for Players!
 Player = function (point)
-    local p, v = point.copy(), Vector(0, 0)
-    local speed, max_speed, is_jumping = 100, 2, true
+    local p, v                = point.copy(), Vector(0, 0)
+    local speed, max_speed    = 100, 2
+    local is_jumping, is_dead = true, false
 
     -- height/width of the sprite's shape
     local draw_w = 16
@@ -18,8 +19,8 @@ Player = function (point)
     -- in Map.collide. Later there will be 4+ of these
     -- the points should be arranged so that
     local collision_points = {}
-    collision_points[1]  = {}
-    collision_points[-1] = {} -- yes... -1
+    collision_points[1]    = {}
+    collision_points[-1]   = {} -- yes... -1
 
     -- these are using vectors with unitary components so that we can determine which
     -- should be checked first (the one closest to the direction of movement)
@@ -110,13 +111,19 @@ Player = function (point)
         v.setX(collision.v.getX())
         v.setY(collision.v.getY())
         is_jumping = collision.mid_air
+        is_dead    = collision.is_dead
 
+        -- global variables for debugggggging
         player_vx = v.getX()
         player_vy = v.getY()
 
         -- this is a thing
         forces.key.setX(0)
         forces.key.setY(0)
+    end
+
+    local isDead = function ()
+        return is_dead
     end
 
     local draw = function ()
@@ -132,6 +139,8 @@ Player = function (point)
         update     = update,
         draw       = draw,
         keypressed = keypressed,
+
+        isDead = isDead,
 
         getX = p.getX,
         getY = p.getY,

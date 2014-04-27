@@ -44,10 +44,15 @@ if maps[num].reset then maps[num].reset() end
 
 local origin, player
 
+function init_player (p)
+    player = Player(p)
+end
+
 function love.load()
     origin = Point(0, 0) -- somehow I just feel safer having a global "origin"
     start  = Point(origin.getX() + 200, origin.getY() + 200)
-    player = Player(start)
+    global.tx = -1000
+    init_player(start)
 end
 
 function love.update(dt)
@@ -68,15 +73,31 @@ function love.update(dt)
     -- Call update in our example if it is defined
     if maps[num].update then maps[num].update(dt) end
 
-    if tile_x == 204 and tile_y == 12 then
-        maps[num].reset()
+    if maps[num].isFinished() then
+        if player.isDead() then
+            -- remove the player
+            -- do the mario death jump
+        end
+
+        -- "proceed" either loads the next world or the next level
+        -- depending on the map state
+        maps[num].proceed()
+        init_player(start)
+
+        -- if we "proceed" and the map is still finished, then we move to
+        -- the next world
+        if maps[num].isFinished() then
+
+            num = num + 1
+            maps[num].reset()
+        end
     end
 
-    if #collisions > 0 then
-        print("======================")
-        print(time)
-        inspect(collisions)
-    end
+  --if #collisions > 0 then
+  --    print("======================")
+  --    print(time)
+  --    inspect(collisions)
+  --end
 
 end
 
