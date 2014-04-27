@@ -92,28 +92,9 @@ function primary_direction (v)
     return x, y
 end
 
--- data is a serialization of some object. I guess I'm just being a dick,
--- but I don't like passing references to objects. I prefer to serialize
--- the data and pass that... probably this is dumb, but only time will tell.
-function Map.collide(data)
-    -- back the o up pixel by pixel
-    -- return mid_air for mid-air collisions
-    local p      = Point(data.x, data.y)
-    local v      = Vector(data.v.x, data.v.y)
-    local x, y   = primary_direction(v) -- index at which to start collision detection
-
-    inspect({ x, y })
-
-    -- collision points are single pixels on the sprite that collide
-    -- at the moment there is just one. The actual data is an offset
-    -- from the position of the sprite, so like a 16px square sprite at
-    -- 0, 0 will have 4 collision points at (0, 0), (16, 0), (0, 16), (16, 16)
-    -- but at the moment we just use one of these
-    local offset = data.collision_points[x][y]
-
+function resolveCollision(p, v, offset)
     local tile  = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
     local new_v = v
-    local mid_air
 
     -- if there is a collision, then we will want to halt the incoming object
     if tile ~= nil then
@@ -129,9 +110,43 @@ function Map.collide(data)
         tile = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
     end
 
+    return p, new_v
+end
+
+-- data is a serialization of some object. I guess I'm just being a dick,
+-- but I don't like passing references to objects. I prefer to serialize
+-- the data and pass that... probably this is dumb, but only time will tell.
+function Map.collide(data)
+    -- back the o up pixel by pixel
+    -- return mid_air for mid-air collisions
+    local p      = Point(data.x, data.y)
+    local v      = Vector(data.v.x, data.v.y)
+    local x, y   = primary_direction(v) -- index at which to start collision detection
+    local new_v  = v
+
+    -- collision points are single pixels on the sprite that collide
+    -- at the moment there is just one. The actual data is an offset
+    -- from the position of the sprite, so like a 16px square sprite at
+    -- 0, 0 will have 4 collision points at (0, 0), (16, 0), (0, 16), (16, 16)
+    -- but at the moment we just use one of these
+    local offset = data.collision_points[x][y]
+
+    p, new_v = resolveCollision(p, v, offset)
+
+    -- iterate over all collision points looking fro secondary collition
+    for i, c1 in pairs(data.collision_points) do
+        for j, c2 in pairs(data.collision_points[i]) do
+
+            offset = data.collision_points[i][j]
+            p, new_v   = resolveCollision(p, new_v, offset)
+        end
+    end
+
+
     -- if there is no tile directly beneath the collision point, then the player
     -- is in mid-air (this is used in the player code)
-    ground_tile = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y + 1))
+    ground_tile = tile_layer(pixel_to_tile(p.getX() + -16, p.getY() + -16 + 1))
+    ground_tile = ground_tile or tile_layer(pixel_to_tile(p.getX() + -32, p.getY() + -16 + 1))
     mid_air     = ground_tile == nil
 
     -- the results of the collision
