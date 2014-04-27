@@ -53,7 +53,7 @@ end
 function love.load()
     origin = Point(0, 0) -- somehow I just feel safer having a global "origin"
     start  = Point(origin.getX() + 200, origin.getY() + 200)
-    global.tx = -3000
+    maps[num].reset()
     init_player(start)
 end
 

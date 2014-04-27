@@ -1,7 +1,4 @@
 require("glitches")
-            --glitches.generate_glitches(20)
-            --glitches.modify_layer()
-
 
 -- Setup
 local loader     = require("vendor/AdvTiledLoader.Loader")
@@ -24,6 +21,11 @@ Map = function (tmx)
 
     glitches.load_layer(tile_layer)
 
+    local glitch = function ()
+        glitches.generate_glitches(20)
+        glitches.modify_layer()
+    end
+
     local isFinished = function ()
         return is_finished
     end
@@ -44,12 +46,28 @@ Map = function (tmx)
         proceed_handler = callback
     end
 
+    -- options is an table like:
+    -- { 
+    --   coords: { 1, 2 },
+    --   event: "victory"
+    -- },
+    --
+    local setEvents = function (options)
+
+        for i, k in ipairs(options) do
+            local x = k.coords[1]
+            local y = k.coords[2]
+
+            events[x]    = { }
+            events[x][y] = k.event
+        end
+    end
+
     -- Resets the example
     local reset = function ()
         -- tx and ty are the offset of the tilemap
-        global.tx = 0
+        global.tx = -3000
         global.ty = 0
-
     end
 
     -- at some point we will probably want code in here
@@ -255,6 +273,36 @@ LevelOne = function (tmx)
 
     return map
 end
+
+SubsequentLevels = function (tmx, options)
+    local map = Map(tmx)
+
+    map.setDoors(options.doors)
+
+    map.setDeathHandler(function ()
+        map.setFinished(true)
+
+        map.setProceedHandler(function ()
+            -- nop because we want to change worlds
+        end)
+    end)
+
+    map.setVictoryHandler(function ()
+        map.setFinished(true)
+
+        map.setProceedHandler(function ()
+            print("in proceed handler")
+            -- you aren't finished here mario...
+            map.setFinished(false)
+
+            map.glitch()
+            map.reset()
+        end)
+    end)
+
+    return map
+end
+
 ---------------------------------------------------------------------------------------------------
 return Map
 
