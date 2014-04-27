@@ -21,6 +21,8 @@ local W_HEIGHT = love.window.getHeight()
 -- debugging stuff
 tile_x = ""
 tile_y = ""
+player_vx = ""
+player_vy = ""
 collisions = {}
 time = 0
 
@@ -54,7 +56,8 @@ function love.update(dt)
 
     -- the player pushes the screen along
     if player.getX() > W_WIDTH / 2 and player.getX() > global.tx then
-        global.tx = global.tx - ( player.getX() - W_WIDTH / 2 )
+        local v = player.getV()
+        global.tx = global.tx - ( math.min(v.getX(), 1.5) * dt * 100 )
         player.setX(W_WIDTH / 2)
     end
 
@@ -89,12 +92,14 @@ function love.draw()
     maps[num].draw()
     player.draw()
 
-    love.graphics.print(player.getX(), 50, 50)
-    love.graphics.print(player.getY(), 50, 70)
-    love.graphics.print(tile_x, 50, 90)
-    love.graphics.print(tile_y, 50, 110)
-    love.graphics.print(global.tx, 50, 130)
-    love.graphics.print(global.ty, 50, 150)
+  --love.graphics.print(player.getX(), 50, 50)
+  --love.graphics.print(player.getY(), 50, 70)
+  --love.graphics.print(tile_x, 50, 90)
+  --love.graphics.print(tile_y, 50, 110)
+  --love.graphics.print(global.tx, 50, 130)
+  --love.graphics.print(global.ty, 50, 150)
+    love.graphics.print(player_vx, 50, 90)
+    love.graphics.print(player_vy, 50, 110)
 
 end
 
