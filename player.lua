@@ -16,12 +16,19 @@ Player = function (point)
 
     -- these are offsets from the Player's x, y as describe
     -- in Map.collide. Later there will be 4+ of these
-    local collision_points = {
-        {
-            x = -draw_w,
-            y = -draw_h
-        }
-    }
+    -- the points should be arranged so that
+    local collision_points = {}
+    collision_points[1]  = {}
+    collision_points[-1] = {} -- yes... -1
+
+    -- these are using vectors with unitary components so that we can determine which
+    -- should be checked first (the one closest to the direction of movement)
+    -- WHOA TODO where are 16 and 32 coming from? Why negative? This I cannot
+    -- explain. It is a "bug"
+    collision_points[1 ][1]  = { x = -16, y = -16 } -- bottom right
+    collision_points[-1][1]  = { x = -32, y = -16 } -- bottom left
+    collision_points[-1][-1] = { x = -32, y = -32 } -- top left
+    collision_points[1 ][-1] = { x = -16, y = -32 } -- top right
 
     local serialize = function ()
         return {

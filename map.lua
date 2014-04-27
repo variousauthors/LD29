@@ -65,6 +65,33 @@ function pixel_to_tile (pixel_x, pixel_y)
     return math.ceil((pixel_x) / (map.tileWidth * global.scale)), math.ceil((pixel_y) / (map.tileHeight * global.scale))
 end
 
+-- given a vector, determine which collision point should be checked
+-- first by converting the vector into a diagonal vector
+-- and using that as an index
+function primary_direction (v)
+    local u    = v.to_unit()
+    local x, y = u.getX(), u.getY()
+
+    -- oh my GOD there must be a better way!!!
+    if x < 0 then
+        x = math.floor(x)
+    elseif x > 0 then
+        x = math.ceil(x)
+    else
+        x = 1
+    end
+
+    if y < 0 then
+        y = math.floor(y)
+    elseif y > 0 then
+        y = math.ceil(y)
+    else
+        y = 1
+    end
+
+    return x, y
+end
+
 -- data is a serialization of some object. I guess I'm just being a dick,
 -- but I don't like passing references to objects. I prefer to serialize
 -- the data and pass that... probably this is dumb, but only time will tell.
@@ -73,13 +100,16 @@ function Map.collide(data)
     -- return mid_air for mid-air collisions
     local p      = Point(data.x, data.y)
     local v      = Vector(data.v.x, data.v.y)
+    local x, y   = primary_direction(v) -- index at which to start collision detection
+
+    inspect({ x, y })
 
     -- collision points are single pixels on the sprite that collide
     -- at the moment there is just one. The actual data is an offset
     -- from the position of the sprite, so like a 16px square sprite at
     -- 0, 0 will have 4 collision points at (0, 0), (16, 0), (0, 16), (16, 16)
     -- but at the moment we just use one of these
-    local offset = data.collision_points[1] -- WARNING lua arrays are 1 indexed... :/
+    local offset = data.collision_points[x][y]
 
     local tile  = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
     local new_v = v
