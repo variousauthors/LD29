@@ -2,7 +2,7 @@ require("glitches")
 
 -- Setup
 local loader     = require("vendor/AdvTiledLoader.Loader")
-loader.path      = "assets/maps/"
+loader.path      = "assets/images/maps/"
 
 -- So, this whole file I basically just stole from the examples in the 
 -- tile library. That's why the code is so weird. In the days to come
@@ -61,7 +61,7 @@ Map = function ()
 
         -- Queue our guy to be drawn after the tile he's on and then draw the map.
         local maxDraw = global.benchmark and 20 or 1
-        for i=1,maxDraw do 
+        for i = 1, maxDraw do 
             map:draw() 
         end
         love.graphics.rectangle("line", map:getDrawRange())

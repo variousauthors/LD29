@@ -30,7 +30,8 @@ time = 0
 -- iterate
 local Map = require("map")
 local maps = {
-    Map()
+    Map("map1-1.tmx"),
+    Map("map2-1.tmx")
 }
 
 local num = 1                   -- The map we're currently on
