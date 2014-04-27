@@ -2,7 +2,7 @@
 -- constructor for Players!
 Player = function (point)
     local p, v = point.copy(), Vector(0, 0)
-    local speed, is_jumping = 100, true
+    local speed, max_speed, is_jumping = 100, 2, true
 
     -- height/width of the sprite's shape
     local draw_w = 16
@@ -10,7 +10,7 @@ Player = function (point)
 
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 0.7),
+        gravity    = Vector(0, 1),
         resistance = Vector(0.3, 0.3)
     }
 
@@ -98,16 +98,24 @@ Player = function (point)
             v = drag(v)
         end
 
+        -- clamp horizontal speed
+        v.setX(math.max(-max_speed, math.min(v.getX(), max_speed)))
+
         -- update position optimistically
         p.setY(p.getY() + v.getY() * dt * speed)
         p.setX(p.getX() + v.getX() * dt * speed)
 
         -- if there is a collision, then we will overwrite
         -- the optimistic position
-        collision  = map.collide(serialize())
-        p          = collision.p
-        v          = collision.v
+        local collision = map.collide(serialize())
+        p.setX(collision.p.getX())
+        p.setY(collision.p.getY())
+        v.setX(collision.v.getX())
+        v.setY(collision.v.getY())
         is_jumping = collision.mid_air
+
+        player_vx = v.getX()
+        player_vy = v.getY()
 
         -- this is a thing
         forces.key.setX(0)
@@ -128,7 +136,14 @@ Player = function (point)
         draw       = draw,
         keypressed = keypressed,
 
-        getX       = p.getX,
-        getY       = p.getY
+        getX = p.getX,
+        getY = p.getY,
+        setX = p.setX,
+        setY = p.setY,
+
+        getV = function ()
+            return v.copy()
+        end
+
     }
 end
