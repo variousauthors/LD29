@@ -97,18 +97,22 @@ function resolveCollision(p, v, offset)
     local tile     = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
     local new_v    = v
 
+
     -- if there is a collision, then we will want to halt the incoming object
     if tile ~= nil then
+        table.insert(collisions, { x = tile_x, y = tile_y, tile = tile})
         new_v = Vector(0, 0)
     end
 
+    local count = 0
     -- the "algorithm" is to push the object back in the direction it came until
     -- there is no longer a collision :/
-    while (tile ~= nil) do
+    while (tile ~= nil and count < 100) do
         p.setX(p.getX() - v.getX())
         p.setY(p.getY() - v.getY())
 
         tile = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
+        count = count + 1
     end
 
     return p, new_v

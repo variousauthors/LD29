@@ -101,7 +101,7 @@ Player = function (point)
 
         -- if there is a collision, then we will overwrite
         -- the optimistic position
-        collision  = map.collide(serialize())
+        local collision = map.collide(serialize())
         p.setX(collision.p.getX())
         p.setY(collision.p.getY())
         v          = collision.v

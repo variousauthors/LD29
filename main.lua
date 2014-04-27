@@ -21,6 +21,8 @@ local W_HEIGHT = love.window.getHeight()
 -- debugging stuff
 tile_x = ""
 tile_y = ""
+collisions = {}
+time = 0
 
 -- we store the levels in a table and I expect when there are more of them we will just
 -- iterate
@@ -45,13 +47,10 @@ function love.load()
 end
 
 function love.update(dt)
+    collisions = {}
+    time = time + dt
 
     player.update(dt, maps[num])
-
-    print(player.getX())
-    print(player.getY())
-    print(global.tx)
-    print(global.ty)
 
     -- the player pushes the screen along
     if player.getX() > W_WIDTH / 2 and player.getX() > global.tx then
@@ -63,6 +62,13 @@ function love.update(dt)
 
     -- Call update in our example if it is defined
     if maps[num].update then maps[num].update(dt) end
+
+    if #collisions > 0 then
+        print("======================")
+        print(time)
+        inspect(collisions)
+    end
+
 end
 
 function love.keypressed(k)
