@@ -1,3 +1,10 @@
+--[[ The mighty Sound object!
+
+    Sounds are loaded into Sound.assets.[sfx|music]. They are triggered by
+    either the Sound.playSFX or Sound.playMusic functions. Simple!
+
+]]--
+
 require("vendor/TEsound") -- TEsound global object
 
 Sound = {}
@@ -28,6 +35,7 @@ Sound.playSFX = function(name)
 end
 
 Sound.playMusic = function(name, noloop)
+    TEsound.stop("music")
     if (noloop) then
         TEsound.play(Sound.assets.music[name], "music")
     else
