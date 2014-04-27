@@ -15,16 +15,23 @@ Sound.assets = {}
 Sound.assets.sfx = {
     ptooi_big        = love.sound.newSoundData("assets/sfx/ptooi_big.wav"),
     ptooi_small      = love.sound.newSoundData("assets/sfx/ptooi_small.wav"),
-    badadoodahdeedah = love.sound.newSoundData("assets/sfx/badadoodahdeedah.wav")
+    badadoodahdeedah = love.sound.newSoundData("assets/sfx/badadoodahdeedah.wav"),
+    smash            = love.sound.newSoundData("assets/sfx/smash.wav"),
+    bading           = love.sound.newSoundData("assets/sfx/bading.wav"),
+    boom             = love.sound.newSoundData("assets/sfx/boom.wav"),
+    bounce           = love.sound.newSoundData("assets/sfx/bounce.wav"),
+    ohheylook        = love.sound.newSoundData("assets/sfx/ohheylook.wav"),
+    awyiss           = love.sound.newSoundData("assets/sfx/awwyiss.wav")
 }
 
 -- Music am just filename since are big.
 Sound.assets.music = {
-    M100tp5e0 = "assets/music/M100tp5e0.mp3",
-    M100tp5e1 = "assets/music/M100tp5e1.mp3",
-    M100tp5e2 = "assets/music/M100tp5e2.mp3",
-    M100tp5e3 = "assets/music/M100tp5e3.mp3",
-    M100tp5e4 = "assets/music/M100tp5e4.mp3"
+    M100tp5e0   = "assets/music/M100tp5e0.mp3",
+    M100tp5e1   = "assets/music/M100tp5e1.mp3",
+    M100tp5e2   = "assets/music/M100tp5e2.mp3",
+    M100tp5e3   = "assets/music/M100tp5e3.mp3",
+    M100tp5e4   = "assets/music/M100tp5e4.mp3",
+    Undesirable = "assets/music/Undesirable.mp3"
 }
 
 TEsound.volume("sfx", 1)
