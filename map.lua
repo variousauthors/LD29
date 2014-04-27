@@ -5,7 +5,9 @@ loader.path      = "assets/maps/"
 local map        = loader.load("map.tmx")
 local tile_layer = map.layers["obstacle"]
 
--- So, this whole file I basically just stole from the examples in the 
+Sound.playMusic("M100tp5e0")
+
+-- So, this whole file I basically just stole from the examples in the
 -- tile library. That's why the code is so weird. In the days to come
 -- I will change this so that Map is a constructor and we can make multiple
 -- maps with different qualities.
@@ -47,8 +49,8 @@ function Map.draw()
 
     -- Queue our guy to be drawn after the tile he's on and then draw the map.
     local maxDraw = global.benchmark and 20 or 1
-    for i=1,maxDraw do 
-        map:draw() 
+    for i=1,maxDraw do
+        map:draw()
     end
     love.graphics.rectangle("line", map:getDrawRange())
 
