@@ -4,6 +4,7 @@ local loader     = require("vendor/AdvTiledLoader.Loader")
 loader.path      = "assets/maps/"
 local map        = loader.load("map.tmx")
 local tile_layer = map.layers["obstacle"]
+require("glitches")
 
 -- So, this whole file I basically just stole from the examples in the 
 -- tile library. That's why the code is so weird. In the days to come
@@ -12,12 +13,23 @@ local tile_layer = map.layers["obstacle"]
 --
 -- Also on the TODO list is pulling the collision code out of here.
 local Map = {}
+local glitches   = Glitches()
+local map_resets = 0
+
+glitches.load_layer(tile_layer)
 
 -- Resets the example
 function Map.reset()
     -- tx and ty are the offset of the tilemap
     global.tx = 0
     global.ty = 0
+
+    if map_resets > 0 then
+        glitches.generate_glitches(20)
+        glitches.modify_layer()
+    end
+
+    map_resets = map_resets + 1
 end
 
 -- at some point we will probably want code in here

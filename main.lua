@@ -66,6 +66,10 @@ function love.update(dt)
     -- Call update in our example if it is defined
     if maps[num].update then maps[num].update(dt) end
 
+    if tile_x == 204 and tile_y == 12 then
+        maps[num].reset()
+    end
+
     if #collisions > 0 then
         print("======================")
         print(time)
@@ -92,14 +96,14 @@ function love.draw()
     maps[num].draw()
     player.draw()
 
-  --love.graphics.print(player.getX(), 50, 50)
-  --love.graphics.print(player.getY(), 50, 70)
-  --love.graphics.print(tile_x, 50, 90)
-  --love.graphics.print(tile_y, 50, 110)
-  --love.graphics.print(global.tx, 50, 130)
-  --love.graphics.print(global.ty, 50, 150)
-    love.graphics.print(player_vx, 50, 90)
-    love.graphics.print(player_vy, 50, 110)
+    love.graphics.print(player.getX(), 50, 50)
+    love.graphics.print(player.getY(), 50, 70)
+    love.graphics.print(tile_x, 50, 90)
+    love.graphics.print(tile_y, 50, 110)
+    love.graphics.print(global.tx, 50, 130)
+    love.graphics.print(global.ty, 50, 150)
+    love.graphics.print(player_vx, 50, 170)
+    love.graphics.print(player_vy, 50, 190)
 
 end
 
