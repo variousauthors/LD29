@@ -40,7 +40,7 @@ function Map.draw()
 
     -- Limit the draw range 
     if global.limitDrawing then 
-        map:autoDrawRange(ftx, fty, global.scale, -40) 
+        map:autoDrawRange(ftx, fty, global.scale, -0) 
     else 
         map:autoDrawRange(ftx, fty, global.scale, 50) 
     end
@@ -62,7 +62,7 @@ end
 -- around these pixels" So for now I'm just converting, but later I
 -- will implement such a lookup.
 function pixel_to_tile (pixel_x, pixel_y)
-    return math.ceil((pixel_x) / (map.tileWidth * global.scale)), math.ceil((pixel_y) / (map.tileHeight * global.scale))
+    return math.ceil((pixel_x - global.tx * 2) / (map.tileWidth * global.scale)), math.ceil((pixel_y - global.ty * 2) / (map.tileHeight * global.scale))
 end
 
 -- given a vector, determine which collision point should be checked
@@ -93,8 +93,9 @@ function primary_direction (v)
 end
 
 function resolveCollision(p, v, offset)
-    local tile  = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
-    local new_v = v
+    tile_x, tile_y = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
+    local tile     = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
+    local new_v    = v
 
     -- if there is a collision, then we will want to halt the incoming object
     if tile ~= nil then

@@ -102,7 +102,8 @@ Player = function (point)
         -- if there is a collision, then we will overwrite
         -- the optimistic position
         collision  = map.collide(serialize())
-        p          = collision.p
+        p.setX(collision.p.getX())
+        p.setY(collision.p.getY())
         v          = collision.v
         is_jumping = collision.mid_air
 
@@ -125,7 +126,9 @@ Player = function (point)
         draw       = draw,
         keypressed = keypressed,
 
-        getX       = p.getX,
-        getY       = p.getY
+        getX = p.getX,
+        getY = p.getY,
+        setX = p.setX,
+        setY = p.setY
     }
 end
