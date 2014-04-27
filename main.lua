@@ -28,8 +28,9 @@ time = 0
 
 -- we store the levels in a table and I expect when there are more of them we will just
 -- iterate
+local Map = require("map")
 local maps = {
-    require("map")
+    Map()
 }
 
 local num = 1                   -- The map we're currently on
