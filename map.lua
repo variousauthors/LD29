@@ -20,12 +20,28 @@ Map = function (tmx)
     local glitches    = Glitches()
     local map_resets  = 0
     local is_finished = false
-    local proceed_handler
+    local proceed_handler, death_handler, victory_handler
 
     glitches.load_layer(tile_layer)
 
     local isFinished = function ()
         return is_finished
+    end
+
+    local setFinished = function (finished)
+        is_finished = finished
+    end
+
+    local setDeathHandler = function (callback)
+        death_handler = callback
+    end
+
+    local setVictoryHandler = function (callback)
+        victory_handler = callback
+    end
+
+    local setProceedHandler = function (callback)
+        proceed_handler = callback
     end
 
     -- Resets the example
@@ -108,30 +124,15 @@ Map = function (tmx)
         return x, y
     end
 
-    local deathHandler = function ()
-        is_finished = true
-
-        -- mario is dead, start over with no glitches
-        proceed_handler = function ()
-            print("deathHandler->proceed")
-            is_finished = false
-
-            reset()
-        end
+    local onDeath = function ()
+        if death_handler ~= nil then death_handler() end
     end
 
-    local victoryHandler = function ()
-        is_finished = true
-
-        proceed_handler = function ()
-            print("no op")
-            -- NOP because we want to change worlds
-        end
+    local onVictory = function ()
+        if victory_handler ~= nil then victory_handler() end
     end
 
     local proceed = function ()
-        print("default")
-
         proceed_handler()
     end
 
@@ -142,13 +143,12 @@ Map = function (tmx)
         
         -- this 14 will need to be based on the map bounds
         if tile_y > 14 then
-            print("tile greater than 14")
-            deathHandler()
+            onDeath()
             is_dead = true
         end
 
         if tile_x == 204 then
-            victoryHandler()
+            onVictory()
         end
 
         -- if there is a collision, then we will want to halt the incoming object
@@ -216,15 +216,45 @@ Map = function (tmx)
     end
     -- public interface for map
     return {
-        update     = update,
-        draw       = draw,
-        collide    = collide,
-        reset      = reset,
-        isFinished = isFinished,
-        proceed    = proceed
+        update            = update,
+        draw              = draw,
+        collide           = collide,
+
+        isFinished        = isFinished,
+        setFinished       = setFinished,
+
+        setVictoryHandler = setVictoryHandler,
+        setDeathHandler   = setDeathHandler,
+        setProceedHandler = setProceedHandler,
+
+        reset             = reset,
+        proceed           = proceed
     }
 end
 
+LevelOne = function (tmx)
+    local map = Map(tmx)
+
+    map.setDeathHandler(function ()
+
+        map.setFinished(true)
+
+        map.setProceedHandler(function ()
+            map.setFinished(false)
+            map.reset()
+        end)
+    end)
+
+    map.setVictoryHandler(function ()
+        map.setFinished(true)
+
+        map.setProceedHandler(function ()
+            -- NOP because we want to change worlds
+        end)
+    end)
+
+    return map
+end
 ---------------------------------------------------------------------------------------------------
 return Map
 

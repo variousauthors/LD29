@@ -30,7 +30,7 @@ time = 0
 -- iterate
 local Map = require("map")
 local maps = {
-    Map("map1-1.tmx"),
+    LevelOne("map1-1.tmx"),
     Map("map2-1.tmx")
 }
 
@@ -45,13 +45,15 @@ if maps[num].reset then maps[num].reset() end
 local origin, player
 
 function init_player (p)
+    print(p.getX())
+    print(p.getY())
     player = Player(p)
 end
 
 function love.load()
     origin = Point(0, 0) -- somehow I just feel safer having a global "origin"
     start  = Point(origin.getX() + 200, origin.getY() + 200)
-    global.tx = -1000
+    global.tx = -3000
     init_player(start)
 end
 

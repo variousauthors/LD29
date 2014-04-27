@@ -77,6 +77,11 @@ Player = function (point)
         return is_jumping
     end
 
+    local reset = function ()
+        is_jumping = true
+        is_dead    = false
+    end
+
     -- the beef!
     local update = function (dt, map)
         setKeyForces()
