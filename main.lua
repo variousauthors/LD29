@@ -3,6 +3,8 @@ inspect = function (a, b)
     print(i.inspect(a, b))
 end
 
+require("sound") -- Sound global object
+
 require("player")
 require("vector")
 
@@ -41,6 +43,9 @@ end
 function love.update(dt)
 
     player.update(dt, maps[num])
+
+    -- Polling/cleanup/loop stuff.
+    Sound.update()
 
     -- Call update in our example if it is defined
     if maps[num].update then maps[num].update(dt) end

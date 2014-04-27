@@ -44,7 +44,10 @@ Player = function (point)
     local keypressed = function (key)
         if is_jumping then return end
 
-        if love.keyboard.isDown("up") then forces.key.setY(-15) end
+        if love.keyboard.isDown("up") then
+            Sound.playSFX("ptooi_big")
+            forces.key.setY(-15)
+        end
     end
 
     -- this is for forces that get set continuously while the key is down
