@@ -4,7 +4,9 @@ require("glitches")
 local loader     = require("vendor/AdvTiledLoader.Loader")
 loader.path      = "assets/images/maps/"
 
--- So, this whole file I basically just stole from the examples in the 
+Sound.playMusic("M100tp5e0")
+
+-- So, this whole file I basically just stole from the examples in the
 -- tile library. That's why the code is so weird. In the days to come
 -- I will change this so that Map is a constructor and we can make multiple
 -- maps with different qualities.

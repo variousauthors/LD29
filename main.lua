@@ -3,6 +3,8 @@ inspect = function (a, b)
     print(i.inspect(a, b))
 end
 
+require("sound") -- Sound global object
+
 require("player")
 require("vector")
 
@@ -87,6 +89,9 @@ function love.update(dt)
     time = time + dt
 
     player.update(dt, maps[num])
+
+    -- Polling/cleanup/loop stuff.
+    Sound.update()
 
     -- the player pushes the screen along
     if player.getX() > W_WIDTH / 2 and player.getX() > global.tx then
