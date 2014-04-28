@@ -26,7 +26,7 @@ function Cutscenes:scene(options)
     end
 
     local start = function (cb)
-        if (type(cb) = "function") then
+        if (type(cb) == "function") then
             done_callback = cb
         end
         is_running = true
@@ -63,7 +63,7 @@ function Cutscenes:scene(options)
         else
             Sound.resumeMusic()
         end
-        if (type(done_callback) = "function") then
+        if (type(done_callback) == "function") then
             done_callback()
             done_callback = nil
         end
@@ -154,8 +154,14 @@ Cutscenes.blank = Cutscenes.scene() -- blank
 Cutscenes.current = Cutscenes.blank -- placeholder
 
 -- Start of Game
+
+local imgStartScreen = love.graphics.newImage("assets/scenes/0-1welcomescreen.png")
+
 Cutscenes.StartScreen = Cutscenes:scene({
     name = "StartScreen",
+    frames = { imgStartScreen },
+    delay = 3,
+    frameX = centerX(imgStartScreen),
     nextCutscene = "Pre11"
 })
 
@@ -165,7 +171,7 @@ local img11Start = love.graphics.newImage("assets/scenes/1-1start.png")
 Cutscenes.Pre11 = Cutscenes:scene({
     name   = "Pre11",
     frames = { img11Start },
-    delay = 3.5,
+    delay = 3,
     frameX = centerX(img11Start),
     musicDone = "M100tp5e0"
 })
@@ -184,7 +190,7 @@ local img11end09 = love.graphics.newImage("assets/scenes/1-1end/1-1end0009.jpg")
 local img11end10 = love.graphics.newImage("assets/scenes/1-1end/1-1end0010.jpg")
 local img11end11 = love.graphics.newImage("assets/scenes/1-1end/1-1end0011.jpg")
 
-Cutscenes.Pre21a = Cutscenes:scene({
+Cutscenes.Pre21 = Cutscenes:scene({
     name   = "Pre21",
     frames = {
         {img11end01, 1},
@@ -210,35 +216,83 @@ local img21Start = love.graphics.newImage("assets/scenes/2-1start.png")
 Cutscenes.Pre21b = Cutscenes:scene({
     name   = "Pre21b",
     frames = { img21Start },
-    delay = 3.5,
+    delay = 3,
     frameX = centerX(img21Start),
     musicDone = "M100tp5e0"
 })
 
--- Subsequent
+-- Subsequent 2-1 runs
+local img21end01 = love.graphics.newImage("assets/scenes/2-1end/2-1end01.jpg")
+local img21end02 = love.graphics.newImage("assets/scenes/2-1end/2-1end02.jpg")
+local img21end03 = love.graphics.newImage("assets/scenes/2-1end/2-1end03.jpg")
+local img21end04 = love.graphics.newImage("assets/scenes/2-1end/2-1end04.jpg")
+local img21end05 = love.graphics.newImage("assets/scenes/2-1end/2-1end05.jpg")
+local img21end06 = love.graphics.newImage("assets/scenes/2-1end/2-1end06.jpg")
+local img21end07 = love.graphics.newImage("assets/scenes/2-1end/2-1end07.jpg")
+
 Cutscenes.Pre21Sub = Cutscenes:scene({
     name   = "Pre21Sub",
+    frames = {
+        {img21end01, 1},
+        {img21end02, 0.1},
+        {img21end03, 0.1},
+        {img21end04, 0.1},
+        {img21end05, 0.1},
+        {img21end06, 0.5},
+        {img21end07, 2} -- changed
+    },
+    frameX = centerX(img21end01),
+    delay = "frames",
+    nextCutscene = "Pre21Subb"
+})
+
+Cutscenes.Pre21Subb = Cutscenes:scene({
+    name   = "Pre21Subb",
     frames = { img21Start },
-    delay = 3.5,
+    delay = 3,
     frameX = centerX(img21Start)
 })
 
 -- Plays before 5-1 (Map 3)
-
 local img51Start = love.graphics.newImage("assets/scenes/5-1start.png")
 
 Cutscenes.Pre51 = Cutscenes:scene({
     name   = "Pre51",
     frames = { img51Start },
-    delay = 3.5,
+    delay = 3,
     frameX = centerX(img51Start),
     musicDone = "M100tp5e0"
 })
 
+-- Subsequent 5-1 runs
+local img51end01 = love.graphics.newImage("assets/scenes/5-1end/5-1end01.jpg")
+local img51end02 = love.graphics.newImage("assets/scenes/5-1end/5-1end02.jpg")
+local img51end03 = love.graphics.newImage("assets/scenes/5-1end/5-1end03.jpg")
+local img51end04 = love.graphics.newImage("assets/scenes/5-1end/5-1end04.jpg")
+local img51end05 = love.graphics.newImage("assets/scenes/5-1end/5-1end05.jpg")
+local img51end06 = love.graphics.newImage("assets/scenes/5-1end/5-1end06.jpg")
+local img51end07 = love.graphics.newImage("assets/scenes/5-1end/5-1end07.jpg")
+
 Cutscenes.Pre51Sub = Cutscenes:scene({
     name   = "Pre51Sub",
+    frames = {
+        {img51end01, 1},
+        {img51end02, 0.1},
+        {img51end03, 0.1},
+        {img51end04, 0.1},
+        {img51end05, 0.1},
+        {img51end06, 0.5},
+        {img51end07, 2}
+    },
+    frameX = centerX(img21end01),
+    delay = "frames",
+    nextCutscene = "Pre51Subb"
+})
+
+Cutscenes.Pre51Subb = Cutscenes:scene({
+    name   = "Pre51Subb",
     frames = { img51Start },
-    delay = 3.5,
+    delay = 3,
     frameX = centerX(img51Start)
 })
 
@@ -249,15 +303,41 @@ local img91Start = love.graphics.newImage("assets/scenes/9-1start.png")
 Cutscenes.Pre91 = Cutscenes:scene({
     name   = "Pre91",
     frames = { img91Start },
-    delay = 3.5,
+    delay = 3,
     frameX = centerX(img91Start),
     musicDone = "M100tp5e0"
 })
 
+-- Subsequent 9-1 runs
+
+local img91end01 = love.graphics.newImage("assets/scenes/9-1end/9-1end01.jpg")
+local img91end02 = love.graphics.newImage("assets/scenes/9-1end/9-1end02.jpg")
+local img91end03 = love.graphics.newImage("assets/scenes/9-1end/9-1end03.jpg")
+local img91end04 = love.graphics.newImage("assets/scenes/9-1end/9-1end04.jpg")
+local img91end05 = love.graphics.newImage("assets/scenes/9-1end/9-1end05.jpg")
+local img91end06 = love.graphics.newImage("assets/scenes/9-1end/9-1end06.jpg")
+local img91end07 = love.graphics.newImage("assets/scenes/9-1end/9-1end07.jpg")
+
 Cutscenes.Pre91Sub = Cutscenes:scene({
     name   = "Pre91Sub",
+    frames = {
+        {img91end01, 1},
+        {img91end02, 0.1},
+        {img91end03, 0.1},
+        {img91end04, 0.1},
+        {img91end05, 0.1},
+        {img91end06, 0.5},
+        {img91end07, 2}
+    },
+    frameX = centerX(img21end01),
+    delay = "frames",
+    nextCutscene = "Pre91Subb"
+})
+
+Cutscenes.Pre91Subb = Cutscenes:scene({
+    name   = "Pre91Subb",
     frames = { img91Start },
-    delay = 3.5,
+    delay = 3,
     frameX = centerX(img91Start)
 })
 
