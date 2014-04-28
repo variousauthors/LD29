@@ -422,3 +422,40 @@ Cutscenes.Shrines.Clouds = Cutscenes:scene({
     delay = "frames"
 })
 
+local imgdoublejump01 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump01.jpg")
+local imgdoublejump02 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump02.jpg")
+
+Cutscenes.Shrines.Doublejump = Cutscenes:scene({
+    name = "Shrines.Doublejump",
+    frames = {
+        {imgdoublejump01, 1},
+        {imgdoublejump02, 2}
+    },
+    frameX = centerX(imgdoublejump01),
+    delay = "frames"
+})
+
+local imgwalljump = love.graphics.newImage("assets/scenes/walljump/shrines_walljump.jpg")
+
+Cutscenes.Shrines.Walljump = Cutscenes:scene({
+    name = "Shrines.Walljump",
+    frames = {
+        {imgwalljump, 3}
+    },
+    frameX = centerX(imgwalljump),
+    delay = "frames"
+})
+
+local imgtrees01 = love.graphics.newImage("assets/scenes/trees/shrines_trees01.jpg")
+local imgtrees02 = love.graphics.newImage("assets/scenes/trees/shrines_trees02.jpg")
+
+Cutscenes.Shrines.Trees = Cutscenes:scene({
+    name = "Shrines.Trees",
+    frames = {
+        {imgtrees01, 1},
+        {imgtrees02, 2}
+    },
+    frameX = centerX(imgtrees01),
+    delay = "frames"
+})
+
