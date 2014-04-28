@@ -37,6 +37,7 @@ teleport = ""
 local Map = require("map")
 
 local maps = {
+    -- 1-1
     LevelOne("map1-1.tmx", {
         sprite = Sprites.bigguy,
         doors = {
@@ -44,9 +45,14 @@ local maps = {
                 coords = { 204, 12 },
                 event  = "onVictory"
             }
+        },
+        scenes = {
+            init = "StartScreen",
+            sub = "Pre11"
         }
     }),
 
+    -- 2-1
     SubsequentLevels("map2-1.tmx", {
         sprite = Sprites.ladyguy,
         doors = {
@@ -54,9 +60,14 @@ local maps = {
                 coords = { 204, 12 },
                 event  = "onVictory"
             }
+        },
+        scenes = {
+            init = "Pre21",
+            sub  = "Pre21Sub"
         }
     }),
 
+    -- 5-1
     SubsequentLevels("map2-1.tmx", {
         sprite = Sprites.lilguy,
         doors = {
@@ -64,9 +75,14 @@ local maps = {
                 coords = { 204, 12 },
                 event  = "onVictory"
             }
+        },
+        scenes = {
+            init = "Pre51",
+            sub  = "Pre51Sub"
         }
     }),
 
+    -- 9-1
     SubsequentLevels("map2-1.tmx", {
         sprite = Sprites.oldguy,
         doors = {
@@ -74,6 +90,10 @@ local maps = {
                 coords = { 204, 12 },
                 event  = "onVictory"
             }
+        },
+        scenes = {
+            init = "Pre91",
+            sub  = "Pre91Sub"
         }
     })
 }
@@ -143,9 +163,20 @@ function love.update(dt)
             -- TODO the end game
             num = num + 1
             maps[num].reset()
-            Cutscenes.current.start()
-            -- this will override any cutscene music immediately, use musicDone
-            -- Sound.playMusic("M100tp5e0")
+
+            -- New map means new "initial" scene
+            if(Cutscenes[maps[num].scenes.init]) then
+                Cutscenes.current = Cutscenes[maps[num].scenes.init]
+                Cutscenes.current.start()
+            end
+        end
+
+        -- If no scene has started, show the "subsequent runs" screen.
+        if not Cutscenes.current.isRunning() then
+            if(Cutscenes[maps[num].scenes.sub]) then
+                Cutscenes.current = Cutscenes[maps[num].scenes.sub]
+                Cutscenes.current.start()
+            end
         end
 
         -- must be called after map number is potentially incremented so that

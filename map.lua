@@ -391,6 +391,7 @@ LevelOne = function (tmx, options)
     end)
 
     map.sprite = options.sprite
+    map.scenes = options.scenes
 
     return map
 end
@@ -421,6 +422,7 @@ SubsequentLevels = function (tmx, options)
     end)
 
     map.sprite = options.sprite
+    map.scenes = options.scenes
 
     return map
 end
