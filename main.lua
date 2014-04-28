@@ -59,21 +59,21 @@ local maps = {
   --    }
   --}),
 
-  --SubsequentLevels("map5-1.tmx", {
-  --    sprite = Sprites.lilguy,
-  --    doors = {
-  --        {
-  --            coords = { 204, 12 },
-  --            event  = "onVictory"
-  --        }
-  --    },
-  --    -- this is the top left corner of the starting screen, 
-  --    -- in tile form
-  --    start = {
-  --        x = 0,
-  --        y = 15
-  --    }
-  --}),
+    SubsequentLevels("map5-1.tmx", {
+        sprite = Sprites.lilguy,
+        doors = {
+            {
+                coords = { 204, 12 },
+                event  = "onVictory"
+            }
+        },
+        -- this is the top left corner of the starting screen, 
+        -- in tile form
+        start = {
+            x = 0,
+            y = 15
+        }
+    }),
 
     SubsequentLevels("map9-1.tmx", {
         sprite = Sprites.oldguy,

@@ -26015,16 +26015,16 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="735"/>
-   <tile gid="736"/>
-   <tile gid="736"/>
-   <tile gid="736"/>
-   <tile gid="736"/>
-   <tile gid="736"/>
-   <tile gid="736"/>
-   <tile gid="736"/>
-   <tile gid="736"/>
-   <tile gid="737"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -45327,8 +45327,8 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="735"/>
-   <tile gid="737"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -106166,6 +106166,7 @@
  <layer name="clouds" width="208" height="85">
   <properties>
    <property name="clouds" value="1"/>
+   <property name="obstacle" value="1"/>
   </properties>
   <data>
    <tile gid="0"/>
@@ -114448,16 +114449,16 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="735"/>
+   <tile gid="736"/>
+   <tile gid="736"/>
+   <tile gid="736"/>
+   <tile gid="736"/>
+   <tile gid="736"/>
+   <tile gid="736"/>
+   <tile gid="736"/>
+   <tile gid="736"/>
+   <tile gid="737"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -116076,8 +116077,8 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="735"/>
+   <tile gid="737"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
