@@ -284,8 +284,6 @@ Map = function (tmx)
     end
 
     callbacks["collectible"] = function (layer, v, tx, ty, rx, ry)
-        print("in collectible callback")
-
         layer:set(tx, ty, nil)
         Sound.playSFX("awyiss")
         global.getFlower()
