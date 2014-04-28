@@ -180,48 +180,82 @@ Map = function (tmx)
     -- a self variable. In the future I could do self["onVictory"]
     -- but for now I do callbacks["onVictory"]
     local callbacks = {}
-    callbacks["onDeath"]   = onDeath
-    callbacks["onVictory"] = onVictory
+    callbacks["onDeath"]      = onDeath
+    callbacks["onVictory"]    = onVictory
+
+    -- callbacks for layer properties
+    callbacks["obstacle"] = function (layer, v, tx, ty, rx, ry)
+        return Vector(0, 0)
+    end
+
+    -- callbacks for layer properties
+    callbacks["destructible"] = function (layer, v, tx, ty, rx, ry)
+
+        -- if the resolution_tile is below the collision_tile then we hit from below
+        -- ... I hope
+        if ry > ty then
+            layer:set(tx, ty, nil)
+        end
+
+        return v
+    end
+
+    callbacks["collectable"] = function (layer, v, tx, ty, rx, ry)
+        return v
+    end
 
     local resolveCollision = function (p, v, offset, layer)
-        tile_x, tile_y       = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
+        -- the position of the tile we are colliding with
+        local tx, ty         = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
+        tile_x, tile_y       = tx, ty -- debug stuff
+
         local tile           = layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
         local new_v, is_dead = v, false
         
         -- this 14 will need to be based on the map bounds
-        if tile_y > 14 then
+        if ty > 14 then
             onDeath()
             is_dead = true
         end
 
         -- if we've collided with an event tile, then we need to
         -- process the event (the tile may not actually be a "hit", such as doors)
-        if events[tile_x] ~= nil and events[tile_x][tile_y] ~= nil then
-            local callback = callbacks[events[tile_x][tile_y]]
+        if events[tx] ~= nil and events[tx][ty] ~= nil then
+            local callback = callbacks[events[tx][ty]]
 
             callback()
         end
 
-        -- resolve the collision
-        if tile ~= nil then
-            -- if there is a collision, then we will want to halt the incoming object
-            new_v = Vector(0, 0)
-
-            -- debug
-            table.insert(collisions, { x = tile_x, y = tile_y, tile = tile})
-        end
-
         local count = 0
+        local collision_occured = tile ~= nil
+        local collision_tile    = tile
 
         -- the "algorithm" is to push the object back in the direction it came until
         -- there is no longer a collision :/
+        -- we want the "tile" to be different from the "collision_tile"
         while (tile ~= nil and count < 100) do
-            print("bob")
             p.setX(p.getX() - v.getX())
             p.setY(p.getY() - v.getY())
 
             tile = layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
             count = count + 1
+        end
+
+        -- resolve the collision's side effects
+        if collision_occured then
+            -- and run collision callbacks
+            for key, value in pairs(layer.properties) do
+                local callback = callbacks[key]
+
+                -- the position of the tile that we resolved to
+                rx, ry = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
+
+                -- some callbacks will change the vector (halt it, for example)
+                new_v = callback(layer, new_v, tx, ty, rx, ry)
+            end
+
+            -- debug
+            table.insert(collisions, { x = tx, y = ty, tile = tile})
         end
 
         return p, new_v, is_dead
@@ -230,7 +264,6 @@ Map = function (tmx)
     -- for each tile layer, try to resolve collisions on that layer
     -- APPOLOGIES
     local resolveCollisions = function (data)
-        print("in resolveCollisions")
         -- back the o up pixel by pixel
         -- return mid_air for mid-air collisions
         local p                       = Point(data.x, data.y)
