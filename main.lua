@@ -72,8 +72,6 @@ if maps[num].reset then maps[num].reset() end
 local origin, player
 
 function init_player (p)
-    print(p.getX())
-    print(p.getY())
     player = Player(p)
 end
 

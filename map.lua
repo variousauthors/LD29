@@ -99,7 +99,7 @@ Map = function (tmx)
     -- Resets the example
     local reset = function ()
         -- tx and ty are the offset of the tilemap
-        global.tx = -1000
+        global.tx = -3000
         global.ty = 0
     end
 
@@ -278,25 +278,23 @@ Map = function (tmx)
         -- so like a 16px square sprite at
         -- 0, 0 will have 4 collision points at (0, 0), (16, 0), (0, 16), (16, 16)
         -- but at the moment we just use one of these
-        local offset = data.collision_points[x][y]
 
         -- run this code once for every tile layer
-        for k in pairs(map.layers) do
-            local layer = map.layers[k]
+        for key in pairs(map.layers) do
+            local layer = map.layers[key]
 
             -- if the layer is an obstacle layer
             if layer.properties["obstacle"] ~= nil then
                 -- run collision detection once to resolve the "most likely collision"
+                local offset = data.collision_points[x][y]
                 p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
 
-                -- iterate over all collision points looking for secondary collision
-                for i, c1 in pairs(data.collision_points) do
-                    for j, c2 in pairs(data.collision_points[i]) do
+                -- iterate over the two neighbouring collision points
+                offset = data.collision_points[-x][y]
+                p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
 
-                        offset = data.collision_points[i][j]
-                        p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
-                    end
-                end
+                offset = data.collision_points[-x][-y]
+                p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
 
                 -- if there is no tile directly beneath the collision point, then the player
                 -- is in mid-air (this is used in the player code)
