@@ -3,12 +3,6 @@ inspect = function (a, b)
     print(i.inspect(a, b))
 end
 
-require("sound") -- Sound global object
-require("cutscenes")
-require("sprites")
-require("player")
-require("vector")
-
 -- globals having to do with the tile library
 global = {}
 global.limitDrawing = true      -- If true then the drawing range example is shown
@@ -20,6 +14,12 @@ global.scale = 2                -- Scale of the screen
 
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
+
+require("sound") -- Sound global object
+require("cutscenes")
+require("sprites")
+require("player")
+require("vector")
 
 -- debugging stuff
 tile_x = ""
@@ -97,7 +97,9 @@ function love.load()
     start  = Point(origin.getX() + 200, origin.getY() + 200)
     maps[num].reset()
     init_player(start, maps[num].sprite)
-    Sound.playMusic("M100tp5e0")
+    --First cutscene.
+    Cutscenes.current = Cutscenes.FirstLevel
+    Cutscenes.current.start()
 end
 
 function love.update(dt)

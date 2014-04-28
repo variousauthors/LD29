@@ -8,8 +8,8 @@ Cutscene = function (options)
     local musicDone   = options.musicDone or "M100tp5e0"
     local frameX = options.frameX or 0
     local frameY = options.frameY or 0
-    local frameW = options.frameW or love.window.getWidth()
-    local frameH = options.frameH or love.window.getHeight()
+    local frameW = options.frameW or W_WIDTH
+    local frameH = options.frameH or W_HEIGHT
     local is_running = false
     local current_frame = nil
     local timer, frameIter = 0, 1
@@ -71,14 +71,17 @@ Cutscene = function (options)
     end
 
     local draw = function ()
+        --Cover everything with a rectangle first
+        local red, green, blue = love.graphics.getColor()
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle("fill", 0, 0,
+            W_WIDTH, W_HEIGHT)
+        love.graphics.setColor(red, green, blue)
+
+        -- Then draw frame
         if current_frame then
             love.graphics.draw( current_frame, frameX, frameY, 0,
                 global.scale, global.scale)
-        else
-            local red, green, blue = love.graphics.getColor()
-            love.graphics.setColor(0, 0, 0)
-            love.graphics.rectangle("fill", frameX, frameY, frameW, frameH)
-            love.graphics.setColor(red, green, blue)
         end
     end
 
@@ -92,9 +95,16 @@ Cutscene = function (options)
 end
 
 --[[ Here be the Cutscenes ]]
+love.graphics.setDefaultFilter("nearest", "nearest")
 
 Cutscenes = {}
 
 Cutscenes.current = Cutscene() -- blank, placeholder
 
-Cutscenes.FirstLevel = Cutscene({})
+local img11Start = love.graphics.newImage("assets/images/1-1start.png")
+
+Cutscenes.FirstLevel = Cutscene({
+    frames = { img11Start },
+    delay = 4,
+    frameX = (W_WIDTH / 2 ) - (img11Start:getWidth() * global.scale / 2)
+})
