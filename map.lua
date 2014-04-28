@@ -21,6 +21,10 @@ Map = function (tmx)
     local glitch_max  = 4
     local death_line  = map.height - 1
 
+    -- the amount to cheat the screen by on level start
+    local origin_y = 0
+    local start_y  = 0
+
     local proceed_handler, death_handler, victory_handler
 
     -- initialize the various glitches
@@ -69,6 +73,80 @@ Map = function (tmx)
         end
     end
 
+    local setOrigin = function (origin)
+        if origin ~= nil then
+            origin_y = -(origin.y * global.tile_size)
+            start_y  = origin.y
+        end
+    end
+
+    -- returns the pixel coords at which mario shouls appear
+    -- mario should start on the ground (5 tiles below the center)
+    local getStart = function ()
+        local arbitrary_offset = 5
+        -- look, on level 9-1 for some reason, the player starts in the wrong place.
+        if start_y == 40 then
+            arbitrary_offset = -7
+        end
+
+        local x = 200 -- arbitrary for now
+        local y = -global.ty + (global.tile_size * global.scale * arbitrary_offset)
+
+        return Point(x, y)
+    end
+
+    local isInDungeon = function (tile)
+        return tile > 15 + start_y
+    end
+
+    local isInTransition = function (tile)
+        return tile == 15 + start_y or tile == 14 + start_y or tile == 13 + start_y
+    end
+
+    local isOnGround = function (tile)
+        return tile < 12 + start_y
+    end
+
+    local isCloudWalking = function (tile)
+        return true
+    end
+
+    local getGroundY = function ()
+        return 0 + origin_y
+    end
+
+    local getTransitionY = function ()
+        return -(( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y
+    end
+
+    local getDungeonY = function ()
+        return -(( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y
+    end
+
+    local getBand = function (tile)
+        if tile > 30 + start_y                                                  then return { zone = "catacombs", transition = false } end
+        if tile > 15 + start_y                                                  then return { zone = "dungeon",   transition = false } end
+        if tile == 15 + start_y or tile == 14 + start_y or tile == 13 + start_y then return { zone = "dungeon",   transition = true  } end
+        if tile > 0 + start_y and tile < 12 + start_y                           then return { zone = "ground" ,   transition = false } end
+        if tile == 0 + start_y or tile == -1 + start_y                          then return { zone = "clouds",    transition = true  } end
+        if tile < -1 + start_y                                                  then return { zone = "clouds",    transition = false } end 
+    end
+
+    local getCameraForBand = function (band)
+
+        if band.zone == "catacombs" and band.transition == false  then return -(( global.tile_height ) * global.tile_size * global.scale) + origin_y end
+        if band.zone == "dungeon" and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y end
+        if band.zone == "dungeon" and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y end
+        if band.zone == "ground"  and band.transition == false  then return 0 + origin_y                                                               end
+        if band.zone == "clouds"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y  end
+        if band.zone == "clouds"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y  end
+
+        -- unimplemented
+        if band.zone == "stratosphere"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y  end
+        if band.zone == "mesosphere"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y  end
+        if band.zone == "mesosphere"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y  end
+    end
+
     -- set handlers for events like "onVictory"
     local setDeathHandler = function (callback)
         death_handler = callback
@@ -102,7 +180,7 @@ Map = function (tmx)
     local reset = function ()
         -- tx and ty are the offset of the tilemap
         global.tx = 0
-        global.ty = 0
+        global.ty = origin_y
     end
 
     -- at some point we will probably want code in here
@@ -206,6 +284,14 @@ Map = function (tmx)
     end
 
     callbacks["collectable"] = function (layer, v, tx, ty, rx, ry)
+        return v
+    end
+
+    callbacks["clouds"] = function (layer, v, tx, ty, rx, ry)
+        return v
+    end
+
+    callbacks["trees"] = function (layer, v, tx, ty, rx, ry)
         return v
     end
 
@@ -350,6 +436,17 @@ Map = function (tmx)
         draw              = draw,
         collide           = collide,
 
+        isInDungeon       = isInDungeon,
+        isInTransition    = isInTransition,
+        isOnGround        = isOnGround,
+        isCloudWalking    = isCloudWalking,
+        getGroundY        = getGroundY,
+        getTransitionY    = getTransitionY,
+        getDungeonY       = getDungeonY,
+
+        getBand           = getBand,
+        getCameraForBand  = getCameraForBand,
+
         isFinished        = isFinished,
         setFinished       = setFinished,
 
@@ -357,6 +454,8 @@ Map = function (tmx)
         setDeathHandler   = setDeathHandler,
         setProceedHandler = setProceedHandler,
         setEvents         = setEvents,
+        setOrigin         = setOrigin,
+        getStart          = getStart,
 
         glitch            = glitch,
         reset             = reset,
@@ -399,6 +498,7 @@ SubsequentLevels = function (tmx, options)
     local map = Map(tmx)
 
     map.setEvents(options.doors)
+    map.setOrigin(options.start)
 
     map.setDeathHandler(function ()
         map.setFinished(true)
