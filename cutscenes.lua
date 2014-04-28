@@ -2,7 +2,7 @@
 
 Cutscenes = {}
 
-function Cutscenes:Cutscene(options)
+function Cutscenes:scene(options)
     options = options or {}
     local frames = options.frames or { }
     local delay  = options.delay or 3
@@ -18,13 +18,19 @@ function Cutscenes:Cutscene(options)
     local is_running = false
     local current_frame, current_frame_delay = nil, nil
     local timer, frameIter = 0, 1
+    local sceneName = options.name or "?"
+    local done_callback = nil
 
     local isRunning = function ()
         return is_running
     end
 
-    local start = function ()
+    local start = function (cb)
+        if (type(cb) = "function") then
+            done_callback = cb
+        end
         is_running = true
+        print("Scene started: " .. sceneName)
         timer, frameIter = 0, 1
 
         if (not delay or type(delay) == "number") then
@@ -44,6 +50,7 @@ function Cutscenes:Cutscene(options)
 
     local stop = function ()
         is_running = false
+        print("Scene stopped: "..sceneName)
     end
 
     local finish = function ()
@@ -56,8 +63,14 @@ function Cutscenes:Cutscene(options)
         else
             Sound.resumeMusic()
         end
+        if (type(done_callback) = "function") then
+            done_callback()
+            done_callback = nil
+        end
+        print("Scene complete: "..sceneName)
         -- cutscene immediately following. kinda hacky, but TIIIIME
         if nextCutscene then
+            print("Starting following scene: "..nextCutscene)
             self.current = self[nextCutscene]
             self.current.start()
         end
@@ -136,26 +149,29 @@ end
     Here be the Cutscenes
 ]]--
 
-Cutscenes.current = Cutscenes.Cutscene() -- blank, placeholder
+Cutscenes.blank = Cutscenes.scene() -- blank
+
+Cutscenes.current = Cutscenes.blank -- placeholder
 
 -- Start of Game
-Cutscenes.StartScreen = Cutscenes:Cutscene({
-    nextCutscene = "FirstLevel",
-    musicStart = "Undesirable",
-    musicStartNL = true
+Cutscenes.StartScreen = Cutscenes:scene({
+    name = "StartScreen",
+    nextCutscene = "Pre11"
 })
 
 -- Plays before 1-1
-local img11Start = love.graphics.newImage("assets/images/1-1start.png")
-Cutscenes.FirstLevel = Cutscenes:Cutscene({
+local img11Start = love.graphics.newImage("assets/scenes/1-1start.png")
+
+Cutscenes.Pre11 = Cutscenes:scene({
+    name   = "Pre11",
     frames = { img11Start },
-    delay = 3,
+    delay = 3.5,
     frameX = centerX(img11Start),
-    musicDone = "M100tp5e0",
-    nextCutscene = "Post11"
+    musicDone = "M100tp5e0"
 })
 
--- Plays after 1-1
+-- Plays before 2-1
+
 local img11end01 = love.graphics.newImage("assets/scenes/1-1end/1-1end0001.jpg")
 local img11end02 = love.graphics.newImage("assets/scenes/1-1end/1-1end0002.jpg")
 local img11end03 = love.graphics.newImage("assets/scenes/1-1end/1-1end0003.jpg")
@@ -167,7 +183,9 @@ local img11end08 = love.graphics.newImage("assets/scenes/1-1end/1-1end0008.jpg")
 local img11end09 = love.graphics.newImage("assets/scenes/1-1end/1-1end0009.jpg")
 local img11end10 = love.graphics.newImage("assets/scenes/1-1end/1-1end0010.jpg")
 local img11end11 = love.graphics.newImage("assets/scenes/1-1end/1-1end0011.jpg")
-Cutscenes.Post11 = Cutscenes:Cutscene({
+
+Cutscenes.Pre21a = Cutscenes:scene({
+    name   = "Pre21",
     frames = {
         {img11end01, 1},
         {img11end02, 0.1},
@@ -184,13 +202,64 @@ Cutscenes.Post11 = Cutscenes:Cutscene({
     frameX = centerX(img11end01),
     delay = "frames",
     musicStart = "M100tp5e4",
+    nextCutscene = "Pre21b"
+})
+
+local img21Start = love.graphics.newImage("assets/scenes/2-1start.png")
+
+Cutscenes.Pre21b = Cutscenes:scene({
+    name   = "Pre21b",
+    frames = { img21Start },
+    delay = 3.5,
+    frameX = centerX(img21Start),
     musicDone = "M100tp5e0"
 })
 
--- Plays before 2
+-- Subsequent
+Cutscenes.Pre21Sub = Cutscenes:scene({
+    name   = "Pre21Sub",
+    frames = { img21Start },
+    delay = 3.5,
+    frameX = centerX(img21Start)
+})
 
+-- Plays before 5-1 (Map 3)
 
--- Plays before 3
+local img51Start = love.graphics.newImage("assets/scenes/5-1start.png")
+
+Cutscenes.Pre51 = Cutscenes:scene({
+    name   = "Pre51",
+    frames = { img51Start },
+    delay = 3.5,
+    frameX = centerX(img51Start),
+    musicDone = "M100tp5e0"
+})
+
+Cutscenes.Pre51Sub = Cutscenes:scene({
+    name   = "Pre51Sub",
+    frames = { img51Start },
+    delay = 3.5,
+    frameX = centerX(img51Start)
+})
+
+-- Plays before 9-1 (Map 4)
+
+local img91Start = love.graphics.newImage("assets/scenes/9-1start.png")
+
+Cutscenes.Pre91 = Cutscenes:scene({
+    name   = "Pre91",
+    frames = { img91Start },
+    delay = 3.5,
+    frameX = centerX(img91Start),
+    musicDone = "M100tp5e0"
+})
+
+Cutscenes.Pre91Sub = Cutscenes:scene({
+    name   = "Pre91Sub",
+    frames = { img91Start },
+    delay = 3.5,
+    frameX = centerX(img91Start)
+})
 
 -- Shrines
 
