@@ -182,7 +182,9 @@ Cutscenes.Post11 = Cutscenes:Cutscene({
         {img11end11, 3.5}
     },
     frameX = centerX(img11end01),
-    delay = "frames"
+    delay = "frames",
+    musicStart = "M100tp5e4",
+    musicDone = "M100tp5e0"
 })
 
 -- Plays before 2
