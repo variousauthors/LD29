@@ -39,16 +39,16 @@ teleport      = ""
 local Map = require("map")
 
 local maps = {
-  --LevelOne("map1-1.tmx", {
-  --    sprite = Sprites.bigguy,
-  --    doors = {
-  --        {
-  --            coords = { 204, 12 },
-  --            event  = "onVictory"
-  --        }
-  --    }
-  --}),
-  --
+    LevelOne("map1-1.tmx", {
+        sprite = Sprites.bigguy,
+        doors = {
+            {
+                coords = { 204, 12 },
+                event  = "onVictory"
+            }
+        }
+    }),
+    
     SubsequentLevels("map2-1.tmx", {
         sprite = Sprites.ladyguy,
         doors = {
@@ -59,7 +59,7 @@ local maps = {
         }
     }),
 
-    SubsequentLevels("map2-1.tmx", {
+    SubsequentLevels("map5-1.tmx", {
         sprite = Sprites.lilguy,
         doors = {
             {
@@ -69,7 +69,7 @@ local maps = {
         }
     }),
 
-    SubsequentLevels("map2-1.tmx", {
+    SubsequentLevels("map9-1.tmx", {
         sprite = Sprites.oldguy,
         doors = {
             {
