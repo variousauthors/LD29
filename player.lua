@@ -3,13 +3,14 @@
 Player = function (point, sprite)
     local p, v                = point.copy(), Vector(0, 0)
     local speed, max_speed    = 100, 2
-    local is_jumping, is_dead, is_walking = true, false, false
     local sprite = sprite
-    local facing = sprite.base_facing
+    local cur_state, prev_state = "stand", nil
+    local cur_facing, prev_facing = sprite.base_facing, nil
+    local current_quad = cur_state
 
     -- height/width of the sprite's shape
-    local draw_w = 16
-    local draw_h = 16
+    local draw_w = (sprite.width or 16) * global.scale
+    local draw_h = (sprite.height or 16) * global.scale
 
     local forces = {
         key        = Vector(0, 0),
@@ -42,10 +43,62 @@ Player = function (point, sprite)
         }
     end
 
+    local setState = function (new_state)
+        prev_state = cur_state
+        cur_state  = new_state
+        return cur_state, prev_state
+    end
+
+    local getState = function ()
+        return cur_state, prev_state
+    end
+
+    local isStateCont = function ()
+        return cur_state == prev_state
+    end
+
+    local isJumping = function ()
+        return cur_state == "jump"
+    end
+
+    local isDead = function ()
+        return cur_state == "dead"
+    end
+
+    local isWalking = function ()
+        return cur_state == "walk"
+    end
+
+    local isStanding = function ()
+        return cur_state == "stand"
+    end
+
+    local setFacing = function (new_facing)
+        prev_facing = cur_facing
+        cur_facing  = new_facing
+        sprite_facing = cur_facing
+        return cur_facing, prev_facing
+    end
+
+    local getFacing = function ()
+        return cur_facing, prev_facing
+    end
+
+    local isFacingCont = function ()
+        return cur_facing == prev_facing
+    end
+
+    local reset = function ()
+        cur_state   = nil
+        prev_state  = nil
+        cur_facing  = sprite.base_facing
+        prev_facing = nil
+    end
+
     -- this is for "one-off" keypresses. So like, jump,
     -- or throw fireball
     local keypressed = function (key)
-        if is_jumping then return end
+        if isJumping() then return end
 
         if love.keyboard.isDown("up") then
             Sound.playSFX("ptooi_big")
@@ -57,11 +110,11 @@ Player = function (point, sprite)
     local setKeyForces = function ()
         if love.keyboard.isDown("right", "left") then
             if love.keyboard.isDown("left") then
-                facing = "left"
+                setFacing("left")
                 forces.key.setX(-0.4)
             end
             if love.keyboard.isDown("right") then
-                facing = "right"
+                setFacing("right")
                 forces.key.setX(0.4)
             end
         end
@@ -84,25 +137,42 @@ Player = function (point, sprite)
         return Vector(x, y)
     end
 
-    local isJumping = function ()
-        return is_jumping
-    end
-
-    local isWalking = function ()
-        return is_walking
-    end
-
-    local wasWalking = function ()
-        return was_walking
-    end
-
-    local reset = function ()
-        is_jumping = true
-        is_dead    = false
-        is_walking = false
-    end
-
     -- the beef!
+    local walkTimer, walkDelay, walkIter, speedUp = 0, 0.2, 1, 0
+    local walkFrames = sprite.walk_anim
+    local updateAnimation = function (dt)
+        if isJumping() then
+            current_quad = "jump"
+        elseif isWalking() then
+            -- reset on state change
+            if not isStateCont() then
+                walkTimer, walkIter = 0, 1
+            -- reset and load frameset with turn frames
+            elseif not isFacingCont() then
+                walkTimer, walkIter = 0, 1
+                walkFrames = sprite.turn_anim
+            end
+            -- speed up animation with movement, 100%-300% of deltatime
+            speedUp = (1 + 2 * (math.abs(v.getX()) / max_speed))
+            walkTimer = walkTimer + (dt * speedUp)
+            if walkTimer > walkDelay then
+                walkTimer = 0
+                walkIter = walkIter + 1
+                if walkIter > #walkFrames then
+                    walkIter = 1
+                    -- reset to normal frames in case we were turnt
+                    walkFrames = sprite.walk_anim
+                end
+            end
+            current_quad = walkFrames[walkIter]
+        elseif isDead() then
+            current_quad = "stand"
+        else
+            current_quad = "stand"
+        end
+        sprite_quad = current_quad
+    end
+
     local update = function (dt, map)
         setKeyForces()
 
@@ -124,24 +194,6 @@ Player = function (point, sprite)
         -- clamp horizontal speed
         v.setX(math.max(-max_speed, math.min(v.getX(), max_speed)))
 
-        --
-        if(v.getX() ~= 0 and not isJumping()) then
-            if isWalking() then
-                was_walking = false
-            else
-                was_walking = true
-            end
-            is_walking = true
-        else
-            if isWalking() then
-                was_walking = true
-            else
-                was_walking = false
-            end
-            is_walking = false
-        end
-
-
         -- update position optimistically
         p.setY(p.getY() + v.getY() * dt * speed)
         p.setX(p.getX() + v.getX() * dt * speed)
@@ -153,8 +205,16 @@ Player = function (point, sprite)
         p.setY(collision.p.getY())
         v.setX(collision.v.getX())
         v.setY(collision.v.getY())
-        is_jumping = collision.mid_air
-        is_dead    = collision.is_dead
+        -- update state
+        if collision.mid_air then
+            setState("jump")
+        elseif collision.is_dead then
+            setState("dead")
+        elseif(v.getX() == 0) then
+            setState("stand")
+        else
+            setState("walk")
+        end
 
         -- global variables for debugggggging
         player_vx = v.getX()
@@ -163,37 +223,32 @@ Player = function (point, sprite)
         -- this is a thing
         forces.key.setX(0)
         forces.key.setY(0)
-    end
 
-    local isDead = function ()
-        return is_dead
+        updateAnimation(dt)
     end
 
     local draw = function ()
-        -- local r, g, b = love.graphics.getColor()
-        -- love.graphics.setColor(255, 0, 0)
-        -- love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
+        local r, g, b = love.graphics.getColor()
+        love.graphics.setColor(255, 0, 0, 128)
+        love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
+        love.graphics.setColor(r, g, b)
 
         -- Flip if facing is different
         local sx, sy = global.scale, global.scale
-        if (facing ~= sprite.base_facing) then
+        local r, ox, oy = 0, 0, 0
+        if (getFacing() ~= sprite.base_facing) then
             sx = 0 - sx
+            ox = sprite.width
         end
 
-        if isJumping() then
-            love.graphics.draw(sprite.image, sprite.namedQuads["jump"], p.getX(), p.getY(), 0, sx, sy)
-        elseif isWalking() then
-            --if not wasWalking(), restart walking
-
-            --else, continue walking
-
-            --debug, show standing sprite
-            love.graphics.draw(sprite.image, sprite.namedQuads["stand"], p.getX(), p.getY(), 0, sx, sy)
-        elseif isDead() then
-
-        else
-            love.graphics.draw(sprite.image, sprite.namedQuads["stand"], p.getX(), p.getY(), 0, sx, sy)
+        -- a dead mario is an upside down mario
+        if isDead() then
+            sy = 0 - sy
+            oy = sprite.height
         end
+
+        love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
+                           p.getX(), p.getY(), r, sx, sy, ox, oy)
     end
 
     -- lean public interface of Player is pretty lean

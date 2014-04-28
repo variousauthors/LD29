@@ -1,4 +1,4 @@
-local gen_spriteset = function(image, gridW, gridH, names)
+local gen_spriteset = function(image, gridW, gridH, base_facing, names)
     if(type(image) == "string") then
         image = love.graphics.newImage(image)
     end
@@ -21,13 +21,13 @@ local gen_spriteset = function(image, gridW, gridH, names)
     end
 
     return {image = image, quads = quads, namedQuads = namedQuads,
-            width = gridW, height = gridH}
+            base_facing = base_facing, width = gridW, height = gridH}
 end
 
 
 Sprites = {}
 
-Sprites.bigguy = gen_spriteset("assets/images/guybigt.png", 16, 32,
+Sprites.bigguy = gen_spriteset("assets/images/guybigt.png", 16, 32, "right",
                      {"stand", "walk1", "walk2", "walk3", "turn", "jump"})
-Sprites.bigguy.base_facing = "right"
 Sprites.bigguy.walk_anim = {"walk1", "walk2", "walk3"}
+Sprites.bigguy.turn_anim = {"turn", "turn", "walk1", "walk2", "walk3"}

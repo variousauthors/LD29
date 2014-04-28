@@ -26,6 +26,8 @@ tile_x = ""
 tile_y = ""
 player_vx = ""
 player_vy = ""
+sprite_quad = ""
+sprite_facing = ""
 collisions = {}
 time = 0
 teleport = ""
@@ -116,7 +118,7 @@ function love.update(dt)
         -- "proceed" either loads the next world or the next level
         -- depending on the map state
         maps[num].onProceed()
-        init_player(start)
+        init_player(start, Sprites.bigguy)
 
         -- if we "proceed" and the map is still finished, then we move to
         -- the next world
@@ -183,6 +185,6 @@ function love.draw()
     love.graphics.print(global.ty, 50, 150)
     love.graphics.print(player_vx, 50, 170)
     love.graphics.print(player_vy, 50, 190)
-
+    love.graphics.print(sprite_facing .. " " .. sprite_quad, 50, 210)
 end
 
