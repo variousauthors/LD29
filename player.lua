@@ -1,3 +1,5 @@
+walking_frame = 0
+debounce = false
 
 -- constructor for Players!
 Player = function (point, sprite)
@@ -51,15 +53,32 @@ Player = function (point, sprite)
             Sound.playSFX("ptooi_big")
             forces.key.setY(-15)
         end
+
+        if love.keyboard.isDown("right", "left") then
+            walking_frame = 0
+        end
+    end
+
+    local keyreleased = function (key)
+        if is_jumping then return end
+
+        if key == "right" or key == "left" then
+            is_walking = false
+        end
     end
 
     -- this is for forces that get set continuously while the key is down
     local setKeyForces = function ()
         if love.keyboard.isDown("right", "left") then
+            if not is_jumping then
+                is_walking = true
+            end
+
             if love.keyboard.isDown("left") then
                 facing = "left"
                 forces.key.setX(-0.4)
             end
+
             if love.keyboard.isDown("right") then
                 facing = "right"
                 forces.key.setX(0.4)
@@ -92,6 +111,10 @@ Player = function (point, sprite)
         return is_walking
     end
 
+    local isDead = function ()
+        return is_dead
+    end
+
     local wasWalking = function ()
         return was_walking
     end
@@ -100,6 +123,28 @@ Player = function (point, sprite)
         is_jumping = true
         is_dead    = false
         is_walking = false
+    end
+
+    local updateAnimation = function (dt)
+        if isJumping() then
+            quad = "jump"
+        elseif isWalking() then
+            quad = "walk" .. ( walking_frame + 1 )
+            --if not wasWalking(), restart walking
+
+            --else, continue walking
+
+            --debug, show standing sprite
+        elseif isDead() then
+
+        else
+            quad = "stand"
+        end
+    end
+
+    function round(num, idp)
+      local mult = 10^(idp or 0)
+      return math.floor(num * mult + 0.5) / mult
     end
 
     -- the beef!
@@ -124,23 +169,17 @@ Player = function (point, sprite)
         -- clamp horizontal speed
         v.setX(math.max(-max_speed, math.min(v.getX(), max_speed)))
 
-        --
-        if(v.getX() ~= 0 and not isJumping()) then
-            if isWalking() then
-                was_walking = false
-            else
-                was_walking = true
-            end
-            is_walking = true
-        else
-            if isWalking() then
-                was_walking = true
-            else
-                was_walking = false
-            end
-            is_walking = false
-        end
+        local ceil = round(time, 1)
 
+        if (ceil < time + 0.01 and ceil > time - 0.01) then
+            if (debounce == false) then
+                debounce = true
+                print(time)
+                walking_frame = ( walking_frame + 1 ) % 3
+            end
+        else
+            debounce = false
+        end
 
         -- update position optimistically
         p.setY(p.getY() + v.getY() * dt * speed)
@@ -163,10 +202,8 @@ Player = function (point, sprite)
         -- this is a thing
         forces.key.setX(0)
         forces.key.setY(0)
-    end
 
-    local isDead = function ()
-        return is_dead
+        updateAnimation(dt)
     end
 
     local draw = function ()
@@ -180,20 +217,8 @@ Player = function (point, sprite)
             sx = 0 - sx
         end
 
-        if isJumping() then
-            love.graphics.draw(sprite.image, sprite.namedQuads["jump"], p.getX(), p.getY(), 0, sx, sy)
-        elseif isWalking() then
-            --if not wasWalking(), restart walking
+        love.graphics.draw(sprite.image, sprite.namedQuads[quad], p.getX(), p.getY(), 0, sx, sy)
 
-            --else, continue walking
-
-            --debug, show standing sprite
-            love.graphics.draw(sprite.image, sprite.namedQuads["stand"], p.getX(), p.getY(), 0, sx, sy)
-        elseif isDead() then
-
-        else
-            love.graphics.draw(sprite.image, sprite.namedQuads["stand"], p.getX(), p.getY(), 0, sx, sy)
-        end
     end
 
     -- lean public interface of Player is pretty lean
@@ -201,6 +226,7 @@ Player = function (point, sprite)
         update     = update,
         draw       = draw,
         keypressed = keypressed,
+        keyreleased = keyreleased,
 
         sprite = sprite,
 

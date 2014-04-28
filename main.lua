@@ -169,6 +169,10 @@ function love.keypressed(k)
     if maps[num].keypressed then maps[num].keypressed(k) end
 end
 
+function love.keyreleased(k)
+    player.keyreleased(k)
+end
+
 function love.draw()
 
     -- Draw our map
@@ -183,6 +187,7 @@ function love.draw()
     love.graphics.print(global.ty, 50, 150)
     love.graphics.print(player_vx, 50, 170)
     love.graphics.print(player_vy, 50, 190)
+    love.graphics.print(walking_frame, 50, 210)
 
 end
 
