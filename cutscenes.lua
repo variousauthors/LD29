@@ -394,4 +394,31 @@ Cutscenes.Finale100 = Cutscenes:scene({
 
 -- Shrines
 
+Cutscenes.Shrines = {}
+
+local imgbackwards01 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards01.jpg")
+local imgbackwards02 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards02.jpg")
+
+Cutscenes.Shrines.Backwards = Cutscenes:scene({
+    name = "Shrines.Backwards",
+    frames = {
+        {imgbackwards01, 3},
+        {imgbackwards02, 3}
+    },
+    frameX = centerX(imgbackwards01),
+    delay = "frames"
+})
+
+local imgclouds01 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds01.jpg")
+local imgclouds02 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds02.jpg")
+
+Cutscenes.Shrines.Clouds = Cutscenes:scene({
+    name = "Shrines.Clouds",
+    frames = {
+        {imgclouds01, 3},
+        {imgclouds02, 3}
+    },
+    frameX = centerX(imgclouds01),
+    delay = "frames"
+})
 
