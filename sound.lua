@@ -47,7 +47,7 @@ Sound.playMusic = function(name, noloop_cb)
     TEsound.stop("music")
     if (noloop_cb) then
         if(type(noloop_cb) == "function") then
-            TEsound.play(Sound.assets.music[name], "music", nil, nil, noloop)
+            TEsound.play(Sound.assets.music[name], "music", nil, nil, noloop_cb)
         else
             TEsound.play(Sound.assets.music[name], "music")
         end
