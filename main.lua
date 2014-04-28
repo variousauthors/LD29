@@ -113,13 +113,14 @@ function love.update(dt)
 
         -- "proceed" either loads the next world or the next level
         -- depending on the map state
-        maps[num].proceed()
+        maps[num].onProceed()
         init_player(start)
 
         -- if we "proceed" and the map is still finished, then we move to
         -- the next world
         if maps[num].isFinished() then
 
+            -- TODO the end game
             num = num + 1
             maps[num].reset()
         end

@@ -16,21 +16,22 @@ Sound.playMusic("M100tp5e0")
 
 Map = function (tmx)
     local map         = loader.load(tmx)
-    local tile_layer  = map.layers["obstacle"]
-    local glitches    = Glitches()
-    local map_resets  = 0
     local is_finished = false
+    local events      = {}
+
     local proceed_handler, death_handler, victory_handler
 
-    local events = {}
+    -- initialize the various glitches
+    local missing_tiles_glitch = Glitches()
+    missing_tiles_glitch.load_layer(map.layers["obstacle"])
 
-    glitches.load_layer(tile_layer)
-
+    -- run all the glitches
     local glitch = function ()
-        glitches.generate_glitches(20)
-        glitches.modify_layer()
+        missing_tiles_glitch.generate_glitches(20)
+        missing_tiles_glitch.modify_layer()
     end
 
+    -- expose the state of the map
     local isFinished = function ()
         return is_finished
     end
@@ -39,19 +40,15 @@ Map = function (tmx)
         is_finished = finished
     end
 
-    local setDeathHandler = function (callback)
-        death_handler = callback
-    end
-
-    local setVictoryHandler = function (callback)
-        victory_handler = callback
-    end
-
-    local setProceedHandler = function (callback)
-        proceed_handler = callback
-    end
-
-    -- options is an table like:
+    -- each map has a number of "doors" and stuff that
+    -- trigger events (and stuff). This function takes
+    -- tile coords and a function name (which should be
+    -- a function like "onThis" or "onThat") and binds
+    -- them up into a table so that, when tile (x, y) is
+    -- collided with, we can easily just say "well, is there
+    -- an event at (x, y) in our table?"
+    --
+    -- @param options is table like:
     -- { 
     --   coords: { 1, 2 },
     --   event: "victory"
@@ -67,6 +64,35 @@ Map = function (tmx)
             events[x][y] = k.event
         end
     end
+
+    -- set handlers for events like "onVictory"
+    local setDeathHandler = function (callback)
+        death_handler = callback
+    end
+
+    local setVictoryHandler = function (callback)
+        victory_handler = callback
+    end
+
+    local setProceedHandler = function (callback)
+        proceed_handler = callback
+    end
+
+    -- respond to events like "onVictory"
+    local onDeath = function ()
+        if death_handler ~= nil then death_handler() end
+    end
+
+    local onVictory = function ()
+        if victory_handler ~= nil then victory_handler() end
+    end
+
+    local onProceed = function ()
+        if proceed_handler ~= nil then proceed_handler() end
+    end
+
+    -- important methods for the public interface
+    -- reset, update, draw
 
     -- Resets the example
     local reset = function ()
@@ -112,6 +138,8 @@ Map = function (tmx)
 
     end
 
+    -- COLLISION CODE STARTS HERE
+
     -- the player's position is a point (x, y) in pixels, but I couldn't
     -- find a function in the tile library that lets us ask for "the tile
     -- around these pixels" So for now I'm just converting, but later I
@@ -147,14 +175,6 @@ Map = function (tmx)
         return x, y
     end
 
-    local onDeath = function ()
-        if death_handler ~= nil then death_handler() end
-    end
-
-    local onVictory = function ()
-        if victory_handler ~= nil then victory_handler() end
-    end
-
     -- TODO this is necessary because I want to dynamically send
     -- messages like "onDeath" but haven't been able to use
     -- a self variable. In the future I could do self["onVictory"]
@@ -163,13 +183,9 @@ Map = function (tmx)
     callbacks["onDeath"]   = onDeath
     callbacks["onVictory"] = onVictory
 
-    local proceed = function ()
-        proceed_handler()
-    end
-
     local resolveCollision = function (p, v, offset)
         tile_x, tile_y       = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
-        local tile           = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
+        local tile           = map.layers["obstacle"](pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
         local new_v, is_dead = v, false
         
         -- this 14 will need to be based on the map bounds
@@ -199,7 +215,7 @@ Map = function (tmx)
             p.setX(p.getX() - v.getX())
             p.setY(p.getY() - v.getY())
 
-            tile = tile_layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
+            tile = map.layers["obstacle"](pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
             count = count + 1
         end
 
@@ -237,8 +253,8 @@ Map = function (tmx)
 
         -- if there is no tile directly beneath the collision point, then the player
         -- is in mid-air (this is used in the player code)
-        ground_tile = tile_layer(pixel_to_tile(p.getX() + -16, p.getY() + -16 + 1))
-        ground_tile = ground_tile or tile_layer(pixel_to_tile(p.getX() + -32, p.getY() + -16 + 1))
+        ground_tile = map.layers["obstacle"](pixel_to_tile(p.getX() + -16, p.getY() + -16 + 1))
+        ground_tile = ground_tile or map.layers["obstacle"](pixel_to_tile(p.getX() + -32, p.getY() + -16 + 1))
         mid_air     = ground_tile == nil
 
         -- the results of the collision
@@ -265,7 +281,8 @@ Map = function (tmx)
 
         glitch            = glitch,
         reset             = reset,
-        proceed           = proceed
+
+        onProceed         = onProceed
     }
 end
 
