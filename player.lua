@@ -1,9 +1,11 @@
 
 -- constructor for Players!
-Player = function (point)
+Player = function (point, sprite)
     local p, v                = point.copy(), Vector(0, 0)
     local speed, max_speed    = 100, 2
-    local is_jumping, is_dead = true, false
+    local is_jumping, is_dead, is_walking = true, false, false
+    local sprite = sprite
+    local facing = sprite.base_facing
 
     -- height/width of the sprite's shape
     local draw_w = 16
@@ -54,8 +56,14 @@ Player = function (point)
     -- this is for forces that get set continuously while the key is down
     local setKeyForces = function ()
         if love.keyboard.isDown("right", "left") then
-            if love.keyboard.isDown("left") then forces.key.setX(-0.4) end
-            if love.keyboard.isDown("right") then forces.key.setX(0.4) end
+            if love.keyboard.isDown("left") then
+                facing = "left"
+                forces.key.setX(-0.4)
+            end
+            if love.keyboard.isDown("right") then
+                facing = "right"
+                forces.key.setX(0.4)
+            end
         end
     end
 
@@ -80,9 +88,18 @@ Player = function (point)
         return is_jumping
     end
 
+    local isWalking = function ()
+        return is_walking
+    end
+
+    local wasWalking = function ()
+        return was_walking
+    end
+
     local reset = function ()
         is_jumping = true
         is_dead    = false
+        is_walking = false
     end
 
     -- the beef!
@@ -106,6 +123,24 @@ Player = function (point)
 
         -- clamp horizontal speed
         v.setX(math.max(-max_speed, math.min(v.getX(), max_speed)))
+
+        --
+        if(v.getX() ~= 0 and not isJumping()) then
+            if isWalking() then
+                was_walking = false
+            else
+                was_walking = true
+            end
+            is_walking = true
+        else
+            if isWalking() then
+                was_walking = true
+            else
+                was_walking = false
+            end
+            is_walking = false
+        end
+
 
         -- update position optimistically
         p.setY(p.getY() + v.getY() * dt * speed)
@@ -135,11 +170,30 @@ Player = function (point)
     end
 
     local draw = function ()
-        local r, g, b = love.graphics.getColor()
-        love.graphics.setColor(255, 0, 0)
-        love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
+        -- local r, g, b = love.graphics.getColor()
+        -- love.graphics.setColor(255, 0, 0)
+        -- love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
 
-        love.graphics.setColor(r, g, b)
+        -- Flip if facing is different
+        local sx, sy = global.scale, global.scale
+        if (facing ~= sprite.base_facing) then
+            sx = 0 - sx
+        end
+
+        if isJumping() then
+            love.graphics.draw(sprite.image, sprite.namedQuads["jump"], p.getX(), p.getY(), 0, sx, sy)
+        elseif isWalking() then
+            --if not wasWalking(), restart walking
+
+            --else, continue walking
+
+            --debug, show standing sprite
+            love.graphics.draw(sprite.image, sprite.namedQuads["stand"], p.getX(), p.getY(), 0, sx, sy)
+        elseif isDead() then
+
+        else
+            love.graphics.draw(sprite.image, sprite.namedQuads["stand"], p.getX(), p.getY(), 0, sx, sy)
+        end
     end
 
     -- lean public interface of Player is pretty lean
@@ -147,6 +201,8 @@ Player = function (point)
         update     = update,
         draw       = draw,
         keypressed = keypressed,
+
+        sprite = sprite,
 
         isDead = isDead,
 

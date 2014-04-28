@@ -5,6 +5,7 @@ end
 
 require("sound") -- Sound global object
 
+require("sprites")
 require("player")
 require("vector")
 
@@ -72,15 +73,15 @@ if maps[num].reset then maps[num].reset() end
 
 local origin, player
 
-function init_player (p)
-    player = Player(p)
+function init_player (p, s)
+    player = Player(p, s)
 end
 
 function love.load()
     origin = Point(0, 0) -- somehow I just feel safer having a global "origin"
     start  = Point(origin.getX() + 200, origin.getY() + 200)
     maps[num].reset()
-    init_player(start)
+    init_player(start, Sprites.bigguy)
     Sound.playMusic("M100tp5e0")
 end
 
