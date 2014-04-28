@@ -5,7 +5,7 @@ Cutscene = function (options)
     local frames = options.frames or { }
     local delay  = options.delay or 3
     local musicStart  = options.musicStart
-    local musicDone   = options.musicDone or "M100tp5e0"
+    local musicDone   = options.musicDone
     local frameX = options.frameX or 0
     local frameY = options.frameY or 0
     local frameW = options.frameW or W_WIDTH
@@ -23,7 +23,7 @@ Cutscene = function (options)
         timer, frameIter = 0, 1
         current_frame = frames[frameIter]
         if (musicStart == nil) then -- stop music
-            Sound.stopMusic()
+            Sound.pauseMusic()
         elseif (musicStart) then -- play the proper music
             Sound.stopMusic()
             Sound.playMusic(music)
@@ -41,6 +41,8 @@ Cutscene = function (options)
         end
         if musicDone then
             Sound.playMusic(musicDone)
+        else
+            Sound.resumeMusic()
         end
     end
 
@@ -94,17 +96,32 @@ Cutscene = function (options)
     }
 end
 
---[[ Here be the Cutscenes ]]
+--[[ Helpers! ]]
+
 love.graphics.setDefaultFilter("nearest", "nearest")
 
-Cutscenes = {}
+local centerX = function (image)
+    return (W_WIDTH / 2 ) - (image:getWidth() * global.scale / 2)
+end
 
+--[[ Here be the Cutscenes ]]
+
+Cutscenes = {}
 Cutscenes.current = Cutscene() -- blank, placeholder
 
+-- Plays before 1-1
 local img11Start = love.graphics.newImage("assets/images/1-1start.png")
-
 Cutscenes.FirstLevel = Cutscene({
     frames = { img11Start },
-    delay = 4,
-    frameX = (W_WIDTH / 2 ) - (img11Start:getWidth() * global.scale / 2)
+    delay = 3,
+    frameX = centerX(img11Start),
+    musicDone = "M100tp5e0"
 })
+
+-- Plays before 2
+
+-- Plays before 3
+
+-- Shrine
+
+

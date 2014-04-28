@@ -60,4 +60,12 @@ Sound.stopMusic = function ()
     TEsound.stop("music")
 end
 
+Sound.pauseMusic = function ()
+    TEsound.pause("music")
+end
+
+Sound.resumeMusic = function ()
+    TEsound.resume("music")
+end
+
 Sound.update = TEsound.cleanup
