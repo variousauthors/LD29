@@ -82,6 +82,7 @@ function love.load()
     start  = Point(origin.getX() + 200, origin.getY() + 200)
     maps[num].reset()
     init_player(start)
+    Sound.playMusic("M100tp5e0")
 end
 
 function love.update(dt)
@@ -109,6 +110,7 @@ function love.update(dt)
         if player.isDead() then
             -- remove the player
             -- do the mario death jump
+            -- something to hold back following code until anim & music are done
         end
 
         -- "proceed" either loads the next world or the next level
@@ -123,6 +125,7 @@ function love.update(dt)
             -- TODO the end game
             num = num + 1
             maps[num].reset()
+            Sound.playMusic("M100tp5e0")
         end
     end
 
