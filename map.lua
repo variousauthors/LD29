@@ -16,6 +16,7 @@ Map = function (tmx)
     local map         = loader.load(tmx)
     local is_finished = false
     local events      = {}
+    local sprite      = {}
     local glitch_lvl  = 0
     local glitch_max  = 4
 
@@ -342,7 +343,9 @@ Map = function (tmx)
         glitch            = glitch,
         reset             = reset,
 
-        onProceed         = onProceed
+        onProceed         = onProceed,
+
+        sprite            = sprite
     }
 end
 
@@ -368,6 +371,8 @@ LevelOne = function (tmx, options)
             -- NOP because we want to change worlds
         end)
     end)
+
+    map.sprite = options.sprite
 
     return map
 end
@@ -396,6 +401,8 @@ SubsequentLevels = function (tmx, options)
             map.reset()
         end)
     end)
+
+    map.sprite = options.sprite
 
     return map
 end

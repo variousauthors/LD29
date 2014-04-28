@@ -38,6 +38,7 @@ local Map = require("map")
 
 local maps = {
     LevelOne("map1-1.tmx", {
+        sprite = Sprites.bigguy,
         doors = {
             {
                 coords = { 204, 12 },
@@ -47,6 +48,7 @@ local maps = {
     }),
 
     SubsequentLevels("map2-1.tmx", {
+        sprite = Sprites.lilguy,
         doors = {
             {
                 coords = { 204, 12 },
@@ -56,6 +58,16 @@ local maps = {
     }),
 
     SubsequentLevels("map2-1.tmx", {
+        sprite = Sprites.oldguy,
+        doors = {
+            {
+                coords = { 204, 12 },
+                event  = "onVictory"
+            }
+        }
+    }),
+    SubsequentLevels("map2-1.tmx", {
+        sprite = Sprites.ladyguy,
         doors = {
             {
                 coords = { 204, 12 },
@@ -83,7 +95,7 @@ function love.load()
     origin = Point(0, 0) -- somehow I just feel safer having a global "origin"
     start  = Point(origin.getX() + 200, origin.getY() + 200)
     maps[num].reset()
-    init_player(start, Sprites.bigguy)
+    init_player(start, maps[num].sprite)
     Sound.playMusic("M100tp5e0")
 end
 
@@ -118,7 +130,6 @@ function love.update(dt)
         -- "proceed" either loads the next world or the next level
         -- depending on the map state
         maps[num].onProceed()
-        init_player(start, Sprites.bigguy)
 
         -- if we "proceed" and the map is still finished, then we move to
         -- the next world
@@ -129,6 +140,10 @@ function love.update(dt)
             maps[num].reset()
             Sound.playMusic("M100tp5e0")
         end
+
+        -- must be called after map number is potentially incremented so that
+        -- the right character loads
+        init_player(start, maps[num].sprite)
     end
 
   --if #collisions > 0 then
