@@ -56,4 +56,8 @@ Sound.playMusic = function(name, noloop_cb)
     end
 end
 
+Sound.stopMusic = function ()
+    TEsound.stop("music")
+end
+
 Sound.update = TEsound.cleanup

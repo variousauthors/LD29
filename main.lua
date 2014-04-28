@@ -4,7 +4,7 @@ inspect = function (a, b)
 end
 
 require("sound") -- Sound global object
-
+require("cutscenes")
 require("sprites")
 require("player")
 require("vector")
@@ -20,9 +20,6 @@ global.scale = 2                -- Scale of the screen
 
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
-
-showing_cut_scene = false
-cut_scene_time    = 0
 
 -- debugging stuff
 tile_x = ""
@@ -107,10 +104,13 @@ function love.update(dt)
     collisions = {}
     time = time + dt
 
-    player.update(dt, maps[num])
-
     -- Polling/cleanup/loop stuff.
     Sound.update()
+
+    -- If cutscene running, abort rest of loop.
+    if Cutscenes.current.update(dt) then return end
+
+    player.update(dt, maps[num])
 
     -- the player pushes the screen along
     if player.getX() > W_WIDTH / 2 and player.getX() > global.tx then
@@ -138,23 +138,12 @@ function love.update(dt)
         -- if we "proceed" and the map is still finished, then we move to
         -- the next world
         if maps[num].isFinished() then
-            if not showing_cut_scene then
-                showing_cut_scene = true
-            else
-                cut_scene_time = cut_scene_time + dt
-                print(cut_scene_time)
-
-                if cut_scene_time > 3 then
-                    showing_cut_scene = false
-
-                    -- TODO the end game
-                    num = num + 1
-                    maps[num].reset()
-                    Sound.playMusic("M100tp5e0")
-
-                    cut_scene_time = 0
-                end
-            end
+            -- TODO the end game
+            num = num + 1
+            maps[num].reset()
+            Cutscenes.current.start()
+            -- this will override any cutscene music immediately, use musicDone
+            -- Sound.playMusic("M100tp5e0")
         end
 
         -- must be called after map number is potentially incremented so that
@@ -209,14 +198,12 @@ function love.draw()
     love.graphics.rectangle("fill", 0, 0, W_WIDTH, W_HEIGHT)
     love.graphics.setColor(red, green, blue)
 
-    -- Draw our map
-    if not showing_cut_scene then
+    -- Draw cutscene or map
+    if Cutscenes.current.isRunning() then
+        Cutscenes.current.draw()
+    else
         maps[num].draw()
         player.draw()
-    else
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.rectangle("fill", 0, 0, W_WIDTH, W_HEIGHT)
-        love.graphics.setColor(red, green, blue)
     end
 
     love.graphics.print(player.getX(), 50, 50)
