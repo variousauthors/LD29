@@ -10,35 +10,47 @@ require("player")
 require("vector")
 
 -- globals having to do with the tile library
-global = {}
-global.limitDrawing = true      -- If true then the drawing range example is shown
-global.benchmark = false        -- If true the map is drawn 20 times instead of 1
-global.useBatch = false         -- If true then the layers are rendered with sprite batches
-global.tx = 0                   -- X translation of the screen
-global.ty = 0                   -- Y translation of the screen
-global.scale = 2                -- Scale of the screen
+global              = {}
+global.limitDrawing = true  -- If true then the drawing range example is shown
+global.benchmark    = false -- If true the map is drawn 20 times instead of 1
+global.useBatch     = false -- If true then the layers are rendered with sprite batches
+global.tx           = 0     -- X translation of the screen
+global.ty           = 0     -- Y translation of the screen
+global.scale        = 2     -- Scale of the screen
+global.tile_size    = 16    -- the pixels in a tile square
+global.tile_height  = 15    -- the tile squares in a window
 
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
 
 -- debugging stuff
-tile_x = ""
-tile_y = ""
-player_vx = ""
-player_vy = ""
-sprite_quad = ""
+tile_x        = ""
+tile_y        = ""
+player_vx     = ""
+player_vy     = ""
+sprite_quad   = ""
 sprite_facing = ""
-collisions = {}
-time = 0
-teleport = ""
+collisions    = {}
+time          = 0
+teleport      = ""
 
 -- we store the levels in a table and I expect when there are more of them we will just
 -- iterate
 local Map = require("map")
 
 local maps = {
-    LevelOne("map1-1.tmx", {
-        sprite = Sprites.bigguy,
+  --LevelOne("map1-1.tmx", {
+  --    sprite = Sprites.bigguy,
+  --    doors = {
+  --        {
+  --            coords = { 204, 12 },
+  --            event  = "onVictory"
+  --        }
+  --    }
+  --}),
+  --
+    SubsequentLevels("map2-1.tmx", {
+        sprite = Sprites.ladyguy,
         doors = {
             {
                 coords = { 204, 12 },
@@ -59,15 +71,6 @@ local maps = {
 
     SubsequentLevels("map2-1.tmx", {
         sprite = Sprites.oldguy,
-        doors = {
-            {
-                coords = { 204, 12 },
-                event  = "onVictory"
-            }
-        }
-    }),
-    SubsequentLevels("map2-1.tmx", {
-        sprite = Sprites.ladyguy,
         doors = {
             {
                 coords = { 204, 12 },
@@ -115,7 +118,51 @@ function love.update(dt)
         player.setX(W_WIDTH / 2)
     end
 
+    -- the player cannot go backwards
     if player.getX() < 0 then player.setX(0) end
+
+    -- if the player is standing on the 12th block (the ground)
+    -- the screen should always be centered
+
+    -- scroll down into the dungeon
+    if tile_y > 15 then
+        local scroll = 10
+
+        -- lock the player relative to the window, and scroll the background up
+        if global.ty > -(( global.tile_height / 2 ) * global.tile_size * global.scale) then
+            global.ty = global.ty - scroll
+            player.setY(player.getY() - scroll * global.scale)
+        end
+    end
+
+    -- scroll to between the dungeon and the ground
+    if tile_y == 15 or tile_y == 14 or tile_y == 13 then
+        local scroll = 10
+        local transition = -(( global.tile_height / 4 ) * global.tile_size * global.scale)
+
+        -- lock the player relative to the window, and scroll the background down
+        if global.ty < transition then
+            global.ty = global.ty + scroll
+            player.setY(player.getY() + scroll * global.scale)
+        end
+
+        if global.ty > transition then
+            global.ty = global.ty - scroll
+            player.setY(player.getY() - scroll * global.scale)
+        end
+    end
+
+    -- scroll to the ground
+    if tile_y < 12 then
+        local scroll = 10
+        local middle_layer_center = 0
+
+        -- lock the player relative to the window, and scroll the background down
+        if global.ty < middle_layer_center then
+            global.ty = global.ty + scroll
+            player.setY(player.getY() + scroll * global.scale)
+        end
+    end
 
     -- Call update in our example if it is defined
     if maps[num].update then maps[num].update(dt) end
@@ -178,6 +225,11 @@ function love.keypressed(k)
         teleport = ""
 
         global.tx = -dest
+    end
+
+    if k =='s' then
+        global.ty = global.ty - 10
+        player.setY(player.getY() - 20)
     end
 
     player.keypressed(k)
