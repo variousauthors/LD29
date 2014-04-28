@@ -25031,7 +25031,7 @@
  <layer name="destructible" width="208" height="30">
   <properties>
    <property name="destructible" value="1"/>
-   <property name="obstacle " value="1"/>
+   <property name="obstacle" value="1"/>
   </properties>
   <data>
    <tile gid="0"/>

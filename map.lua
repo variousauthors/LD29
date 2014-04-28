@@ -97,7 +97,7 @@ Map = function (tmx)
     -- Resets the example
     local reset = function ()
         -- tx and ty are the offset of the tilemap
-        global.tx = -3000
+        global.tx = -1000
         global.ty = 0
     end
 
@@ -183,9 +183,9 @@ Map = function (tmx)
     callbacks["onDeath"]   = onDeath
     callbacks["onVictory"] = onVictory
 
-    local resolveCollision = function (p, v, offset)
+    local resolveCollision = function (p, v, offset, layer)
         tile_x, tile_y       = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
-        local tile           = map.layers["obstacle"](pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
+        local tile           = layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
         local new_v, is_dead = v, false
         
         -- this 14 will need to be based on the map bounds
@@ -195,67 +195,93 @@ Map = function (tmx)
         end
 
         -- if we've collided with an event tile, then we need to
-        -- process the event
+        -- process the event (the tile may not actually be a "hit", such as doors)
         if events[tile_x] ~= nil and events[tile_x][tile_y] ~= nil then
             local callback = callbacks[events[tile_x][tile_y]]
 
             callback()
         end
 
-        -- if there is a collision, then we will want to halt the incoming object
+        -- resolve the collision
         if tile ~= nil then
-            table.insert(collisions, { x = tile_x, y = tile_y, tile = tile})
+            -- if there is a collision, then we will want to halt the incoming object
             new_v = Vector(0, 0)
+
+            -- debug
+            table.insert(collisions, { x = tile_x, y = tile_y, tile = tile})
         end
 
         local count = 0
+
         -- the "algorithm" is to push the object back in the direction it came until
         -- there is no longer a collision :/
         while (tile ~= nil and count < 100) do
+            print("bob")
             p.setX(p.getX() - v.getX())
             p.setY(p.getY() - v.getY())
 
-            tile = map.layers["obstacle"](pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
+            tile = layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
             count = count + 1
         end
 
         return p, new_v, is_dead
     end
 
-    -- data is a serialization of some object. I guess I'm just being a dick,
-    -- but I don't like passing references to objects. I prefer to serialize
-    -- the data and pass that... probably this is dumb, but only time will tell.
-    local collide = function (data)
+    -- for each tile layer, try to resolve collisions on that layer
+    -- APPOLOGIES
+    local resolveCollisions = function (data)
+        print("in resolveCollisions")
         -- back the o up pixel by pixel
         -- return mid_air for mid-air collisions
-        local p              = Point(data.x, data.y)
-        local v              = Vector(data.v.x, data.v.y)
-        local x, y           = primary_direction(v) -- index at which to start collision detection
-        local new_v, is_dead = v, false
+        local p                       = Point(data.x, data.y)
+        local v                       = Vector(data.v.x, data.v.y)
+        local x, y                    = primary_direction(v) -- index at which to start collision detection
+        local new_v, is_dead, mid_air = v, false, true -- assume we are in mid_air and not dead
 
         -- collision points are single pixels on the sprite that collide
-        -- at the moment there is just one. The actual data is an offset
-        -- from the position of the sprite, so like a 16px square sprite at
+        -- The actual data is an offset from the position of the sprite,
+        -- so like a 16px square sprite at
         -- 0, 0 will have 4 collision points at (0, 0), (16, 0), (0, 16), (16, 16)
         -- but at the moment we just use one of these
         local offset = data.collision_points[x][y]
 
-        p, new_v, is_dead = resolveCollision(p, v, offset)
+        -- run this code once for every tile layer
+        for k in pairs(map.layers) do
+            local layer = map.layers[k]
 
-        -- iterate over all collision points looking fro secondary collition
-        for i, c1 in pairs(data.collision_points) do
-            for j, c2 in pairs(data.collision_points[i]) do
+            -- if the layer is an obstacle layer
+            if layer.properties["obstacle"] ~= nil then
+                -- run collision detection once to resolve the "most likely collision"
+                p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
 
-                offset = data.collision_points[i][j]
-                p, new_v, is_dead = resolveCollision(p, new_v, offset)
+                -- iterate over all collision points looking for secondary collision
+                for i, c1 in pairs(data.collision_points) do
+                    for j, c2 in pairs(data.collision_points[i]) do
+
+                        offset = data.collision_points[i][j]
+                        p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
+                    end
+                end
+
+                -- if there is no tile directly beneath the collision point, then the player
+                -- is in mid-air (this is used in the player code)
+                ground_tile = layer(pixel_to_tile(p.getX() + -16, p.getY() + -16 + 1))
+                ground_tile = ground_tile or layer(pixel_to_tile(p.getX() + -32, p.getY() + -16 + 1))
+
+                -- mid_air is the AND of all mid_air calculations
+                -- so if _any_ collision detected a ground_tile then we are _not_ in mid_air
+                mid_air = mid_air and (ground_tile == nil)
             end
         end
 
-        -- if there is no tile directly beneath the collision point, then the player
-        -- is in mid-air (this is used in the player code)
-        ground_tile = map.layers["obstacle"](pixel_to_tile(p.getX() + -16, p.getY() + -16 + 1))
-        ground_tile = ground_tile or map.layers["obstacle"](pixel_to_tile(p.getX() + -32, p.getY() + -16 + 1))
-        mid_air     = ground_tile == nil
+        return p, new_v, mid_air, is_dead
+    end
+
+    -- data is a serialization of some object. I guess I'm just being a dick,
+    -- but I don't like passing references to objects. I prefer to serialize
+    -- the data and pass that... probably this is dumb, but only time will tell.
+    local collide = function (data)
+        local p, new_v, mid_air, is_dead = resolveCollisions(data)
 
         -- the results of the collision
         return {
