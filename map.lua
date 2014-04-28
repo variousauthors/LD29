@@ -295,36 +295,27 @@ Map = function (tmx)
             -- if the layer is an obstacle layer
             if layer.properties["obstacle"] ~= nil then
                 -- run collision detection once to resolve the "most likely collision"
-                local offset = data.collision_points[x][y]
-                p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
 
-                offset = data.collision_points[-x][-y]
-                p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
+                corner = data.collision_points[1][1]
 
-                offset = data.collision_points[-x][y]
-                p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
+                magic_keys = {
+                    data.h - 1,
+                    0,
+                    (data.h - 1) / 8,
+                    (data.h - 1) - (data.h - 1) / 8,
+                    (data.h - 1) / 4,
+                    (data.h - 1) - (data.h - 1) / 4
+                }
 
-                offset = data.collision_points[x][-y]
-                p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
+                for key, value in pairs(magic_keys) do
+                    local pixel = value
 
-                -- iterate over the two neighbouring collision points
-              --offset = data.collision_points[-x][y]
-              --p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
+                    offset = { x = corner.x, y = corner.y - (data.h - 1 - pixel) }
+                    p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
 
-              --offset = data.collision_points[-x][-y]
-              --p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
-
-                -- if there is no tile directly beneath the collision point, then the player
-                -- is in mid-air (this is used in the player code)
---              a, b = pixel_to_tile(p.getX() + 0, p.getY() - ( data.h / 2 ) + 1)
---              c, d = pixel_to_tile(p.getX() + ( data.w / 2  ), p.getY() - ( data.h / 2 ) + 1)
---              e, f = pixel_to_tile(p.getX() - ( data.w / 2  ), p.getY() - ( data.h / 2 ) + 1)
---              g, h = pixel_to_tile(p.getX() - ( data.w ), p.getY() - ( data.h / 2 ) + 1)
-
---              inspect({ a, b }) -- center green
---              inspect({ c, d }) -- top right green
---              inspect({ e, f }) -- center red
---              inspect({ g, h }) -- center red
+                    offset = { x = corner.x - data.w, y = corner.y - (data.h - 1 - pixel) }
+                    p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
+                end
 
                 ground_tile = layer(pixel_to_tile(p.getX() - (data.w ) + ( data.w / 2  ), p.getY() - ( data.h / 2 ) + 1))
                 ground_tile = ground_tile or layer(pixel_to_tile(p.getX() - (data.w) - ( data.w / 2 ), p.getY() - ( data.h / 2 ) + 1))
