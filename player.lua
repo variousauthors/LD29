@@ -9,7 +9,8 @@ Player = function (point, sprite)
     local current_quad = cur_state
 
     -- height/width of the sprite's shape
-    local draw_w = (sprite.width or 16) * global.scale
+    local sprite_width = (sprite.width or 16)
+    local draw_w = sprite_width * global.scale - ( sprite_width / 2 ) -- skinny for collisions
     local draw_h = (sprite.height or 16) * global.scale
 
     local forces = {
@@ -248,13 +249,14 @@ Player = function (point, sprite)
 
         -- hack to draw red square
         if draw_h == 32 then
-            local x = p.getX() - draw_w / 2
+            -- the sprite_width / 4 is to allow the collision to be skinny
+            local x = p.getX() - draw_w / 2 + ( sprite_width / 4 )
             local y = p.getY() - draw_h / 2
 
             love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
                                x, y, r, sx, sy, ox, oy)
         else
-            local x = p.getX() - draw_w / 2
+            local x = p.getX() - draw_w / 2 + ( sprite_width / 4 )
             local y = p.getY() - draw_h
 
             love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
