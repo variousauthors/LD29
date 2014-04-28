@@ -212,6 +212,8 @@ Player = function (point, sprite)
         p.setY(collision.p.getY())
         v.setX(collision.v.getX())
         v.setY(collision.v.getY())
+
+
         -- update state
         if collision.mid_air then
             setState("jump")

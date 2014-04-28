@@ -283,8 +283,14 @@ Map = function (tmx)
         return v
     end
 
-    callbacks["collectable"] = function (layer, v, tx, ty, rx, ry)
-        return v
+    callbacks["collectible"] = function (layer, v, tx, ty, rx, ry)
+        print("in collectible callback")
+
+        layer:set(tx, ty, nil)
+        Sound.playSFX("awyiss")
+        global.getFlower()
+
+        return v, true
     end
 
     callbacks["clouds"] = function (layer, v, tx, ty, rx, ry)
@@ -328,15 +334,18 @@ Map = function (tmx)
         local collision_occured = tile ~= nil
         local collision_tile    = tile
 
-        -- the "algorithm" is to push the object back in the direction it came until
-        -- there is no longer a collision :/
-        -- we want the "tile" to be different from the "collision_tile"
-        while (tile ~= nil and count < 100) do
-            p.setX(p.getX() - v.getX())
-            p.setY(p.getY() - v.getY())
+        -- don't run collision prevention for collectible
+        if layer.properties["obstacle"] ~= nil then
+            -- the "algorithm" is to push the object back in the direction it came until
+            -- there is no longer a collision :/
+            -- we want the "tile" to be different from the "collision_tile"
+            while (tile ~= nil and count < 100) do
+                p.setX(p.getX() - v.getX())
+                p.setY(p.getY() - v.getY())
 
-            tile = layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
-            count = count + 1
+                tile = layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
+                count = count + 1
+            end
         end
 
         -- resolve the collision's side effects
@@ -380,7 +389,7 @@ Map = function (tmx)
             local layer = map.layers[key]
 
             -- if the layer is an obstacle layer
-            if layer.properties["obstacle"] ~= nil then
+            if layer.properties["obstacle"] ~= nil or layer.properties["collectible"] then
                 -- run collision detection once to resolve the "most likely collision"
 
                 corner = data.collision_points[1][1]

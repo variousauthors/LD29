@@ -19,6 +19,8 @@ global.ty           = 0     -- Y translation of the screen
 global.scale        = 2     -- Scale of the screen
 global.tile_size    = 16    -- the pixels in a tile square
 global.tile_height  = 15    -- the tile squares in a window
+global.flower_get   = false -- whether a flower was got this tic
+global.flowers      = 0     -- the number of flowers collected so far
 
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
@@ -113,11 +115,28 @@ function love.load()
     Sound.playMusic("M100tp5e0")
 end
 
+local deflower = false
+
+-- increment the number of flowers
+global.getFlower = function ()
+    global.flower_get = true
+end
+
+global.resolveFlower = function ()
+    if global.flower_get then
+        print("getting a flower")
+        global.flowers = global.flowers + 1
+    end
+
+    global.flower_get = false
+end
+
 function love.update(dt)
     collisions = {}
     time = time + dt
 
     player.update(dt, maps[num])
+    global.resolveFlower()
 
     -- Polling/cleanup/loop stuff.
     Sound.update()
@@ -252,5 +271,6 @@ function love.draw()
     love.graphics.print(player_vx, 50, 170)
     love.graphics.print(player_vy, 50, 190)
     love.graphics.print(sprite_facing .. " " .. sprite_quad, 50, 210)
+    love.graphics.print(global.flowers, 50, 230)
 end
 
