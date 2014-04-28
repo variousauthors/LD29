@@ -4,8 +4,6 @@ require("glitches")
 local loader     = require("vendor/AdvTiledLoader.Loader")
 loader.path      = "assets/images/maps/"
 
-Sound.playMusic("M100tp5e0")
-
 -- So, this whole file I basically just stole from the examples in the
 -- tile library. That's why the code is so weird. In the days to come
 -- I will change this so that Map is a constructor and we can make multiple
@@ -18,6 +16,8 @@ Map = function (tmx)
     local map         = loader.load(tmx)
     local is_finished = false
     local events      = {}
+    local glitch_lvl  = 0
+    local glitch_max  = 4
 
     local proceed_handler, death_handler, victory_handler
 
@@ -29,6 +29,8 @@ Map = function (tmx)
     local glitch = function ()
         missing_tiles_glitch.generate_glitches(20)
         missing_tiles_glitch.modify_layer()
+        glitch_lvl = glitch_lvl + 1
+        Sound.playMusic("M100tp5e".. math.min(glitch_lvl, glitch_max))
     end
 
     -- expose the state of the map
@@ -49,7 +51,7 @@ Map = function (tmx)
     -- an event at (x, y) in our table?"
     --
     -- @param options is table like:
-    -- { 
+    -- {
     --   coords: { 1, 2 },
     --   event: "victory"
     -- },
@@ -119,17 +121,17 @@ Map = function (tmx)
         love.graphics.scale(global.scale)
         love.graphics.translate(ftx, fty)
 
-        -- Limit the draw range 
-        if global.limitDrawing then 
-            map:autoDrawRange(ftx, fty, global.scale, -0) 
-        else 
-            map:autoDrawRange(ftx, fty, global.scale, 50) 
+        -- Limit the draw range
+        if global.limitDrawing then
+            map:autoDrawRange(ftx, fty, global.scale, -0)
+        else
+            map:autoDrawRange(ftx, fty, global.scale, 50)
         end
 
         -- Queue our guy to be drawn after the tile he's on and then draw the map.
         local maxDraw = global.benchmark and 20 or 1
-        for i = 1, maxDraw do 
-            map:draw() 
+        for i = 1, maxDraw do
+            map:draw()
         end
         love.graphics.rectangle("line", map:getDrawRange())
 
@@ -187,7 +189,7 @@ Map = function (tmx)
         tile_x, tile_y       = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
         local tile           = map.layers["obstacle"](pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
         local new_v, is_dead = v, false
-        
+
         -- this 14 will need to be based on the map bounds
         if tile_y > 14 then
             onDeath()
