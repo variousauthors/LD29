@@ -134,45 +134,22 @@ function love.update(dt)
 
     -- if the player is standing on the 12th block (the ground)
     -- the screen should always be centered
+    --
+    band   = maps[num].getBand(tile_y)
 
-    -- scroll down into the dungeon
-    if maps[num].isInDungeon(tile_y) then
+    if band ~= nil then
         local scroll = 10
-        local dungeon = maps[num].getDungeonY()
+        camera = maps[num].getCameraForBand(band)
 
         -- lock the player relative to the window, and scroll the background up
-        if global.ty > dungeon then
-            global.ty = global.ty - scroll
-            player.setY(player.getY() - scroll * global.scale)
-        end
-    end
-
-    -- scroll to between the dungeon and the ground
-    if maps[num].isInTransition(tile_y) then
-        local scroll = 10
-        local transition = maps[num].getTransitionY()
-
-        -- lock the player relative to the window, and scroll the background down
-        if global.ty < transition then
+        if global.ty < camera then
             global.ty = global.ty + scroll
             player.setY(player.getY() + scroll * global.scale)
         end
 
-        if global.ty > transition then
+        if global.ty > camera then
             global.ty = global.ty - scroll
             player.setY(player.getY() - scroll * global.scale)
-        end
-    end
-
-    -- scroll to the ground
-    if maps[num].isOnGround(tile_y) then
-        local scroll = 10
-        local middle_layer_center = maps[num].getGroundY()
-
-        -- lock the player relative to the window, and scroll the background down
-        if global.ty < middle_layer_center then
-            global.ty = global.ty + scroll
-            player.setY(player.getY() + scroll * global.scale)
         end
     end
 

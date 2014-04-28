@@ -64,6 +64,10 @@ Player = function (point, sprite)
         return cur_state == "jump"
     end
 
+    local isCloudWalking = function ()
+        return true
+    end
+
     local isDead = function ()
         return cur_state == "dead"
     end
@@ -273,7 +277,8 @@ Player = function (point, sprite)
 
         sprite = sprite,
 
-        isDead = isDead,
+        isDead         = isDead,
+        isCloudWalking = isCloudWalking,
 
         getX = p.getX,
         getY = p.getY,

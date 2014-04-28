@@ -107,6 +107,10 @@ Map = function (tmx)
         return tile < 12 + start_y
     end
 
+    local isCloudWalking = function (tile)
+        return true
+    end
+
     local getGroundY = function ()
         return 0 + origin_y
     end
@@ -117,6 +121,22 @@ Map = function (tmx)
 
     local getDungeonY = function ()
         return -(( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y
+    end
+
+    local getBand = function (tile)
+        if tile > 15 + start_y                                                  then return { zone = "dungeon", transition = false } end
+        if tile == 15 + start_y or tile == 14 + start_y or tile == 13 + start_y then return { zone = "dungeon", transition = true  } end
+        if tile < 12 + start_y                                                  then return { zone = "ground" , transition = false } end
+
+        if tile > 15 + start_y                                                  then return { zone = "dungeon", transition = false } end
+        if tile == 15 + start_y or tile == 14 + start_y or tile == 13 + start_y then return { zone = "dungeon", transition = true  } end
+        if tile < 12 + start_y                                                  then return { zone = "ground" , transition = false } end
+    end
+
+    local getCameraForBand = function (band)
+        if band.zone == "dungeon" and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y end
+        if band.zone == "dungeon" and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y end
+        if band.zone == "ground"  and band.transition == false  then return 0 + origin_y                                                               end
     end
 
     -- set handlers for events like "onVictory"
@@ -411,9 +431,13 @@ Map = function (tmx)
         isInDungeon       = isInDungeon,
         isInTransition    = isInTransition,
         isOnGround        = isOnGround,
+        isCloudWalking    = isCloudWalking,
         getGroundY        = getGroundY,
         getTransitionY    = getTransitionY,
         getDungeonY       = getDungeonY,
+
+        getBand           = getBand,
+        getCameraForBand  = getCameraForBand,
 
         isFinished        = isFinished,
         setFinished       = setFinished,
