@@ -95,6 +95,20 @@ local maps = {
             init = "Pre91",
             sub  = "Pre91Sub"
         }
+    }),
+
+    -- 10-0 (Finale)
+    SubsequentLevels("map2-1.tmx", {
+        sprite = Sprites.oldguy,
+        doors = {
+            {
+                coords = { 204, 12 },
+                event  = "onVictory"
+            }
+        },
+        scenes = {
+            init = "Finale100"
+        }
     })
 }
 
@@ -167,7 +181,15 @@ function love.update(dt)
             -- New map means new "initial" scene
             if(Cutscenes[maps[num].scenes.init]) then
                 Cutscenes.current = Cutscenes[maps[num].scenes.init]
-                Cutscenes.current.start()
+                if (num ~= #maps) then
+                    Cutscenes.current.start()
+                else
+                    --Final map == final cutscene
+                    Cutscenes.current.start(function ()
+                        --What to do after the final cutscene is done?
+                        print("GAME OVER")
+                    end)
+                end
             end
         end
 
@@ -175,7 +197,12 @@ function love.update(dt)
         if not Cutscenes.current.isRunning() then
             if(Cutscenes[maps[num].scenes.sub]) then
                 Cutscenes.current = Cutscenes[maps[num].scenes.sub]
-                Cutscenes.current.start()
+                -- Callback here is kind of hacky. The purpose is to
+                -- Make sure the level retains the proper glitchy music.
+                Cutscenes.current.start( function ()
+                    Sound.stopMusic()
+                    Sound.playMusic(maps[num].getGlitchMusic())
+                end)
             end
         end
 

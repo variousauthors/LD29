@@ -19,7 +19,8 @@ function Cutscenes:scene(options)
     local current_frame, current_frame_delay = nil, nil
     local timer, frameIter = 0, 1
     local sceneName = options.name or "?"
-    local done_callback = nil
+    local done_callback = options.done_callback
+    local old_done_callback = nil
 
     local isRunning = function ()
         return is_running
@@ -27,6 +28,7 @@ function Cutscenes:scene(options)
 
     local start = function (cb)
         if (type(cb) == "function") then
+            if done_callback then old_done_callback = done_callback end
             done_callback = cb
         end
         is_running = true
@@ -65,7 +67,11 @@ function Cutscenes:scene(options)
         end
         if (type(done_callback) == "function") then
             done_callback()
-            done_callback = nil
+            if old_done_callback then
+                done_callback = old_done_callback
+            else
+                done_callback = nil
+            end
         end
         print("Scene complete: "..sceneName)
         -- cutscene immediately following. kinda hacky, but TIIIIME
@@ -243,6 +249,7 @@ Cutscenes.Pre21Sub = Cutscenes:scene({
     },
     frameX = centerX(img21end01),
     delay = "frames",
+    musicStart = "M100tp5e4",
     nextCutscene = "Pre21Subb"
 })
 
@@ -286,6 +293,7 @@ Cutscenes.Pre51Sub = Cutscenes:scene({
     },
     frameX = centerX(img21end01),
     delay = "frames",
+    musicStart = "M100tp5e4",
     nextCutscene = "Pre51Subb"
 })
 
@@ -331,6 +339,7 @@ Cutscenes.Pre91Sub = Cutscenes:scene({
     },
     frameX = centerX(img21end01),
     delay = "frames",
+    musicStart = "M100tp5e4",
     nextCutscene = "Pre91Subb"
 })
 
@@ -339,6 +348,48 @@ Cutscenes.Pre91Subb = Cutscenes:scene({
     frames = { img91Start },
     delay = 3,
     frameX = centerX(img91Start)
+})
+
+-- 10-0 finale
+
+local img100finale01 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale01.jpg")
+local img100finale02 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale02.jpg")
+local img100finale03 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale03.jpg")
+local img100finale04 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale04.jpg")
+local img100finale05 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale05.jpg")
+local img100finale06 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale06.jpg")
+local img100finale07 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale07.jpg")
+local img100finale08 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale08.jpg")
+local img100finale09 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale09.jpg")
+local img100finale10 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale10.jpg")
+local img100finale11 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale11.jpg")
+local img100finale12 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale12.jpg")
+local img100finale13 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale13.jpg")
+local img100finale14 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale14.jpg")
+local img100finale15 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale15.jpg")
+
+Cutscenes.Finale100 = Cutscenes:scene({
+    name   = "Finale100",
+    frames = {
+        {img100finale01, 2},
+        {img100finale02, 1},
+        {img100finale03, 0.1},
+        {img100finale04, 0.1},
+        {img100finale05, 0.1},
+        {img100finale06, 0.1},
+        {img100finale07, 0.5},
+        {img100finale08, 3},
+        {img100finale09, 0.5},
+        {img100finale10, 0.1},
+        {img100finale11, 0.1},
+        {img100finale12, 0.1},
+        {img100finale13, 0.1},
+        {img100finale14, 0.5},
+        {img100finale15, 2}
+    },
+    frameX = centerX(img100finale01),
+    delay = "frames",
+    musicStart = "M100tp5e4"
 })
 
 -- Shrines
