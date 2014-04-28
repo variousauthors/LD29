@@ -18,6 +18,7 @@ Map = function (tmx)
     local events      = {}
     local glitch_lvl  = 0
     local glitch_max  = 4
+    local death_line  = map.height - 1
 
     local proceed_handler, death_handler, victory_handler
 
@@ -216,7 +217,7 @@ Map = function (tmx)
         local new_v, is_dead = v, false
 
         -- this 14 will need to be based on the map bounds
-        if ty > 14 then
+        if ty > death_line then
             onDeath()
             is_dead = true
         end
