@@ -33,8 +33,8 @@ Glitches = function(param)
         map_layer = layer_in
 
         tile_list = {}
-        layer_w = map_layer.map.width
-        layer_h = map_layer.map.height
+        map_w = map_layer.map.width
+        map_h = map_layer.map.height
         for x, y, tile in map_layer:iterate() do
             table.insert(tile_list, {x, y, tile.properties})
         end
@@ -63,7 +63,7 @@ Glitches = function(param)
     -- safely write coords to 2d table
     local glitch_coords_add = function(x, y, p)
         -- do some basic bounds-checking for new coords
-        if (x >= layer_w or y >= layer_h) then return false end
+        if (x >= map_w or y >= map_h) then return false end
 
         if (glitch_coords[x] == nil) then
             glitch_coords[x] = {}
@@ -82,9 +82,19 @@ Glitches = function(param)
 
     -- Generate cross-shaped glitches on tiles in loaded layer.
     -- Doesn't try to avoid duplicates, nor to keep whole glitch on-screen.
-    local generate_glitches = function(num_glitches, shape)
+    local generate_glitches = function(num_glitches, shape, whole_map)
         for i = 1, num_glitches, 1 do
-            local x, y, p = unpack(tile_list[rng:random(1, #tile_list)])
+            local x, y, p = nil, nil, nil
+            if(whole_map) then
+                x = rng:random(0, map_w - 1)
+                y = rng:random(0, map_h - 1)
+                -- store tile properties if they exist
+                p = map_layer(x, y)
+                if (p) then p = p.properties end
+            else
+                x, y, p = unpack(tile_list[rng:random(1, #tile_list)])
+            end
+
             -- shape defaults to a cross, but "single" is an option
             if (shape == "single") then
                 glitch_coords_add(x, y, p)
