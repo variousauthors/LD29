@@ -197,6 +197,7 @@ Map = function (tmx)
         -- ... I hope
         if ry > ty then
             layer:set(tx, ty, nil)
+            Sound.playSFX("smash")
         end
 
         return v

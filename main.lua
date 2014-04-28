@@ -27,6 +27,7 @@ player_vx = ""
 player_vy = ""
 collisions = {}
 time = 0
+teleport = ""
 
 -- we store the levels in a table and I expect when there are more of them we will just
 -- iterate
@@ -139,6 +140,26 @@ function love.keypressed(k)
     -- quit
     if k == 'escape' then
         love.event.push("quit")
+    end
+
+    if k == "0"
+    or k == "1"
+    or k == "2"
+    or k == "3"
+    or k == "4"
+    or k == "5"
+    or k == "6"
+    or k == "7"
+    or k == "8"
+    or k == "9" then
+        teleport = teleport .. k
+    end
+
+    if #teleport == 4 then
+        local dest = tonumber(teleport)
+        teleport = ""
+
+        global.tx = -dest
     end
 
     player.keypressed(k)
