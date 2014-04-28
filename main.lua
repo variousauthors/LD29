@@ -27,6 +27,8 @@ global.tile_height  = 15    -- the tile squares in a window
 global.flower_get   = false -- whether a flower was got this tic
 global.flowers      = 0     -- the number of flowers collected so far
 
+local MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 14)
+
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
 
@@ -113,6 +115,8 @@ function init_player (p, s)
 end
 
 function love.load()
+    love.graphics.setFont(MARIO_FONT)
+
     origin = Point(0, 0) -- somehow I just feel safer having a global "origin"
     start  = Point(origin.getX() + 200, origin.getY() + 200)
     maps[num].reset()
@@ -266,6 +270,8 @@ function love.draw()
     -- Draw our map
     maps[num].draw()
     player.draw()
+
+    love.graphics.print("FLOWERS x " .. global.flowers, W_WIDTH - 200, 20)
 
     love.graphics.print(player.getX(), 50, 50)
     love.graphics.print(player.getY(), 50, 70)
