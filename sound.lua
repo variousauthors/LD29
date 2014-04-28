@@ -41,10 +41,16 @@ Sound.playSFX = function(name)
     TEsound.play(Sound.assets.sfx[name], "sfx")
 end
 
-Sound.playMusic = function(name, noloop)
+-- second parameter causes music not to loop, and can even be a callback
+-- to run when the sound finishes
+Sound.playMusic = function(name, noloop_cb)
     TEsound.stop("music")
-    if (noloop) then
-        TEsound.play(Sound.assets.music[name], "music")
+    if (noloop_cb) then
+        if(type(noloop_cb) == "function") then
+            TEsound.play(Sound.assets.music[name], "music", nil, nil, noloop_cb)
+        else
+            TEsound.play(Sound.assets.music[name], "music")
+        end
     else
         TEsound.playLooping(Sound.assets.music[name], "music")
     end
