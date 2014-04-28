@@ -39,35 +39,41 @@ teleport      = ""
 local Map = require("map")
 
 local maps = {
-    LevelOne("map1-1.tmx", {
-        sprite = Sprites.bigguy,
-        doors = {
-            {
-                coords = { 204, 12 },
-                event  = "onVictory"
-            }
-        }
-    }),
+  --LevelOne("map1-1.tmx", {
+  --    sprite = Sprites.bigguy,
+  --    doors = {
+  --        {
+  --            coords = { 204, 12 },
+  --            event  = "onVictory"
+  --        }
+  --    }
+  --}),
     
-    SubsequentLevels("map2-1.tmx", {
-        sprite = Sprites.ladyguy,
-        doors = {
-            {
-                coords = { 204, 12 },
-                event  = "onVictory"
-            }
-        }
-    }),
+  --SubsequentLevels("map2-1.tmx", {
+  --    sprite = Sprites.ladyguy,
+  --    doors = {
+  --        {
+  --            coords = { 204, 12 },
+  --            event  = "onVictory"
+  --        }
+  --    }
+  --}),
 
-    SubsequentLevels("map5-1.tmx", {
-        sprite = Sprites.lilguy,
-        doors = {
-            {
-                coords = { 204, 12 },
-                event  = "onVictory"
-            }
-        }
-    }),
+  --SubsequentLevels("map5-1.tmx", {
+  --    sprite = Sprites.lilguy,
+  --    doors = {
+  --        {
+  --            coords = { 204, 12 },
+  --            event  = "onVictory"
+  --        }
+  --    },
+  --    -- this is the top left corner of the starting screen, 
+  --    -- in tile form
+  --    start = {
+  --        x = 0,
+  --        y = 15
+  --    }
+  --}),
 
     SubsequentLevels("map9-1.tmx", {
         sprite = Sprites.oldguy,
@@ -76,6 +82,11 @@ local maps = {
                 coords = { 204, 12 },
                 event  = "onVictory"
             }
+        },
+
+        start = {
+            x = 0,
+            y = 40
         }
     })
 }
@@ -98,7 +109,7 @@ function love.load()
     origin = Point(0, 0) -- somehow I just feel safer having a global "origin"
     start  = Point(origin.getX() + 200, origin.getY() + 200)
     maps[num].reset()
-    init_player(start, maps[num].sprite)
+    init_player(maps[num].getStart(), maps[num].sprite)
     Sound.playMusic("M100tp5e0")
 end
 
@@ -125,20 +136,21 @@ function love.update(dt)
     -- the screen should always be centered
 
     -- scroll down into the dungeon
-    if tile_y > 15 then
+    if maps[num].isInDungeon(tile_y) then
         local scroll = 10
+        local dungeon = maps[num].getDungeonY()
 
         -- lock the player relative to the window, and scroll the background up
-        if global.ty > -(( global.tile_height / 2 ) * global.tile_size * global.scale) then
+        if global.ty > dungeon then
             global.ty = global.ty - scroll
             player.setY(player.getY() - scroll * global.scale)
         end
     end
 
     -- scroll to between the dungeon and the ground
-    if tile_y == 15 or tile_y == 14 or tile_y == 13 then
+    if maps[num].isInTransition(tile_y) then
         local scroll = 10
-        local transition = -(( global.tile_height / 4 ) * global.tile_size * global.scale)
+        local transition = maps[num].getTransitionY()
 
         -- lock the player relative to the window, and scroll the background down
         if global.ty < transition then
@@ -153,9 +165,9 @@ function love.update(dt)
     end
 
     -- scroll to the ground
-    if tile_y < 12 then
+    if maps[num].isOnGround(tile_y) then
         local scroll = 10
-        local middle_layer_center = 0
+        local middle_layer_center = maps[num].getGroundY()
 
         -- lock the player relative to the window, and scroll the background down
         if global.ty < middle_layer_center then
@@ -190,7 +202,7 @@ function love.update(dt)
 
         -- must be called after map number is potentially incremented so that
         -- the right character loads
-        init_player(start, maps[num].sprite)
+        init_player(maps[num].getStart(), maps[num].sprite)
     end
 
   --if #collisions > 0 then
@@ -228,8 +240,13 @@ function love.keypressed(k)
     end
 
     if k =='s' then
-        global.ty = global.ty - 10
-        player.setY(player.getY() - 20)
+        global.ty = global.ty - 100
+        player.setY(player.getY() - 200)
+    end
+
+    if k =='w' then
+        global.ty = global.ty + 100
+        player.setY(player.getY() + 200)
     end
 
     player.keypressed(k)
