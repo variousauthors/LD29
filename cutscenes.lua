@@ -16,7 +16,7 @@ function Cutscenes:Cutscene(options)
     local frameH = options.frameH or W_HEIGHT
     local nextCutscene = options.nextCutscene
     local is_running = false
-    local current_frame = nil
+    local current_frame, current_frame_delay = nil, nil
     local timer, frameIter = 0, 1
 
     local isRunning = function ()
@@ -26,7 +26,14 @@ function Cutscenes:Cutscene(options)
     local start = function ()
         is_running = true
         timer, frameIter = 0, 1
-        current_frame = frames[frameIter]
+
+        if (not delay or type(delay) == "number") then
+            current_frame = frames[frameIter]
+        else -- every frame is an array of [frame, delay]
+            current_frame = frames[frameIter][1]
+            current_frame_delay = frames[frameIter][2]
+        end
+
         if (musicStart == nil) then -- stop music
             Sound.pauseMusic()
         elseif (musicStart) then -- play the proper music
@@ -67,7 +74,7 @@ function Cutscenes:Cutscene(options)
                     current_frame = frames[frameIter]
                 end
             end
-        else -- count up delay
+        elseif (type(delay) == "number") then -- count up delay
             timer = timer + dt
             if timer >= delay then
                 timer = 0
@@ -76,6 +83,18 @@ function Cutscenes:Cutscene(options)
                     finish()
                 else
                     current_frame = frames[frameIter]
+                end
+            end
+        else -- delay of non-nil and non-number means frame-based
+            timer = timer + dt
+            if timer >= current_frame_delay then
+                timer = 0
+                frameIter = frameIter + 1
+                if (frameIter > #frames) then
+                    finish()
+                else
+                    current_frame = frames[frameIter][1]
+                    current_frame_delay = frames[frameIter][2]
                 end
             end
         end
@@ -132,7 +151,38 @@ Cutscenes.FirstLevel = Cutscenes:Cutscene({
     frames = { img11Start },
     delay = 3,
     frameX = centerX(img11Start),
-    musicDone = "M100tp5e0"
+    musicDone = "M100tp5e0",
+    nextCutscene = "Post11"
+})
+
+-- Plays after 1-1
+local img11end01 = love.graphics.newImage("assets/scenes/1-1end/1-1end0001.jpg")
+local img11end02 = love.graphics.newImage("assets/scenes/1-1end/1-1end0002.jpg")
+local img11end03 = love.graphics.newImage("assets/scenes/1-1end/1-1end0003.jpg")
+local img11end04 = love.graphics.newImage("assets/scenes/1-1end/1-1end0004.jpg")
+local img11end05 = love.graphics.newImage("assets/scenes/1-1end/1-1end0005.jpg")
+local img11end06 = love.graphics.newImage("assets/scenes/1-1end/1-1end0006.jpg")
+local img11end07 = love.graphics.newImage("assets/scenes/1-1end/1-1end0007.jpg")
+local img11end08 = love.graphics.newImage("assets/scenes/1-1end/1-1end0008.jpg")
+local img11end09 = love.graphics.newImage("assets/scenes/1-1end/1-1end0009.jpg")
+local img11end10 = love.graphics.newImage("assets/scenes/1-1end/1-1end0010.jpg")
+local img11end11 = love.graphics.newImage("assets/scenes/1-1end/1-1end0011.jpg")
+Cutscenes.Post11 = Cutscenes:Cutscene({
+    frames = {
+        {img11end01, 1},
+        {img11end02, 0.1},
+        {img11end03, 0.1},
+        {img11end04, 0.1},
+        {img11end05, 0.1},
+        {img11end06, 0.5},
+        {img11end07, 3.5},
+        {img11end08, 1},
+        {img11end09, 1},
+        {img11end10, 0.2},
+        {img11end11, 3.5}
+    },
+    frameX = centerX(img11end01),
+    delay = "frames"
 })
 
 -- Plays before 2
