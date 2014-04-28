@@ -124,19 +124,22 @@ Map = function (tmx)
     end
 
     local getBand = function (tile)
-        if tile > 15 + start_y                                                  then return { zone = "dungeon", transition = false } end
-        if tile == 15 + start_y or tile == 14 + start_y or tile == 13 + start_y then return { zone = "dungeon", transition = true  } end
-        if tile < 12 + start_y                                                  then return { zone = "ground" , transition = false } end
-
-        if tile > 15 + start_y                                                  then return { zone = "dungeon", transition = false } end
-        if tile == 15 + start_y or tile == 14 + start_y or tile == 13 + start_y then return { zone = "dungeon", transition = true  } end
-        if tile < 12 + start_y                                                  then return { zone = "ground" , transition = false } end
+        if tile > 30 + start_y                                                  then return { zone = "catacombs", transition = false } end
+        if tile > 15 + start_y                                                  then return { zone = "dungeon",   transition = false } end
+        if tile == 15 + start_y or tile == 14 + start_y or tile == 13 + start_y then return { zone = "dungeon",   transition = true  } end
+        if tile > 0 + start_y and tile < 12 + start_y                           then return { zone = "ground" ,   transition = false } end
+        if tile == 0 + start_y or tile == -1 + start_y or tile == -2 + start_y  then return { zone = "clouds",    transition = true  } end
+        if tile < -2                                                            then return { zone = "clouds",    transition = false } end
     end
 
     local getCameraForBand = function (band)
+
+        if band.zone == "catacombs" and band.transition == false  then return -(( global.tile_height ) * global.tile_size * global.scale) + origin_y end
         if band.zone == "dungeon" and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y end
         if band.zone == "dungeon" and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y end
         if band.zone == "ground"  and band.transition == false  then return 0 + origin_y                                                               end
+        if band.zone == "clouds"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y  end
+        if band.zone == "clouds"  and band.transition == false  then return (( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y  end
     end
 
     -- set handlers for events like "onVictory"
