@@ -6,8 +6,8 @@ Player = function (point)
     local is_jumping, is_dead = true, false
 
     -- height/width of the sprite's shape
-    local draw_w = 16
-    local draw_h = 16
+    local draw_w = 32
+    local draw_h = 64
 
     local forces = {
         key        = Vector(0, 0),
@@ -26,10 +26,10 @@ Player = function (point)
     -- should be checked first (the one closest to the direction of movement)
     -- WHOA TODO where are 16 and 32 coming from? Why negative? This I cannot
     -- explain. It is a "bug"
-    collision_points[1 ][1]  = { x = -16, y = -16 } -- bottom right
-    collision_points[-1][1]  = { x = -32, y = -16 } -- bottom left
-    collision_points[-1][-1] = { x = -32, y = -32 } -- top left
-    collision_points[1 ][-1] = { x = -16, y = -32 } -- top right
+    collision_points[1 ][1]  = { x = - draw_w * 0.5, y = -draw_h / 2 } -- bottom right
+    collision_points[-1][1]  = { x = - draw_w * 1.5, y = -draw_h * 1.5 } -- bottom left
+    collision_points[-1][-1] = { x = - draw_w * 1.5,            y = -draw_h / 2  } -- top left
+    collision_points[1 ][-1] = { x = - draw_w * 0.5,            y = -draw_h * 1.5 } -- top right
 
     local serialize = function ()
         return {
@@ -37,6 +37,8 @@ Player = function (point)
             y = p.getY(),
             v = { x = v.getX(), y = v.getY() },
             collision_points = collision_points,
+            w = draw_w,
+            h = draw_h
         }
     end
 
@@ -136,8 +138,17 @@ Player = function (point)
 
     local draw = function ()
         local r, g, b = love.graphics.getColor()
-        love.graphics.setColor(255, 0, 0)
-        love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
+
+        if draw_h == 32 then
+            love.graphics.setColor(255, 0, 0)
+            love.graphics.rectangle("fill", p.getX() - draw_w / 2, p.getY() - draw_h / 2, draw_w, draw_h)
+        else
+            love.graphics.setColor(255, 0, 0)
+            love.graphics.rectangle("fill", p.getX() - draw_w / 2, p.getY() - draw_h , draw_w, draw_h)
+        end
+
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.rectangle("fill", p.getX(), p.getY(), 1, 1)
 
         love.graphics.setColor(r, g, b)
     end

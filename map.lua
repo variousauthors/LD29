@@ -100,7 +100,7 @@ Map = function (tmx)
     -- Resets the example
     local reset = function ()
         -- tx and ty are the offset of the tilemap
-        global.tx = -3000
+        global.tx = 0
         global.ty = 0
     end
 
@@ -208,12 +208,19 @@ Map = function (tmx)
         return v
     end
 
+    local detect = function (p, offset, layer)
+        tile = layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
+
+        return tile
+    end
+
     local resolveCollision = function (p, v, offset, layer)
         -- the position of the tile we are colliding with
         local tx, ty         = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
         tile_x, tile_y       = tx, ty -- debug stuff
 
-        local tile           = layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
+        -- this is where the tile is "detected"
+        local tile           = detect(p, offset, layer)
         local new_v, is_dead = v, false
 
         -- this 14 will need to be based on the map bounds
@@ -291,17 +298,36 @@ Map = function (tmx)
                 local offset = data.collision_points[x][y]
                 p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
 
-                -- iterate over the two neighbouring collision points
-                offset = data.collision_points[-x][y]
-                p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
-
                 offset = data.collision_points[-x][-y]
                 p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
 
+                offset = data.collision_points[-x][y]
+                p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
+
+                offset = data.collision_points[x][-y]
+                p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
+
+                -- iterate over the two neighbouring collision points
+              --offset = data.collision_points[-x][y]
+              --p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
+
+              --offset = data.collision_points[-x][-y]
+              --p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
+
                 -- if there is no tile directly beneath the collision point, then the player
                 -- is in mid-air (this is used in the player code)
-                ground_tile = layer(pixel_to_tile(p.getX() + -16, p.getY() + -16 + 1))
-                ground_tile = ground_tile or layer(pixel_to_tile(p.getX() + -32, p.getY() + -16 + 1))
+--              a, b = pixel_to_tile(p.getX() + 0, p.getY() - ( data.h / 2 ) + 1)
+--              c, d = pixel_to_tile(p.getX() + ( data.w / 2  ), p.getY() - ( data.h / 2 ) + 1)
+--              e, f = pixel_to_tile(p.getX() - ( data.w / 2  ), p.getY() - ( data.h / 2 ) + 1)
+--              g, h = pixel_to_tile(p.getX() - ( data.w ), p.getY() - ( data.h / 2 ) + 1)
+
+--              inspect({ a, b }) -- center green
+--              inspect({ c, d }) -- top right green
+--              inspect({ e, f }) -- center red
+--              inspect({ g, h }) -- center red
+
+                ground_tile = layer(pixel_to_tile(p.getX() - (data.w ) + ( data.w / 2  ), p.getY() - ( data.h / 2 ) + 1))
+                ground_tile = ground_tile or layer(pixel_to_tile(p.getX() - (data.w) - ( data.w / 2 ), p.getY() - ( data.h / 2 ) + 1))
 
                 -- mid_air is the AND of all mid_air calculations
                 -- so if _any_ collision detected a ground_tile then we are _not_ in mid_air
