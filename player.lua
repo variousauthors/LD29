@@ -138,7 +138,7 @@ Player = function (point, sprite)
     end
 
     -- the beef!
-    local walkTimer, walkDelay, walkIter, speedUp = 0, 0.2, 1, 0
+    local walkTimer, walkDelay, walkIter, speedUp = 0, 0.25, 1, 0
     local walkFrames = sprite.walk_anim
     local updateAnimation = function (dt)
         if isJumping() then
@@ -152,8 +152,8 @@ Player = function (point, sprite)
                 walkTimer, walkIter = 0, 1
                 walkFrames = sprite.turn_anim
             end
-            -- speed up animation with movement, 100%-300% of deltatime
-            speedUp = (1 + 2 * (math.abs(v.getX()) / max_speed))
+            -- speed up animation with movement, deltatime multiplied by 1-4
+            speedUp = (1 + 3 * (math.abs(v.getX()) / max_speed))
             walkTimer = walkTimer + (dt * speedUp)
             if walkTimer > walkDelay then
                 walkTimer = 0
