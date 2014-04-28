@@ -74,6 +74,11 @@ local maps = {
             {
                 coords = { 204, 12 },
                 event  = "onVictory"
+            },
+
+            {
+                coords = { 36, 27 },
+                event  = "enterCloudShrine"
             }
         },
         -- this is the top left corner of the starting screen, 
@@ -90,6 +95,16 @@ local maps = {
             {
                 coords = { 204, 12 },
                 event  = "onVictory"
+            },
+
+            {
+                coords = { 36, 27 },
+                event  = "enterCloudShrine"
+            },
+
+            {
+                coords = { 82, 82 },
+                event  = "enterTreeShrine"
             }
         },
 
@@ -271,7 +286,9 @@ function love.draw()
     maps[num].draw()
     player.draw()
 
-    love.graphics.print("FLOWERS x " .. global.flowers, W_WIDTH - 200, 20)
+--  if not Cutscenes.current.isRunning() then
+--      love.graphics.print("FLOWERS x " .. global.flowers, W_WIDTH - 200, 20)
+--  end
 
     love.graphics.print(player.getX(), 50, 50)
     love.graphics.print(player.getY(), 50, 70)

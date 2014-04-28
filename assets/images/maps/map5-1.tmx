@@ -56246,7 +56246,6 @@
  <layer name="clouds" width="208" height="45">
   <properties>
    <property name="clouds" value="1"/>
-   <property name="obstacle" value="1"/>
   </properties>
   <data>
    <tile gid="0"/>

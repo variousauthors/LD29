@@ -173,6 +173,26 @@ Map = function (tmx)
         if proceed_handler ~= nil then proceed_handler() end
     end
 
+    local enterCloudShrine = function ()
+        -- start the cutscene
+      --Cutscenes.current = 0
+      --Cutscenes.current.start()
+
+        if map.layers["clouds"] then
+            map.layers["clouds"].properties["obstacle"] = 1
+        end
+    end
+
+    local enterTreeShrine = function ()
+        -- start the cutscene
+      --Cutscenes.current = 0
+      --Cutscenes.current.start()
+
+        if map.layers["trees"] then
+            map.layers["trees"].properties["obstacle"] = 1
+        end
+    end
+
     -- important methods for the public interface
     -- reset, update, draw
 
@@ -264,6 +284,8 @@ Map = function (tmx)
     local callbacks = {}
     callbacks["onDeath"]      = onDeath
     callbacks["onVictory"]    = onVictory
+    callbacks["enterCloudShrine"]    = enterCloudShrine
+    callbacks["enterTreeShrine"]    = enterTreeShrine
 
     -- callbacks for layer properties
     callbacks["obstacle"] = function (layer, v, tx, ty, rx, ry)
