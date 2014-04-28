@@ -98,7 +98,7 @@ function love.load()
     maps[num].reset()
     init_player(start, maps[num].sprite)
     --First cutscene.
-    Cutscenes.current = Cutscenes.FirstLevel
+    Cutscenes.current = Cutscenes.StartScreen
     Cutscenes.current.start()
 end
 

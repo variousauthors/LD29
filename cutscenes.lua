@@ -1,15 +1,20 @@
 --[[ Cutscene constructor class and Cutscenes object containing instances. ]]
 
-Cutscene = function (options)
+Cutscenes = {}
+
+function Cutscenes:Cutscene(options)
     options = options or {}
     local frames = options.frames or { }
     local delay  = options.delay or 3
     local musicStart  = options.musicStart
-    local musicDone   = options.musicDone
+    local musicDone  = options.musicDone
+    local musicStartNL = options.musicStartNL
+    local musicDoneNL  = options.musicDoneNL
     local frameX = options.frameX or 0
     local frameY = options.frameY or 0
     local frameW = options.frameW or W_WIDTH
     local frameH = options.frameH or W_HEIGHT
+    local nextCutscene = options.nextCutscene
     local is_running = false
     local current_frame = nil
     local timer, frameIter = 0, 1
@@ -26,7 +31,7 @@ Cutscene = function (options)
             Sound.pauseMusic()
         elseif (musicStart) then -- play the proper music
             Sound.stopMusic()
-            Sound.playMusic(music)
+            Sound.playMusic(musicStart, musicStartNL)
         end
     end
 
@@ -40,9 +45,14 @@ Cutscene = function (options)
             Sound.stopMusic()
         end
         if musicDone then
-            Sound.playMusic(musicDone)
+            Sound.playMusic(musicDone, musicDoneNL)
         else
             Sound.resumeMusic()
+        end
+        -- cutscene immediately following. kinda hacky, but TIIIIME
+        if nextCutscene then
+            self.current = self[nextCutscene]
+            self.current.start()
         end
     end
 
@@ -76,8 +86,7 @@ Cutscene = function (options)
         --Cover everything with a rectangle first
         local red, green, blue = love.graphics.getColor()
         love.graphics.setColor(0, 0, 0)
-        love.graphics.rectangle("fill", 0, 0,
-            W_WIDTH, W_HEIGHT)
+        love.graphics.rectangle("fill", 0, 0, W_WIDTH, W_HEIGHT)
         love.graphics.setColor(red, green, blue)
 
         -- Then draw frame
@@ -104,14 +113,22 @@ local centerX = function (image)
     return (W_WIDTH / 2 ) - (image:getWidth() * global.scale / 2)
 end
 
---[[ Here be the Cutscenes ]]
+--[[
+    Here be the Cutscenes
+]]--
 
-Cutscenes = {}
-Cutscenes.current = Cutscene() -- blank, placeholder
+Cutscenes.current = Cutscenes.Cutscene() -- blank, placeholder
+
+-- Start of Game
+Cutscenes.StartScreen = Cutscenes:Cutscene({
+    nextCutscene = "FirstLevel",
+    musicStart = "Undesirable",
+    musicStartNL = true
+})
 
 -- Plays before 1-1
 local img11Start = love.graphics.newImage("assets/images/1-1start.png")
-Cutscenes.FirstLevel = Cutscene({
+Cutscenes.FirstLevel = Cutscenes:Cutscene({
     frames = { img11Start },
     delay = 3,
     frameX = centerX(img11Start),
@@ -120,8 +137,9 @@ Cutscenes.FirstLevel = Cutscene({
 
 -- Plays before 2
 
+
 -- Plays before 3
 
--- Shrine
+-- Shrines
 
 
