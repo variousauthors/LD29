@@ -4,13 +4,15 @@ inspect = function (a, b)
 end
 
 -- globals having to do with the tile library
-global = {}
-global.limitDrawing = true      -- If true then the drawing range example is shown
-global.benchmark = false        -- If true the map is drawn 20 times instead of 1
-global.useBatch = false         -- If true then the layers are rendered with sprite batches
-global.tx = 0                   -- X translation of the screen
-global.ty = 0                   -- Y translation of the screen
-global.scale = 2                -- Scale of the screen
+global              = {}
+global.limitDrawing = true  -- If true then the drawing range example is shown
+global.benchmark    = false -- If true the map is drawn 20 times instead of 1
+global.useBatch     = false -- If true then the layers are rendered with sprite batches
+global.tx           = 0     -- X translation of the screen
+global.ty           = 0     -- Y translation of the screen
+global.scale        = 2     -- Scale of the screen
+global.tile_size    = 16    -- the pixels in a tile square
+global.tile_height  = 15    -- the tile squares in a window
 
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
@@ -22,15 +24,15 @@ require("player")
 require("vector")
 
 -- debugging stuff
-tile_x = ""
-tile_y = ""
-player_vx = ""
-player_vy = ""
-sprite_quad = ""
+tile_x        = ""
+tile_y        = ""
+player_vx     = ""
+player_vy     = ""
+sprite_quad   = ""
 sprite_facing = ""
-collisions = {}
-time = 0
-teleport = ""
+collisions    = {}
+time          = 0
+teleport      = ""
 
 -- we store the levels in a table and I expect when there are more of them we will just
 -- iterate
@@ -49,6 +51,10 @@ local maps = {
         scenes = {
             init = "StartScreen",
             sub = "Pre11"
+        },
+        start = {
+            x = 0,
+            y = 15
         }
     }),
 
@@ -64,11 +70,15 @@ local maps = {
         scenes = {
             init = "Pre21",
             sub  = "Pre21Sub"
+        },
+        start = {
+            x = 0,
+            y = 15
         }
     }),
 
     -- 5-1
-    SubsequentLevels("map2-1.tmx", {
+    SubsequentLevels("map5-1.tmx", {
         sprite = Sprites.lilguy,
         doors = {
             {
@@ -79,11 +89,17 @@ local maps = {
         scenes = {
             init = "Pre51",
             sub  = "Pre51Sub"
+        },
+        -- this is the top left corner of the starting screen,
+        -- in tile form
+        start = {
+            x = 0,
+            y = 15
         }
     }),
 
     -- 9-1
-    SubsequentLevels("map2-1.tmx", {
+    SubsequentLevels("map9-1.tmx", {
         sprite = Sprites.oldguy,
         doors = {
             {
@@ -94,11 +110,16 @@ local maps = {
         scenes = {
             init = "Pre91",
             sub  = "Pre91Sub"
+        },
+
+        start = {
+            x = 0,
+            y = 40
         }
     }),
 
     -- 10-0 (Finale)
-    SubsequentLevels("map2-1.tmx", {
+    SubsequentLevels("map9-1.tmx", {
         sprite = Sprites.oldguy,
         doors = {
             {
@@ -108,6 +129,10 @@ local maps = {
         },
         scenes = {
             init = "Finale100"
+        },
+        start = {
+            x = 0,
+            y = 40
         }
     })
 }
@@ -130,7 +155,7 @@ function love.load()
     origin = Point(0, 0) -- somehow I just feel safer having a global "origin"
     start  = Point(origin.getX() + 200, origin.getY() + 200)
     maps[num].reset()
-    init_player(start, maps[num].sprite)
+    init_player(maps[num].getStart(), maps[num].sprite)
     --First cutscene.
     Cutscenes.current = Cutscenes.StartScreen
     Cutscenes.current.start()
@@ -155,7 +180,29 @@ function love.update(dt)
         player.setX(W_WIDTH / 2)
     end
 
+    -- the player cannot go backwards
     if player.getX() < 0 then player.setX(0) end
+
+    -- if the player is standing on the 12th block (the ground)
+    -- the screen should always be centered
+    --
+    band   = maps[num].getBand(tile_y)
+
+    if band ~= nil then
+        local scroll = 10
+        camera = maps[num].getCameraForBand(band)
+
+        -- lock the player relative to the window, and scroll the background up
+        if global.ty < camera then
+            global.ty = global.ty + scroll
+            player.setY(player.getY() + scroll * global.scale)
+        end
+
+        if global.ty > camera then
+            global.ty = global.ty - scroll
+            player.setY(player.getY() - scroll * global.scale)
+        end
+    end
 
     -- Call update in our example if it is defined
     if maps[num].update then maps[num].update(dt) end
@@ -208,7 +255,7 @@ function love.update(dt)
 
         -- must be called after map number is potentially incremented so that
         -- the right character loads
-        init_player(start, maps[num].sprite)
+        init_player(maps[num].getStart(), maps[num].sprite)
     end
 
   --if #collisions > 0 then
@@ -243,6 +290,16 @@ function love.keypressed(k)
         teleport = ""
 
         global.tx = -dest
+    end
+
+    if k =='s' then
+        global.ty = global.ty - 100
+        player.setY(player.getY() - 200)
+    end
+
+    if k =='w' then
+        global.ty = global.ty + 100
+        player.setY(player.getY() + 200)
     end
 
     player.keypressed(k)
