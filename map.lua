@@ -31,12 +31,16 @@ Map = function (tmx)
     local missing_tiles_glitch = Glitches()
     missing_tiles_glitch.load_layer(map.layers["obstacle"])
 
+    local getGlitchMusic = function ()
+        return "M100tp5e".. math.min(glitch_lvl, glitch_max)
+    end
+
     -- run all the glitches
     local glitch = function ()
         missing_tiles_glitch.generate_glitches(20)
         missing_tiles_glitch.modify_layer()
         glitch_lvl = glitch_lvl + 1
-        Sound.playMusic("M100tp5e".. math.min(glitch_lvl, glitch_max))
+        --Sound.playMusic()
     end
 
     -- expose the state of the map
@@ -383,7 +387,6 @@ Map = function (tmx)
 
             if count == 100 then
                 print("PANIC")
-                reset()
             end
         end
 
@@ -505,6 +508,8 @@ Map = function (tmx)
         setOrigin         = setOrigin,
         getStart          = getStart,
 
+        getGlitchMusic    = getGlitchMusic,
+
         glitch            = glitch,
         reset             = reset,
 
@@ -538,6 +543,7 @@ LevelOne = function (tmx, options)
     end)
 
     map.sprite = options.sprite
+    map.scenes = options.scenes
 
     return map
 end
@@ -569,6 +575,7 @@ SubsequentLevels = function (tmx, options)
     end)
 
     map.sprite = options.sprite
+    map.scenes = options.scenes
 
     return map
 end

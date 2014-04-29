@@ -108,7 +108,7 @@ Player = function (point, sprite)
     local keypressed = function (key)
         if isJumping() and not global.double_jump then return end
 
-        if love.keyboard.isDown("up") then
+        if love.keyboard.isDown("up", " ") then
             if isJumping() and not double_jump then
                 double_jump = true
 

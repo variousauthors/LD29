@@ -33,6 +33,12 @@ local MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 14)
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
 
+require("sound") -- Sound global object
+require("cutscenes")
+require("sprites")
+require("player")
+require("vector")
+
 -- debugging stuff
 tile_x        = ""
 tile_y        = ""
@@ -49,57 +55,73 @@ teleport      = ""
 local Map = require("map")
 
 local maps = {
-  --LevelOne("map1-1.tmx", {
-  --    sprite = Sprites.bigguy,
-  --    doors = {
-  --        {
-  --            coords = { 204, 12 },
-  --            event  = "onVictory"
-  --        }
-  --    }
-  --}),
-    
-  --SubsequentLevels("map2-1.tmx", {
-  --    sprite = Sprites.ladyguy,
-  --    doors = {
-  --        {
-  --            coords = { 204, 12 },
-  --            event  = "onVictory"
-  --        },
+    -- 1-1
+--  LevelOne("map1-1.tmx", {
+--      sprite = Sprites.bigguy,
+--      doors = {
+--          {
+--              coords = { 204, 12 },
+--              event  = "onVictory"
+--          }
+--      },
+--      scenes = {
+--          init = "StartScreen",
+--          sub = "Pre11"
+--      }
+--  }),
 
-  --        {
-  --            coords = { 98, 27 },
-  --            event  = "enterDoubleJumpShrine"
-  --        },
-  --    }
-  --}),
+    -- 2-1
+    SubsequentLevels("map2-1.tmx", {
+        sprite = Sprites.ladyguy,
+        doors = {
+            {
+                coords = { 204, 12 },
+                event  = "onVictory"
+            },
 
-  --SubsequentLevels("map5-1.tmx", {
-  --    sprite = Sprites.lilguy,
-  --    doors = {
-  --        {
-  --            coords = { 204, 12 },
-  --            event  = "onVictory"
-  --        },
+            {
+                coords = { 98, 27 },
+                event  = "enterDoubleJumpShrine"
+            },
+        },
+        scenes = {
+            init = "Pre21",
+            sub  = "Pre21Sub"
+        }
+    }),
 
-  --        {
-  --            coords = { 36, 27 },
-  --            event  = "enterCloudShrine"
-  --        },
+    -- 5-1
+    SubsequentLevels("map5-1.tmx", {
+        sprite = Sprites.lilguy,
+        doors = {
+            {
+                coords = { 204, 12 },
+                event  = "onVictory"
+            },
 
-  --        {
-  --            coords = { 98, 42 },
-  --            event  = "enterDoubleJumpShrine"
-  --        },
-  --    },
-  --    -- this is the top left corner of the starting screen, 
-  --    -- in tile form
-  --    start = {
-  --        x = 0,
-  --        y = 15
-  --    }
-  --}),
+            {
+                coords = { 36, 27 },
+                event  = "enterCloudShrine"
+            },
 
+            {
+                coords = { 98, 42 },
+                event  = "enterDoubleJumpShrine"
+            },
+        },
+        scenes = {
+            init = "Pre51",
+            sub  = "Pre51Sub"
+        },
+        -- this is the top left corner of the starting screen,
+        -- in tile form
+        start = {
+            x = 0,
+            y = 15
+        }
+    }),
+
+    -- 9-1
     SubsequentLevels("map9-1.tmx", {
         sprite = Sprites.oldguy,
         doors = {
@@ -123,6 +145,10 @@ local maps = {
                 event  = "enterDoubleJumpShrine"
             },
         },
+        scenes = {
+            init = "Pre91",
+            sub  = "Pre91Sub"
+        },
 
         start = {
             x = 0,
@@ -142,6 +168,8 @@ if maps[num].reset then maps[num].reset() end
 local origin, player
 
 function init_player (p, s)
+    inspect({ global.tx, global.ty })
+    inspect({ p.getX(), p.getY() })
     player = Player(p, s)
 end
 
@@ -152,7 +180,9 @@ function love.load()
     start  = Point(origin.getX() + 200, origin.getY() + 200)
     maps[num].reset()
     init_player(maps[num].getStart(), maps[num].sprite)
-    Sound.playMusic("M100tp5e0")
+    --First cutscene.
+    Cutscenes.current = Cutscenes.StartScreen
+    Cutscenes.current.start()
 end
 
 local deflower = false
@@ -175,11 +205,14 @@ function love.update(dt)
     collisions = {}
     time = time + dt
 
-    player.update(dt, maps[num])
-    global.resolveFlower()
-
     -- Polling/cleanup/loop stuff.
     Sound.update()
+
+    -- If cutscene running, abort rest of loop.
+    if Cutscenes.current.update(dt) then return end
+
+    player.update(dt, maps[num])
+    global.resolveFlower()
 
     -- the player pushes the screen along
     if player.getX() > W_WIDTH / 2 and player.getX() > global.tx then
@@ -229,11 +262,36 @@ function love.update(dt)
         -- if we "proceed" and the map is still finished, then we move to
         -- the next world
         if maps[num].isFinished() then
-
             -- TODO the end game
             num = num + 1
             maps[num].reset()
-            Sound.playMusic("M100tp5e0")
+
+            -- New map means new "initial" scene
+            if(Cutscenes[maps[num].scenes.init]) then
+                Cutscenes.current = Cutscenes[maps[num].scenes.init]
+                if (num ~= #maps) then
+                    Cutscenes.current.start()
+                else
+                    --Final map == final cutscene
+                    Cutscenes.current.start(function ()
+                        --What to do after the final cutscene is done?
+                        print("GAME OVER")
+                    end)
+                end
+            end
+        end
+
+        -- If no scene has started, show the "subsequent runs" screen.
+        if not Cutscenes.current.isRunning() then
+            if(Cutscenes[maps[num].scenes.sub]) then
+                Cutscenes.current = Cutscenes[maps[num].scenes.sub]
+                -- Callback here is kind of hacky. The purpose is to
+                -- Make sure the level retains the proper glitchy music.
+                Cutscenes.current.start( function ()
+                    Sound.stopMusic()
+                    Sound.playMusic(maps[num].getGlitchMusic())
+                end)
+            end
         end
 
         -- must be called after map number is potentially incremented so that
@@ -298,9 +356,13 @@ function love.draw()
     love.graphics.rectangle("fill", 0, 0, W_WIDTH, W_HEIGHT)
     love.graphics.setColor(red, green, blue)
 
-    -- Draw our map
-    maps[num].draw()
-    player.draw()
+    -- Draw cutscene or map
+    if Cutscenes.current.isRunning() then
+        Cutscenes.current.draw()
+    else
+        maps[num].draw()
+        player.draw()
+    end
 
 --  if not Cutscenes.current.isRunning() then
 --      love.graphics.print("FLOWERS x " .. global.flowers, W_WIDTH - 200, 20)
