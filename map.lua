@@ -134,7 +134,7 @@ Map = function (tmx)
         if tile == 15 + start_y or tile == 14 + start_y or tile == 13 + start_y then return { zone = "dungeon",   transition = true  } end
         if tile > 0 + start_y and tile < 12 + start_y                           then return { zone = "ground" ,   transition = false } end
         if tile == 0 + start_y or tile == -1 + start_y                          then return { zone = "clouds",    transition = true  } end
-        if tile < -1 + start_y                                                  then return { zone = "clouds",    transition = false } end 
+        if tile < -1 + start_y                                                  then return { zone = "clouds",    transition = false } end
     end
 
     local getCameraForBand = function (band)
@@ -184,8 +184,8 @@ Map = function (tmx)
 
     local enterCloudShrine = function ()
         -- start the cutscene
-      --Cutscenes.current = 0
-      --Cutscenes.current.start()
+        Cutscenes.current = Cutscenes.Shrines.Clouds
+        Cutscenes.current.start()
 
         if map.layers["clouds"] then
             map.layers["clouds"].properties["obstacle"] = 1
@@ -194,8 +194,8 @@ Map = function (tmx)
 
     local enterTreeShrine = function ()
         -- start the cutscene
-      --Cutscenes.current = 0
-      --Cutscenes.current.start()
+        Cutscenes.current = Cutscenes.Shrines.Trees
+        Cutscenes.current.start()
 
         if map.layers["trees"] then
             map.layers["trees"].properties["obstacle"] = 1
@@ -204,8 +204,8 @@ Map = function (tmx)
 
     local enterDoubleJumpShrine = function ()
         -- start the cutscene
-      --Cutscenes.current = 0
-      --Cutscenes.current.start()
+        Cutscenes.current = Cutscenes.Shrines.Doublejump
+        Cutscenes.current.start()
 
         global.double_jump = true
     end
