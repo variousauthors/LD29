@@ -95,7 +95,7 @@ local maps = {
         sprite = Sprites.lilguy,
         doors = {
             {
-                coords = { 204, 12 },
+                coords = { 202, 27 },
                 event  = "onVictory"
             },
 
@@ -126,7 +126,7 @@ local maps = {
         sprite = Sprites.oldguy,
         doors = {
             {
-                coords = { 204, 12 },
+                coords = { 196, 52 },
                 event  = "onVictory"
             },
 
