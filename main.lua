@@ -368,16 +368,5 @@ function love.draw()
     if not Cutscenes.current.isRunning() then
         love.graphics.print("FLOWERS x " .. global.flowers, W_WIDTH - 200, 20)
     end
-
-    love.graphics.print(player.getX(), 50, 50)
-    love.graphics.print(player.getY(), 50, 70)
-    love.graphics.print(tile_x, 50, 90)
-    love.graphics.print(tile_y, 50, 110)
-    love.graphics.print(global.tx, 50, 130)
-    love.graphics.print(global.ty, 50, 150)
-    love.graphics.print(player_vx, 50, 170)
-    love.graphics.print(player_vy, 50, 190)
-    love.graphics.print(sprite_facing .. " " .. sprite_quad, 50, 210)
-    love.graphics.print(global.flowers, 50, 230)
 end
 

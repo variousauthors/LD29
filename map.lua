@@ -184,25 +184,37 @@ Map = function (tmx)
 
     local enterCloudShrine = function ()
         -- start the cutscene
-        Cutscenes.current = Cutscenes.Shrines.Clouds
-        Cutscenes.current.start()
 
         if map.layers["clouds"] then
+            if map.layers["clouds"].properties["obstacle"] == 1 then
+                return
+            end
+
+            Cutscenes.current = Cutscenes.Shrines.Clouds
+            Cutscenes.current.start()
+
             map.layers["clouds"].properties["obstacle"] = 1
         end
     end
 
     local enterTreeShrine = function ()
-        -- start the cutscene
-        Cutscenes.current = Cutscenes.Shrines.Trees
-        Cutscenes.current.start()
 
         if map.layers["trees"] then
+            if map.layers["trees"].properties["obstacle"] == 1 then
+                return
+            end
+
+            -- start the cutscene
+            Cutscenes.current = Cutscenes.Shrines.Trees
+            Cutscenes.current.start()
+
             map.layers["trees"].properties["obstacle"] = 1
         end
     end
 
     local enterDoubleJumpShrine = function ()
+        if global.double_jump == true then return end
+
         -- start the cutscene
         Cutscenes.current = Cutscenes.Shrines.Doublejump
         Cutscenes.current.start()
