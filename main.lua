@@ -343,7 +343,8 @@ function love.keypressed(k)
         player.setY(player.getY() + 200)
     end
 
-    player.keypressed(k)
+    -- No jumping during cutscenes
+    if not Cutscenes.current.isRunning() then player.keypressed(k) end
 
     -- Call keypressed in our maps if it is defined
     if maps[num].keypressed then maps[num].keypressed(k) end
