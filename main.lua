@@ -330,7 +330,7 @@ function love.keypressed(k)
         local dest = tonumber(teleport)
         teleport = ""
 
-        global.tx = -dest
+        --global.tx = -dest
     end
 
     if k =='s' then
