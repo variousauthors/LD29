@@ -26,6 +26,7 @@ global.tile_size    = 16    -- the pixels in a tile square
 global.tile_height  = 15    -- the tile squares in a window
 global.flower_get   = false -- whether a flower was got this tic
 global.flowers      = 0     -- the number of flowers collected so far
+global.double_jump  = false -- EVERYTHING IS GLOBAL NOW...  prorgamming!
 
 local MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 14)
 
@@ -64,30 +65,40 @@ local maps = {
   --        {
   --            coords = { 204, 12 },
   --            event  = "onVictory"
-  --        }
+  --        },
+
+  --        {
+  --            coords = { 98, 27 },
+  --            event  = "enterDoubleJumpShrine"
+  --        },
   --    }
   --}),
 
-    SubsequentLevels("map5-1.tmx", {
-        sprite = Sprites.lilguy,
-        doors = {
-            {
-                coords = { 204, 12 },
-                event  = "onVictory"
-            },
+  --SubsequentLevels("map5-1.tmx", {
+  --    sprite = Sprites.lilguy,
+  --    doors = {
+  --        {
+  --            coords = { 204, 12 },
+  --            event  = "onVictory"
+  --        },
 
-            {
-                coords = { 36, 27 },
-                event  = "enterCloudShrine"
-            }
-        },
-        -- this is the top left corner of the starting screen, 
-        -- in tile form
-        start = {
-            x = 0,
-            y = 15
-        }
-    }),
+  --        {
+  --            coords = { 36, 27 },
+  --            event  = "enterCloudShrine"
+  --        },
+
+  --        {
+  --            coords = { 98, 42 },
+  --            event  = "enterDoubleJumpShrine"
+  --        },
+  --    },
+  --    -- this is the top left corner of the starting screen, 
+  --    -- in tile form
+  --    start = {
+  --        x = 0,
+  --        y = 15
+  --    }
+  --}),
 
     SubsequentLevels("map9-1.tmx", {
         sprite = Sprites.oldguy,
@@ -105,7 +116,12 @@ local maps = {
             {
                 coords = { 82, 82 },
                 event  = "enterTreeShrine"
-            }
+            },
+
+            {
+                coords = { 98, 67 },
+                event  = "enterDoubleJumpShrine"
+            },
         },
 
         start = {

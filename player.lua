@@ -7,6 +7,7 @@ Player = function (point, sprite)
     local cur_state, prev_state = "stand", nil
     local cur_facing, prev_facing = sprite.base_facing, nil
     local current_quad = cur_state
+    local double_jump = false
 
     -- height/width of the sprite's shape
     local sprite_width = (sprite.width or 16)
@@ -105,11 +106,22 @@ Player = function (point, sprite)
     -- this is for "one-off" keypresses. So like, jump,
     -- or throw fireball
     local keypressed = function (key)
-        if isJumping() then return end
+        if isJumping() and not global.double_jump then return end
 
         if love.keyboard.isDown("up") then
-            Sound.playSFX("ptooi_big")
-            forces.key.setY(-15)
+            if isJumping() and not double_jump then
+                double_jump = true
+
+                Sound.playSFX("ptooi_big")
+                forces.key.setY(-15)
+            elseif isJumping() then
+                -- NOP
+
+            else
+                Sound.playSFX("ptooi_big")
+                forces.key.setY(-15)
+                double_jump = false
+            end
         end
     end
 

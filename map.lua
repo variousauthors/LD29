@@ -45,6 +45,7 @@ Map = function (tmx)
     end
 
     local setFinished = function (finished)
+
         is_finished = finished
     end
 
@@ -163,10 +164,14 @@ Map = function (tmx)
     -- respond to events like "onVictory"
     local onDeath = function ()
         if death_handler ~= nil then death_handler() end
+
+        global.double_jump = false
     end
 
     local onVictory = function ()
         if victory_handler ~= nil then victory_handler() end
+
+        global.double_jump = false
     end
 
     local onProceed = function ()
@@ -191,6 +196,14 @@ Map = function (tmx)
         if map.layers["trees"] then
             map.layers["trees"].properties["obstacle"] = 1
         end
+    end
+
+    local enterDoubleJumpShrine = function ()
+        -- start the cutscene
+      --Cutscenes.current = 0
+      --Cutscenes.current.start()
+
+        global.double_jump = true
     end
 
     -- important methods for the public interface
@@ -282,10 +295,11 @@ Map = function (tmx)
     -- a self variable. In the future I could do self["onVictory"]
     -- but for now I do callbacks["onVictory"]
     local callbacks = {}
-    callbacks["onDeath"]      = onDeath
-    callbacks["onVictory"]    = onVictory
-    callbacks["enterCloudShrine"]    = enterCloudShrine
-    callbacks["enterTreeShrine"]    = enterTreeShrine
+    callbacks["onDeath"]               = onDeath
+    callbacks["onVictory"]             = onVictory
+    callbacks["enterCloudShrine"]      = enterCloudShrine
+    callbacks["enterTreeShrine"]       = enterTreeShrine
+    callbacks["enterDoubleJumpShrine"] = enterDoubleJumpShrine
 
     -- callbacks for layer properties
     callbacks["obstacle"] = function (layer, v, tx, ty, rx, ry)
@@ -347,7 +361,7 @@ Map = function (tmx)
         if events[tx] ~= nil and events[tx][ty] ~= nil then
             local callback = callbacks[events[tx][ty]]
 
-            callback()
+            if callback ~= nil then callback() end
         end
 
         local count = 0
@@ -365,6 +379,11 @@ Map = function (tmx)
 
                 tile = layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
                 count = count + 1
+            end
+
+            if count == 100 then
+                print("PANIC")
+                reset()
             end
         end
 
