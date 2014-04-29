@@ -154,6 +154,25 @@ local maps = {
             x = 0,
             y = 40
         }
+    }),
+
+    -- 10-0
+    SubsequentLevels("map9-1.tmx", {
+        sprite = Sprites.oldguy,
+        doors = {
+            {
+                coords = { 196, 52 },
+                event  = "onVictory"
+            }
+        },
+        scenes = {
+            init = "Finale100"
+        },
+
+        start = {
+            x = 0,
+            y = 40
+        }
     })
 }
 
