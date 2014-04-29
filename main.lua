@@ -56,19 +56,19 @@ local Map = require("map")
 
 local maps = {
     -- 1-1
---  LevelOne("map1-1.tmx", {
---      sprite = Sprites.bigguy,
---      doors = {
---          {
---              coords = { 204, 12 },
---              event  = "onVictory"
---          }
---      },
---      scenes = {
---          init = "StartScreen",
---          sub = "Pre11"
---      }
---  }),
+    LevelOne("map1-1.tmx", {
+        sprite = Sprites.bigguy,
+        doors = {
+            {
+                coords = { 204, 12 },
+                event  = "onVictory"
+            }
+        },
+        scenes = {
+            init = "StartScreen",
+            sub = "Pre11"
+        }
+    }),
 
     -- 2-1
     SubsequentLevels("map2-1.tmx", {
@@ -364,9 +364,9 @@ function love.draw()
         player.draw()
     end
 
---  if not Cutscenes.current.isRunning() then
---      love.graphics.print("FLOWERS x " .. global.flowers, W_WIDTH - 200, 20)
---  end
+    if not Cutscenes.current.isRunning() then
+        love.graphics.print("FLOWERS x " .. global.flowers, W_WIDTH - 200, 20)
+    end
 
     love.graphics.print(player.getX(), 50, 50)
     love.graphics.print(player.getY(), 50, 70)
