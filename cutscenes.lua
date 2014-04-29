@@ -402,8 +402,7 @@ local imgbackwards02 = love.graphics.newImage("assets/scenes/backwards/shrines_b
 Cutscenes.Shrines.Backwards = Cutscenes:scene({
     name = "Shrines.Backwards",
     frames = {
-        {imgbackwards01, 1},
-        {imgbackwards02, 2}
+        {imgbackwards01, 3}
     },
     frameX = centerX(imgbackwards01),
     delay = "frames"
