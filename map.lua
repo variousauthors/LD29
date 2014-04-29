@@ -13,13 +13,14 @@ loader.path      = "assets/images/maps/"
 --
 
 Map = function (tmx)
-    local map         = loader.load(tmx)
-    local is_finished = false
-    local events      = {}
-    local sprite      = {}
-    local glitch_lvl  = 0
-    local glitch_max  = 4
-    local death_line  = map.height - 1
+    local map             = loader.load(tmx)
+    local is_finished     = false
+    local events          = {}
+    local sprite          = {}
+    local glitch_lvl      = 0
+    local glitch_max      = 4
+    local death_line      = map.height - 1
+    local old_collectible = {}
 
     -- the amount to cheat the screen by on level start
     local origin_y = 0
@@ -37,6 +38,12 @@ Map = function (tmx)
 
     -- run all the glitches
     local glitch = function ()
+        local layer = map.layers["collectible"]
+
+        for key, value in pairs(old_collectible) do
+            layer:set(value.x, value.y, value.tile)
+        end
+
         missing_tiles_glitch.generate_glitches(20)
         missing_tiles_glitch.modify_layer()
         glitch_lvl = glitch_lvl + 1
@@ -336,7 +343,11 @@ Map = function (tmx)
     end
 
     callbacks["collectible"] = function (layer, v, tx, ty, rx, ry)
+        local tile = layer:get(tx, ty)
+        table.insert(old_collectible, { tile = tile, x = tx, y = ty })
+
         layer:set(tx, ty, nil)
+
         Sound.playSFX("awyiss")
         global.getFlower()
 
