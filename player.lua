@@ -107,7 +107,7 @@ Player = function (point, sprite)
     local keypressed = function (key)
         if isJumping() then return end
 
-        if love.keyboard.isDown("up") then
+        if love.keyboard.isDown("up", " ") then
             Sound.playSFX("ptooi_big")
             forces.key.setY(-15)
         end
