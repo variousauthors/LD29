@@ -25,17 +25,24 @@ Player = function (point, sprite)
     -- in Map.collide. Later there will be 4+ of these
     -- the points should be arranged so that
     local collision_points = {}
+    collision_points[0]    = {}
     collision_points[1]    = {}
     collision_points[-1]   = {} -- yes... -1
 
     -- these are using vectors with unitary components so that we can determine which
     -- should be checked first (the one closest to the direction of movement)
-    -- WHOA TODO where are 16 and 32 coming from? Why negative? This I cannot
-    -- explain. It is a "bug"
-    collision_points[1 ][1]  = { x = - draw_w * 0.5, y = -draw_h / 2 } -- bottom right
-    collision_points[-1][1]  = { x = - draw_w * 1.5, y = -draw_h * 1.5 } -- bottom left
-    collision_points[-1][-1] = { x = - draw_w * 1.5,            y = -draw_h / 2  } -- top left
-    collision_points[1 ][-1] = { x = - draw_w * 0.5,            y = -draw_h * 1.5 } -- top right
+    -- clockwise from top right
+    collision_points[-1][-1]  = { x = 0         , y = 0          } -- top right (origin)
+    collision_points[ 0][-1]  = { x = draw_w / 2, y = 0          } --
+    collision_points[ 1][-1]  = { x = draw_w    , y = 0          } --
+    collision_points[ 1][ 0]  = { x = draw_w    , y = draw_h / 2 } --
+    collision_points[ 1][ 1]  = { x = draw_w    , y = draw_h     } --
+    collision_points[ 0][ 1]  = { x = draw_w / 2, y = draw_h     } --
+    collision_points[-1][ 1]  = { x = 0         , y = draw_h     } --
+    collision_points[-1][ 0]  = { x = 0         , y = draw_h / 2 } --
+
+    -- special case. This is mainly to prevent the nil but is also a reasonable value
+    collision_points[ 0][ 0]  = { x = draw_w / 2, y = draw_h / 2 }
 
     local serialize = function ()
         return {

@@ -376,13 +376,12 @@ Map = function (tmx)
         return tile
     end
 
-    local resolveCollision = function (p, v, offset, layer)
+    local resolveCollision = function (p, v, offset, tile, layer)
         -- the position of the tile we are colliding with
         local tx, ty         = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
         tile_x, tile_y       = tx, ty -- debug stuff
 
         -- this is where the tile is "detected"
-        local tile           = detect(p, offset, layer)
         local new_v, is_dead = v, false
 
         -- this 14 will need to be based on the map bounds
@@ -498,12 +497,17 @@ Map = function (tmx)
         return p, new_v, mid_air, is_dead
     end
 
-    local resolveCollisions = function (data)
+    local resolve = function (p, prev, new_v, corner, layer)
+    end
+
+    local collisions = function (data)
         local p                       = Point(data.x, data.y)
         local prev                    = Point(data.px, data.py)
         local v                       = Vector(data.v.x, data.v.y)
         local x, y                    = primary_direction(v) -- index at which to start collision detection
         local new_v, is_dead, mid_air = v, false, true -- assume we are in mid_air and not dead
+
+        inspect({ x, y })
 
         for key in pairs(map.layers) do
             local layer = map.layers[key]
@@ -512,8 +516,10 @@ Map = function (tmx)
             if layer.properties["obstacle"] ~= nil or layer.properties["collectible"] then
                 -- run collision detection once to resolve the "most likely collision"
                 
-                local tile = detect(p, { x = 0, y = 0 }, layer)
-                inspect(tile)
+                local corner = data.collision_points[x][y]
+                local tile   = detect(p, corner, layer)
+
+                p, new_v, is_dead = resolveCollision(p, new_v, corner, tile, layer)
             end
         end
 
@@ -524,7 +530,7 @@ Map = function (tmx)
     -- but I don't like passing references to objects. I prefer to serialize
     -- the data and pass that... probably this is dumb, but only time will tell.
     local collide = function (data)
-        local p, new_v, mid_air, is_dead = resolveCollisions(data)
+        local p, new_v, mid_air, is_dead = collisions(data)
 
         -- the results of the collision
         return {
