@@ -1,13 +1,14 @@
 
 -- constructor for Players!
 Player = function (point, sprite)
-    local p, v                = point.copy(), Vector(0, 0)
-    local speed, max_speed    = 100, 2
-    local sprite = sprite
-    local cur_state, prev_state = "stand", nil
+    local p, v                    = point.copy(), Vector(0, 0)
+    local prev                    = nil -- the previous point position
+    local speed, max_speed        = 100, 2
+    local sprite                  = sprite
+    local cur_state, prev_state   = "stand", nil
     local cur_facing, prev_facing = sprite.base_facing, nil
-    local current_quad = cur_state
-    local double_jump = false
+    local current_quad            = cur_state
+    local double_jump             = false
 
     -- height/width of the sprite's shape
     local sprite_width = (sprite.width or 16)
@@ -40,6 +41,8 @@ Player = function (point, sprite)
         return {
             x = p.getX(),
             y = p.getY(),
+            px = prev.getX(),
+            py = prev.getY(),
             v = { x = v.getX(), y = v.getY() },
             collision_points = collision_points,
             w = draw_w,
@@ -196,6 +199,7 @@ Player = function (point, sprite)
     end
 
     local update = function (dt, map)
+        prev = p.copy()
         setKeyForces()
 
         -- here is where we sum up all the forces acting on the player

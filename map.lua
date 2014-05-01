@@ -285,7 +285,13 @@ Map = function (tmx)
     -- around these pixels" So for now I'm just converting, but later I
     -- will implement such a lookup.
     local pixel_to_tile = function (pixel_x, pixel_y)
-        return math.ceil((pixel_x - global.tx * 2) / (map.tileWidth * global.scale)), math.ceil((pixel_y - global.ty * 2) / (map.tileHeight * global.scale))
+        local tile_width = map.tileWidth * global.scale;
+
+        -- x, y relative to a moving frame
+        local rel_x = pixel_x - global.tx * global.scale
+        local rel_y = pixel_y - global.ty * global.scale
+
+        return math.floor(rel_x / tile_width), math.floor(rel_y / tile_width)
     end
 
     -- given a vector, determine which collision point should be checked
@@ -301,7 +307,7 @@ Map = function (tmx)
         elseif x > 0 then
             x = math.ceil(x)
         else
-            x = 1
+            x = 0
         end
 
         if y < 0 then
@@ -309,7 +315,7 @@ Map = function (tmx)
         elseif y > 0 then
             y = math.ceil(y)
         else
-            y = 1
+            y = 0
         end
 
         return x, y
@@ -494,9 +500,22 @@ Map = function (tmx)
 
     local resolveCollisions = function (data)
         local p                       = Point(data.x, data.y)
+        local prev                    = Point(data.px, data.py)
         local v                       = Vector(data.v.x, data.v.y)
         local x, y                    = primary_direction(v) -- index at which to start collision detection
         local new_v, is_dead, mid_air = v, false, true -- assume we are in mid_air and not dead
+
+        for key in pairs(map.layers) do
+            local layer = map.layers[key]
+
+            -- if the layer is an obstacle layer
+            if layer.properties["obstacle"] ~= nil or layer.properties["collectible"] then
+                -- run collision detection once to resolve the "most likely collision"
+                
+                local tile = detect(p, { x = 0, y = 0 }, layer)
+                inspect(tile)
+            end
+        end
 
         return p, new_v, mid_air, is_dead
     end
