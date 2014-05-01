@@ -40,8 +40,8 @@ require("player")
 require("vector")
 
 -- debugging stuff
-tile_x        = ""
-tile_y        = ""
+tile_x        = nil
+tile_y        = nil
 player_vx     = ""
 player_vy     = ""
 sprite_quad   = ""

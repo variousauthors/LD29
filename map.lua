@@ -136,6 +136,8 @@ Map = function (tmx)
     end
 
     local getBand = function (tile)
+        if tile == nil then return nil end
+
         if tile > 30 + start_y                                                  then return { zone = "catacombs", transition = false } end
         if tile > 15 + start_y                                                  then return { zone = "dungeon",   transition = false } end
         if tile == 15 + start_y or tile == 14 + start_y or tile == 13 + start_y then return { zone = "dungeon",   transition = true  } end
@@ -486,6 +488,15 @@ Map = function (tmx)
                 mid_air = mid_air and (ground_tile == nil)
             end
         end
+
+        return p, new_v, mid_air, is_dead
+    end
+
+    local resolveCollisions = function (data)
+        local p                       = Point(data.x, data.y)
+        local v                       = Vector(data.v.x, data.v.y)
+        local x, y                    = primary_direction(v) -- index at which to start collision detection
+        local new_v, is_dead, mid_air = v, false, true -- assume we are in mid_air and not dead
 
         return p, new_v, mid_air, is_dead
     end
