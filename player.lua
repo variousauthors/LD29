@@ -281,11 +281,19 @@ Player = function (point, sprite)
             love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
                                x, y, r, sx, sy, ox, oy)
         else
-            local x = p.getX() - draw_w / 2 + ( sprite_width / 4 )
-            local y = p.getY() - draw_h
+            local x = p.getX() + draw_w / 2 -- + ( sprite_width / 4 )
+            local y = p.getY() + draw_h / 2
 
+            love.graphics.setColor(255, 0, 0)
+            love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.rectangle("fill", p.getX(), p.getY(), 3, 3)
+
+            love.graphics.setColor(255, 255, 255)
             love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
-                               x, y, r, sx, sy, ox, oy)
+                               x - sprite.width, y - sprite.height, r, sx, sy, ox, oy)
+
+            love.graphics.rectangle("fill", x, y, 3, 3)
         end
 
     end
