@@ -497,7 +497,22 @@ Map = function (tmx)
         return p, new_v, mid_air, is_dead
     end
 
-    local resolve = function (p, prev, new_v, corner, layer)
+    local resolve = function (p, v, value, corner, layer)
+        local tile      = detect(p, corner, layer)
+        local collision = tile ~= nil
+
+        while (tile ~= nil) do
+            p.setX(p.getX() - value.x)
+            p.setY(p.getY() - value.y)
+
+            tile = detect(p, corner, layer)
+        end
+
+        if collision and value.y ~= 0 then
+            v.setY(0)
+        end
+
+        return p, v, false
     end
 
     local collisions = function (data)
@@ -507,8 +522,6 @@ Map = function (tmx)
         local x, y                    = primary_direction(v) -- index at which to start collision detection
         local new_v, is_dead, mid_air = v, false, true -- assume we are in mid_air and not dead
 
-        inspect({ x, y })
-
         for key in pairs(map.layers) do
             local layer = map.layers[key]
 
@@ -516,10 +529,27 @@ Map = function (tmx)
             if layer.properties["obstacle"] ~= nil or layer.properties["collectible"] then
                 -- run collision detection once to resolve the "most likely collision"
                 
-                local corner = data.collision_points[x][y]
-                local tile   = detect(p, corner, layer)
+                bob = {
+                    { x = 0, y = -1 },
+                    { x = 1, y = 0 },
+                    { x = 0, y = 1 },
+                    { x = -1, y = 0 }
+                }
 
-                p, new_v, is_dead = resolveCollision(p, new_v, corner, tile, layer)
+                for index, value in pairs(bob) do
+                    local corner = data.collision_points[value.x][value.y]
+
+                    p, new_v, is_dead = resolve(p, new_v, value, corner, layer)
+                end
+
+                -- mario is in mid_air if he is already in mid_air and
+                -- his left and right bottom pixels are in mid_air
+                local bottom_left  = data.collision_points[-1][1]
+                local bottom_right = data.collision_points[1][1]
+                bottom_left  = { x = bottom_left.x,  y = bottom_left.y + 1 }
+                bottom_right = { x = bottom_right.x, y = bottom_right.y + 1 }
+
+                mid_air = mid_air and not detect(p, bottom_left, layer) and not detect(p, bottom_right, layer)
             end
         end
 

@@ -17,7 +17,7 @@ Player = function (point, sprite)
 
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 0),
+        gravity    = Vector(0, 1),
         resistance = Vector(0.3, 0.3)
     }
 
@@ -137,7 +137,7 @@ Player = function (point, sprite)
 
     -- this is for forces that get set continuously while the key is down
     local setKeyForces = function ()
-        if love.keyboard.isDown("right", "left", "down") then
+        if love.keyboard.isDown("right", "left") then
             if love.keyboard.isDown("left") then
                 setFacing("left")
                 forces.key.setX(-0.4)
@@ -145,9 +145,6 @@ Player = function (point, sprite)
             if love.keyboard.isDown("right") then
                 setFacing("right")
                 forces.key.setX(0.4)
-            end
-            if love.keyboard.isDown("down") then
-                forces.key.setY(0.4)
             end
         end
     end
