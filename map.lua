@@ -458,7 +458,7 @@ Map = function (tmx)
         local prev                    = Point(data.px, data.py)
         local v                       = Vector(data.v.x, data.v.y)
         local x, y                    = primary_direction(v) -- index at which to start collision detection
-        local new_v, is_dead, mid_air = v, false, true -- assume we are in mid_air and not dead
+        local new_v, mid_air = v, true -- assume we are in mid_air and not dead
 
         for key in pairs(map.layers) do
             local layer = map.layers[key]
@@ -469,12 +469,14 @@ Map = function (tmx)
                 
                 -- to iterate over the adjacent squares we need to hit all
                 -- the cardinal directions with TRIGONOMETRY BITCHES
+                -- TODO we could run these two loops a couple of times, in order
+                -- to prevent collisions from causing collisions.
                 for i = 0, 3 do
                     local x      = math.round(math.cos(i * (math.pi / 2)))
                     local y      = math.round(math.sin(i * (math.pi / 2)))
                     local corner = data.collision_points[x][y]
 
-                    p, new_v, is_dead = resolve(p, new_v, { x = x, y = y }, corner, layer)
+                    p, new_v = resolve(p, new_v, { x = x, y = y }, corner, layer)
                 end
 
                 -- and now we'll hit the diagonals (but they should mostly already be resolved)
@@ -483,7 +485,7 @@ Map = function (tmx)
                     local y      = math.round(math.sin(i * (math.pi / 2) + (math.pi / 4)))
                     local corner = data.collision_points[x][y]
 
-                    p, new_v, is_dead = resolve(p, new_v, { x = x, y = y }, corner, layer)
+                    p, new_v = resolve(p, new_v, { x = x, y = y }, corner, layer)
                 end
 
                 -- mario is in mid_air if he is already in mid_air and
@@ -497,21 +499,23 @@ Map = function (tmx)
             end
         end
 
-        return p, new_v, mid_air, is_dead
+        return p, new_v, mid_air 
     end
 
     -- data is a serialization of some object. I guess I'm just being a dick,
     -- but I don't like passing references to objects. I prefer to serialize
     -- the data and pass that... probably this is dumb, but only time will tell.
     local collide = function (data)
-        local p, new_v, mid_air, is_dead = collisions(data)
+        local p, new_v, mid_air = collisions(data)
+        local tx, ty = pixel_to_tile(p.getX(), p.getY())
+        inspect({ tx, ty })
 
         -- the results of the collision
         return {
             p = p,
             v = new_v,
             mid_air = mid_air,
-            is_dead = is_dead
+            is_dead = checkForDeath(tx, ty)
         }
     end
     -- public interface for map
