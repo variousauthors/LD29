@@ -497,6 +497,13 @@ Map = function (tmx)
         return p, new_v, mid_air, is_dead
     end
 
+    -- given a real number, snap its value to the next
+    -- integer in the direction of that real from 0
+    local discretize = function (x)
+        if x <= 0 then return math.floor(x) end
+        if x > 0 then return math.ceil(x) end
+    end
+
     local resolve = function (p, v, value, corner, layer)
         local tile      = detect(p, corner, layer)
         local collision = tile ~= nil
@@ -508,6 +515,8 @@ Map = function (tmx)
             tile = detect(p, corner, layer)
         end
 
+        -- if mario collided in a y direction, then
+        -- halt his y movement
         if collision and value.y ~= 0 then
             v.setY(0)
         end
@@ -529,17 +538,23 @@ Map = function (tmx)
             if layer.properties["obstacle"] ~= nil or layer.properties["collectible"] then
                 -- run collision detection once to resolve the "most likely collision"
                 
-                bob = {
-                    { x = 0, y = -1 },
-                    { x = 1, y = 0 },
-                    { x = 0, y = 1 },
-                    { x = -1, y = 0 }
-                }
+                -- to iterate over the adjacent squares we need to hit all
+                -- the cardinal directions with TRIGONOMETRY BITCHES
+                for i = 0, 3 do
+                    local x      = math.round(math.cos(i * (math.pi / 2)))
+                    local y      = math.round(math.sin(i * (math.pi / 2)))
+                    local corner = data.collision_points[x][y]
 
-                for index, value in pairs(bob) do
-                    local corner = data.collision_points[value.x][value.y]
+                    p, new_v, is_dead = resolve(p, new_v, { x = x, y = y }, corner, layer)
+                end
 
-                    p, new_v, is_dead = resolve(p, new_v, value, corner, layer)
+                -- and now we'll hit the diagonals (but they should mostly already be resolved)
+                for i = 0, 3 do
+                    local x      = math.round(math.cos(i * (math.pi / 2) + (math.pi / 4)))
+                    local y      = math.round(math.sin(i * (math.pi / 2) + (math.pi / 4)))
+                    local corner = data.collision_points[x][y]
+
+                    p, new_v, is_dead = resolve(p, new_v, { x = x, y = y }, corner, layer)
                 end
 
                 -- mario is in mid_air if he is already in mid_air and
