@@ -376,20 +376,18 @@ Map = function (tmx)
         return tile
     end
 
-    local resolveCollision = function (p, v, offset, tile, layer)
-        -- the position of the tile we are colliding with
-        local tx, ty         = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
-        tile_x, tile_y       = tx, ty -- debug stuff
-
-        -- this is where the tile is "detected"
-        local new_v, is_dead = v, false
-
+    local checkForDeath = function (tx, ty)
+        local is_dead = false
         -- this 14 will need to be based on the map bounds
         if ty > death_line then
             onDeath()
             is_dead = true
         end
 
+        return is_dead
+    end
+
+    local runCollisionEvents = function (tx, ty)
         -- if we've collided with an event tile, then we need to
         -- process the event (the tile may not actually be a "hit", such as doors)
         if events[tx] ~= nil and events[tx][ty] ~= nil then
@@ -397,104 +395,36 @@ Map = function (tmx)
 
             if callback ~= nil then callback() end
         end
+    end
 
-        local count = 0
-        local collision_occured = tile ~= nil
-        local collision_tile    = tile
+    local runCollisionEffects = function (tx, ty, v, corner, layer)
+        -- and run collision callbacks
+        for key, value in pairs(layer.properties) do
+            local callback = callbacks[key]
 
+            -- the position of the tile that we resolved to
+            rx, ry = pixel_to_tile(p.getX() + corner.x, p.getY() + corner.y)
+
+            -- some callbacks will change the vector (halt it, for example)
+            v = callback(layer, v, tx, ty, rx, ry)
+        end
+
+        return v
+    end
+
+    local adjustPosition = function (p, v, value, corner, layer)
         -- don't run collision prevention for collectible
         if layer.properties["obstacle"] ~= nil then
             -- the "algorithm" is to push the object back in the direction it came until
             -- there is no longer a collision :/
             -- we want the "tile" to be different from the "collision_tile"
-            while (tile ~= nil and count < 100) do
-                p.setX(p.getX() - v.getX())
-                p.setY(p.getY() - v.getY())
+            while (tile ~= nil) do
+                p.setX(p.getX() - value.x)
+                p.setY(p.getY() - value.y)
 
-                tile = layer(pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y))
-                count = count + 1
-            end
-
-            if count == 100 then
-                print("PANIC")
+                tile = detect(p, corner, layer)
             end
         end
-
-        -- resolve the collision's side effects
-        if collision_occured then
-            -- and run collision callbacks
-            for key, value in pairs(layer.properties) do
-                local callback = callbacks[key]
-
-                -- the position of the tile that we resolved to
-                rx, ry = pixel_to_tile(p.getX() + offset.x, p.getY() + offset.y)
-
-                -- some callbacks will change the vector (halt it, for example)
-                new_v = callback(layer, new_v, tx, ty, rx, ry)
-            end
-
-            -- debug
-            table.insert(collisions, { x = tx, y = ty, tile = tile})
-        end
-
-        return p, new_v, is_dead
-    end
-
-    -- for each tile layer, try to resolve collisions on that layer
-    -- APPOLOGIES
-    local resolveCollisions = function (data)
-        -- back the o up pixel by pixel
-        -- return mid_air for mid-air collisions
-        local p                       = Point(data.x, data.y)
-        local v                       = Vector(data.v.x, data.v.y)
-        local x, y                    = primary_direction(v) -- index at which to start collision detection
-        local new_v, is_dead, mid_air = v, false, true -- assume we are in mid_air and not dead
-
-        -- collision points are single pixels on the sprite that collide
-        -- The actual data is an offset from the position of the sprite,
-        -- so like a 16px square sprite at
-        -- 0, 0 will have 4 collision points at (0, 0), (16, 0), (0, 16), (16, 16)
-        -- but at the moment we just use one of these
-
-        -- run this code once for every tile layer
-        for key in pairs(map.layers) do
-            local layer = map.layers[key]
-
-            -- if the layer is an obstacle layer
-            if layer.properties["obstacle"] ~= nil or layer.properties["collectible"] then
-                -- run collision detection once to resolve the "most likely collision"
-
-                corner = data.collision_points[1][1]
-
-                magic_keys = {
-                    data.h - 1,
-                    0,
-                    (data.h - 1) / 8,
-                    (data.h - 1) - (data.h - 1) / 8,
-                    (data.h - 1) / 4,
-                    (data.h - 1) - (data.h - 1) / 4
-                }
-
-                for key, value in pairs(magic_keys) do
-                    local pixel = value
-
-                    offset = { x = corner.x, y = corner.y - (data.h - 1 - pixel) }
-                    p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
-
-                    offset = { x = corner.x - data.w, y = corner.y - (data.h - 1 - pixel) }
-                    p, new_v, is_dead = resolveCollision(p, new_v, offset, layer)
-                end
-
-                ground_tile = layer(pixel_to_tile(p.getX() - (data.w ) + ( data.w / 2  ), p.getY() - ( data.h / 2 ) + 1))
-                ground_tile = ground_tile or layer(pixel_to_tile(p.getX() - (data.w) - ( data.w / 2 ), p.getY() - ( data.h / 2 ) + 1))
-
-                -- mid_air is the AND of all mid_air calculations
-                -- so if _any_ collision detected a ground_tile then we are _not_ in mid_air
-                mid_air = mid_air and (ground_tile == nil)
-            end
-        end
-
-        return p, new_v, mid_air, is_dead
     end
 
     -- given a real number, snap its value to the next
@@ -508,12 +438,11 @@ Map = function (tmx)
         local tile      = detect(p, corner, layer)
         local collision = tile ~= nil
 
-        while (tile ~= nil) do
-            p.setX(p.getX() - value.x)
-            p.setY(p.getY() - value.y)
+        -- the position of the tile we are colliding with
+        local tx, ty         = pixel_to_tile(p.getX() + corner.x, p.getY() + corner.y)
+        tile_x, tile_y       = tx, ty -- debug stuff
 
-            tile = detect(p, corner, layer)
-        end
+        adjustPosition(p, v, value, corner, layer)
 
         -- if mario collided in a y direction, then
         -- halt his y movement
