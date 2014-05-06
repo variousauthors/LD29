@@ -397,7 +397,9 @@ Map = function (tmx)
         end
     end
 
-    local runCollisionEffects = function (tx, ty, v, corner, layer)
+    local runCollisionEffects = function (tx, ty, p, v, corner, layer)
+        print ("in runCollisionEffects")
+        inspect( { tx, ty })
         -- and run collision callbacks
         for key, value in pairs(layer.properties) do
             local callback = callbacks[key]
@@ -443,6 +445,11 @@ Map = function (tmx)
         tile_x, tile_y       = tx, ty -- debug stuff
 
         adjustPosition(p, v, value, corner, layer)
+
+        if collision then
+            runCollisionEvents(tx, ty)
+            runCollisionEffects(tx, ty, p, v, corner, layer)
+        end
 
         -- if mario collided in a y direction, then
         -- halt his y movement
@@ -508,7 +515,6 @@ Map = function (tmx)
     local collide = function (data)
         local p, new_v, mid_air = collisions(data)
         local tx, ty = pixel_to_tile(p.getX(), p.getY())
-        inspect({ tx, ty })
 
         -- the results of the collision
         return {
