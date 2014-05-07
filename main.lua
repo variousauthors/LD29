@@ -56,39 +56,39 @@ local Map = require("map")
 
 local maps = {
     -- 1-1
-    LevelOne("map1-1.tmx", {
-        sprite = Sprites.bigguy,
-        doors = {
-            {
-                coords = { 204, 12 },
-                event  = "onVictory"
-            }
-        },
-        scenes = {
-            init = "StartScreen",
-            sub = "Pre11"
-        }
-    }),
+--  LevelOne("map1-1.tmx", {
+--      sprite = Sprites.bigguy,
+--      doors = {
+--          {
+--              coords = { 204, 12 },
+--              event  = "onVictory"
+--          }
+--      },
+--      scenes = {
+--          init = "StartScreen",
+--          sub = "Pre11"
+--      }
+--  }),
 
-    -- 2-1
-    SubsequentLevels("map2-1.tmx", {
-        sprite = Sprites.ladyguy,
-        doors = {
-            {
-                coords = { 204, 12 },
-                event  = "onVictory"
-            },
+--  -- 2-1
+--  SubsequentLevels("map2-1.tmx", {
+--      sprite = Sprites.ladyguy,
+--      doors = {
+--          {
+--              coords = { 204, 12 },
+--              event  = "onVictory"
+--          },
 
-            {
-                coords = { 98, 27 },
-                event  = "enterDoubleJumpShrine"
-            },
-        },
-        scenes = {
-            init = "Pre21",
-            sub  = "Pre21Sub"
-        }
-    }),
+--          {
+--              coords = { 98, 27 },
+--              event  = "enterDoubleJumpShrine"
+--          },
+--      },
+--      scenes = {
+--          init = "Pre21",
+--          sub  = "Pre21Sub"
+--      }
+--  }),
 
     -- 5-1
     SubsequentLevels("map5-1.tmx", {
@@ -117,7 +117,7 @@ local maps = {
         -- in tile form
         start = {
             x = 0,
-            y = 15
+            y = 14 -- TODO this was 15, but I made it fourteen for testing mini mario
         }
     }),
 

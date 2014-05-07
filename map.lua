@@ -404,8 +404,6 @@ Map = function (tmx)
     end
 
     local runCollisionEffects = function (tx, ty, p, v, corner, layer)
-        print ("in runCollisionEffects")
-
         -- and run collision callbacks
         for key, value in pairs(layer.properties) do
             local callback = callbacks[key]
@@ -450,9 +448,26 @@ Map = function (tmx)
         local tx, ty         = pixel_to_tile(p.getX() + corner.x, p.getY() + corner.y)
         tile_x, tile_y       = tx, ty -- debug stuff
 
+        if collision then
+            print("before resolution")
+            inspect({ p.getX(), p.getY() })
+        end
+
         adjustPosition(p, v, value, corner, layer)
 
         if collision then
+            print("after resolution")
+            inspect({ p.getX(), p.getY() })
+        end
+
+        if collision then
+            print("collision:")
+            print("  corner:")
+            inspect({ corner.x, corner.y })
+            print("  direction:")
+            inspect({ value.x, value.y })
+            print("  tile:")
+            inspect({ tx, ty })
             runCollisionEffects(tx, ty, p, v, corner, layer)
         end
 

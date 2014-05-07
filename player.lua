@@ -277,14 +277,14 @@ Player = function (point, sprite)
 
 
         -- hack to draw red square
-        if draw_h == 32 then
-            -- the sprite_width / 4 is to allow the collision to be skinny
-            local x = p.getX() - draw_w / 2 + ( sprite_width / 4 )
-            local y = p.getY() - draw_h / 2
+      --if draw_h == 32 then
+      --    -- the sprite_width / 4 is to allow the collision to be skinny
+      --    local x = p.getX() - draw_w / 2 + ( sprite_width / 4 )
+      --    local y = p.getY() - draw_h / 2
 
-            love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
-                               x, y, r, sx, sy, ox, oy)
-        else
+      --    love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
+      --                       x, y, r, sx, sy, ox, oy)
+      --else
             local x = p.getX() + draw_w / 2 -- + ( sprite_width / 4 )
             local y = p.getY() + draw_h / 2
 
@@ -316,7 +316,7 @@ Player = function (point, sprite)
 
                 love.graphics.rectangle("fill", p.getX() + corner.x, p.getY() + corner.y, 3, 3)
             end
-        end
+      --  end
 
     end
 
