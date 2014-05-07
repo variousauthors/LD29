@@ -3,22 +3,28 @@
 Player = function (point, sprite)
     local p, v                    = point.copy(), Vector(0, 0)
     local prev                    = nil -- the previous point position
-    local speed, max_speed        = 100, 2
+    local speed                   = 100
+    local max_horizontal_speed    = 2
+    local max_vertical_speed      = 10
     local sprite                  = sprite
     local cur_state, prev_state   = "stand", nil
     local cur_facing, prev_facing = sprite.base_facing, nil
     local current_quad            = cur_state
     local double_jump             = false
+    local jump_force              = 10
 
     -- height/width of the sprite's shape
+    print("sprite")
+    inspect({ sprite.width, sprite.height })
+
     local sprite_width = (sprite.width or 16)
-    local draw_w = sprite_width * global.scale - ( sprite_width / 2 ) -- skinny for collisions
+    local draw_w = sprite_width * global.scale -- ( sprite_width / 2 ) -- skinny for collisions
     local draw_h = (sprite.height or 16) * global.scale
 
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 1),
-        resistance = Vector(0.3, 0.3)
+        gravity    = Vector(0, 0.5),
+        resistance = Vector(0.3, 0.1)
     }
 
     -- these are offsets from the Player's x, y as describe
@@ -123,13 +129,13 @@ Player = function (point, sprite)
                 double_jump = true
 
                 Sound.playSFX("ptooi_big")
-                forces.key.setY(-15)
+                forces.key.setY(-jump_force)
             elseif isJumping() then
                 -- NOP
 
             else
                 Sound.playSFX("ptooi_big")
-                forces.key.setY(-15)
+                forces.key.setY(-jump_force)
                 double_jump = false
             end
         end
@@ -154,7 +160,7 @@ Player = function (point, sprite)
     -- with no way of stopping!
     local drag = function (v)
         local x, y   = v.getX(), v.getY()
-        local rx, ry = forces.resistance.getX(), forces.resistance.getX()
+        local rx, ry = forces.resistance.getX(), forces.resistance.getY()
 
         -- drag "drags" the x, y values towards 0
         if x > 0 then x = math.max(x - rx, 0)
@@ -182,7 +188,7 @@ Player = function (point, sprite)
                 walkFrames = sprite.turn_anim
             end
             -- speed up animation with movement, deltatime multiplied by 1-4
-            speedUp = (1 + 3 * (math.abs(v.getX()) / max_speed))
+            speedUp = (1 + 3 * (math.abs(v.getX()) / max_horizontal_speed))
             walkTimer = walkTimer + (dt * speedUp)
             if walkTimer > walkDelay then
                 walkTimer = 0
@@ -221,8 +227,9 @@ Player = function (point, sprite)
             v = drag(v)
         end
 
-        -- clamp horizontal speed
-        v.setX(math.max(-max_speed, math.min(v.getX(), max_speed)))
+        -- clamp speeds
+        v.setX(math.max(-max_horizontal_speed, math.min(v.getX(), max_horizontal_speed)))
+        v.setY(math.max(-max_vertical_speed, math.min(v.getY(), max_vertical_speed)))
 
         -- update position optimistically
         p.setY(p.getY() + v.getY() * dt * speed)
