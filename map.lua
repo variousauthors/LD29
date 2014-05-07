@@ -342,6 +342,12 @@ Map = function (tmx)
 
         -- if the resolution_tile is below the collision_tile then we hit from below
         -- ... I hope
+        -- TODO mario can break blocks by walking into them... should only
+        -- work when jumping
+        -- Maybe this information should be gathered up and shipped out
+        -- to the player, so then different players can have different
+        -- callbacks for destructible objects etc
+        -- OH YEAH! Then small mario won't be able to break blocks!!!
         if ry > ty then
             layer:set(tx, ty, nil)
             Sound.playSFX("smash")
@@ -387,7 +393,7 @@ Map = function (tmx)
         return is_dead
     end
 
-    local runCollisionEvents = function (tx, ty)
+    local runMapEvents = function (tx, ty)
         -- if we've collided with an event tile, then we need to
         -- process the event (the tile may not actually be a "hit", such as doors)
         if events[tx] ~= nil and events[tx][ty] ~= nil then
@@ -399,7 +405,7 @@ Map = function (tmx)
 
     local runCollisionEffects = function (tx, ty, p, v, corner, layer)
         print ("in runCollisionEffects")
-        inspect( { tx, ty })
+
         -- and run collision callbacks
         for key, value in pairs(layer.properties) do
             local callback = callbacks[key]
@@ -447,9 +453,11 @@ Map = function (tmx)
         adjustPosition(p, v, value, corner, layer)
 
         if collision then
-            runCollisionEvents(tx, ty)
             runCollisionEffects(tx, ty, p, v, corner, layer)
         end
+
+        -- no collision necessary
+        runMapEvents(tx, ty)
 
         -- if mario collided in a y direction, then
         -- halt his y movement

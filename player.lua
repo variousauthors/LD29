@@ -298,6 +298,24 @@ Player = function (point, sprite)
                                x - sprite.width, y - sprite.height, r, sx, sy, ox, oy)
 
             love.graphics.rectangle("fill", x, y, 3, 3)
+
+            love.graphics.setColor(255, 255, 255)
+            for i = 0, 3 do
+                local x      = math.round(math.cos(i * (math.pi / 2)))
+                local y      = math.round(math.sin(i * (math.pi / 2)))
+                local corner = collision_points[x][y]
+
+                love.graphics.rectangle("fill", p.getX() + corner.x, p.getY() + corner.y, 3, 3)
+            end
+
+            -- and now we'll hit the diagonals (but they should mostly already be resolved)
+            for i = 0, 3 do
+                local x      = math.round(math.cos(i * (math.pi / 2) + (math.pi / 4)))
+                local y      = math.round(math.sin(i * (math.pi / 2) + (math.pi / 4)))
+                local corner = collision_points[x][y]
+
+                love.graphics.rectangle("fill", p.getX() + corner.x, p.getY() + corner.y, 3, 3)
+            end
         end
 
     end
