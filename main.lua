@@ -40,8 +40,8 @@ require("player")
 require("vector")
 
 -- debugging stuff
-tile_x        = ""
-tile_y        = ""
+tile_x        = nil
+tile_y        = nil
 player_vx     = ""
 player_vy     = ""
 sprite_quad   = ""
@@ -117,7 +117,7 @@ local maps = {
         -- in tile form
         start = {
             x = 0,
-            y = 15
+            y = 14 -- TODO this was 15, but I made it fourteen for testing mini mario
         }
     }),
 
@@ -151,8 +151,8 @@ local maps = {
         },
 
         start = {
-            x = 0,
-            y = 40
+            x = 5,
+            y = 25
         }
     }),
 
@@ -349,7 +349,7 @@ function love.keypressed(k)
         local dest = tonumber(teleport)
         teleport = ""
 
-        --global.tx = -dest
+        global.tx = -dest
     end
 
     if k =='s' then
