@@ -282,48 +282,37 @@ Player = function (point, sprite)
             oy = sprite.height
         end
 
+        local x = p.getX() + draw_w / 2 -- + ( sprite_width / 4 )
+        local y = p.getY() + draw_h / 2
 
-        -- hack to draw red square
-      --if draw_h == 32 then
-      --    -- the sprite_width / 4 is to allow the collision to be skinny
-      --    local x = p.getX() - draw_w / 2 + ( sprite_width / 4 )
-      --    local y = p.getY() - draw_h / 2
+        love.graphics.setColor(255, 0, 0)
+        love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle("fill", p.getX(), p.getY(), 3, 3)
 
-      --    love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
-      --                       x, y, r, sx, sy, ox, oy)
-      --else
-            local x = p.getX() + draw_w / 2 -- + ( sprite_width / 4 )
-            local y = p.getY() + draw_h / 2
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
+                           x - sprite.width, y - sprite.height, r, sx, sy, ox, oy)
 
-            love.graphics.setColor(255, 0, 0)
-            love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
-            love.graphics.setColor(0, 0, 0)
-            love.graphics.rectangle("fill", p.getX(), p.getY(), 3, 3)
+        love.graphics.rectangle("fill", x, y, 3, 3)
 
-            love.graphics.setColor(255, 255, 255)
-            love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
-                               x - sprite.width, y - sprite.height, r, sx, sy, ox, oy)
+        love.graphics.setColor(255, 255, 255)
+        for i = 0, 3 do
+            local x      = math.round(math.cos(i * (math.pi / 2)))
+            local y      = math.round(math.sin(i * (math.pi / 2)))
+            local corner = collision_points[x][y]
 
-            love.graphics.rectangle("fill", x, y, 3, 3)
+            love.graphics.rectangle("fill", p.getX() + corner.x, p.getY() + corner.y, 3, 3)
+        end
 
-            love.graphics.setColor(255, 255, 255)
-            for i = 0, 3 do
-                local x      = math.round(math.cos(i * (math.pi / 2)))
-                local y      = math.round(math.sin(i * (math.pi / 2)))
-                local corner = collision_points[x][y]
+        -- and now we'll hit the diagonals (but they should mostly already be resolved)
+        for i = 0, 3 do
+            local x      = math.round(math.cos(i * (math.pi / 2) + (math.pi / 4)))
+            local y      = math.round(math.sin(i * (math.pi / 2) + (math.pi / 4)))
+            local corner = collision_points[x][y]
 
-                love.graphics.rectangle("fill", p.getX() + corner.x, p.getY() + corner.y, 3, 3)
-            end
-
-            -- and now we'll hit the diagonals (but they should mostly already be resolved)
-            for i = 0, 3 do
-                local x      = math.round(math.cos(i * (math.pi / 2) + (math.pi / 4)))
-                local y      = math.round(math.sin(i * (math.pi / 2) + (math.pi / 4)))
-                local corner = collision_points[x][y]
-
-                love.graphics.rectangle("fill", p.getX() + corner.x, p.getY() + corner.y, 3, 3)
-            end
-      --  end
+            love.graphics.rectangle("fill", p.getX() + corner.x, p.getY() + corner.y, 3, 3)
+        end
 
     end
 

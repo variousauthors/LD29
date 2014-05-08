@@ -496,7 +496,6 @@ Map = function (tmx)
             -- if the layer is an obstacle layer
             if layer.properties["obstacle"] ~= nil or layer.properties["collectible"] then
                 -- run collision detection once to resolve the "most likely collision"
-                
                 -- to iterate over the adjacent squares we need to hit all
                 -- the cardinal directions with TRIGONOMETRY BITCHES
                 -- TODO we could run these two loops a couple of times, in order
@@ -541,8 +540,8 @@ Map = function (tmx)
 
         -- the results of the collision
         return {
-            p = p,
-            v = new_v,
+            p       = p,
+            v       = new_v,
             mid_air = mid_air,
             is_dead = checkForDeath(tx, ty)
         }
