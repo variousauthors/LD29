@@ -329,7 +329,11 @@ end
 
 local inputPressed = function(k, isRepeat)
     -- No jumping during cutscenes
-    if not Cutscenes.current.isRunning() then player.keypressed(k) end
+    if Cutscenes.current.isRunning() then
+        if not isRepeat then Cutscenes.current.update(65535) end
+    else
+        player.keypressed(k)
+    end
 
     -- Call keypressed in our maps if it is defined
     if maps[num].keypressed then maps[num].keypressed(k) end
