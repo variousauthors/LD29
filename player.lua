@@ -124,7 +124,7 @@ Player = function (point, sprite)
     local keypressed = function (key)
         if isJumping() and not global.double_jump then return end
 
-        if love.keyboard.isDown("up", " ") then
+        if Input.isPressed("jump") then
             if isJumping() and not double_jump then
                 double_jump = true
 
@@ -143,15 +143,14 @@ Player = function (point, sprite)
 
     -- this is for forces that get set continuously while the key is down
     local setKeyForces = function ()
-        if love.keyboard.isDown("right", "left") then
-            if love.keyboard.isDown("left") then
-                setFacing("left")
-                forces.key.setX(-0.4)
-            end
-            if love.keyboard.isDown("right") then
-                setFacing("right")
-                forces.key.setX(0.4)
-            end
+        if Input.isPressed("left") and Input.isPressed("right") then
+            -- Both directions! Do Nothing!
+        elseif Input.isPressed("left") then
+            setFacing("left")
+            forces.key.setX(-0.4)
+        elseif Input.isPressed("right") then
+            setFacing("right")
+            forces.key.setX(0.4)
         end
     end
 

@@ -9,6 +9,7 @@ function math.round(val, decimal)
 end
 
 require("sound") -- Sound global object
+require("input")
 
 require("sprites")
 require("player")
@@ -326,7 +327,19 @@ function love.update(dt)
 
 end
 
-function love.keypressed(k)
+local inputPressed = function(k, isRepeat)
+    -- No jumping during cutscenes
+    if Cutscenes.current.isRunning() then
+        if not isRepeat then Cutscenes.current.update(65535) end
+    else
+        player.keypressed(k)
+    end
+
+    -- Call keypressed in our maps if it is defined
+    if maps[num].keypressed then maps[num].keypressed(k) end
+end
+
+function love.keypressed(k, isRepeat)
     -- quit
     if k == 'escape' then
         love.event.push("quit")
@@ -362,11 +375,11 @@ function love.keypressed(k)
         player.setY(player.getY() + 200)
     end
 
-    -- No jumping during cutscenes
-    if not Cutscenes.current.isRunning() then player.keypressed(k) end
+    inputPressed(k, isRepeat)
+end
 
-    -- Call keypressed in our maps if it is defined
-    if maps[num].keypressed then maps[num].keypressed(k) end
+function love.joystickpressed(j, k)
+    inputPressed(k, nil)
 end
 
 function love.draw()
