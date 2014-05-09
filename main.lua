@@ -227,8 +227,8 @@ function love.keypressed(k, isRepeat)
     inputPressed(k, isRepeat)
 end
 
-function love.joystickpressed(j, k)
-    inputPressed(k, nil)
+function love.gamepadpressed(j, k)
+    inputPressed(k)
 end
 
 function love.draw()

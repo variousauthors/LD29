@@ -8,21 +8,39 @@ Input = {}
 Input.mappings = {
     left = {
         {"k", "left"},
-        {"j", "dpleft"}
+        {"j", "dpleft"},
+        {"ja", "leftx", -0.2}
     },
 
     right = {
         {"k", "right"},
-        {"j", "dpright"}
+        {"j", "dpright"},
+        {"ja", "leftx", 0.2}
     },
 
     jump = {
         {"k", " "},
         {"k", "up"},
-        {"j", "a"}
+        {"j", "a"},
+        {"j", "x"}
     }
 }
-Input.joystick = love.joystick.getJoysticks()[1]
+
+Input.joystick = nil
+
+function love.joystickadded (j)
+    local joysticks = love.joystick.getJoysticks()
+    if joysticks then
+        Input.joystick = joysticks[1]
+    end
+end
+
+function love.joystickremoved (j)
+    local joysticks = love.joystick.getJoysticks()
+    if joysticks then
+        Input.joystick = joysticks[1]
+    end
+end
 
 -- I manually entered the mappings in the table above, so this isn't super
 -- relevant, but...
@@ -46,15 +64,24 @@ function Input.addMapping (name, device, key)
 end
 
 function Input.isPressed (name)
-    if not Input.mappings[name] then
+    if not Input.mappings[name] or not love.window.hasFocus() then
         return false
     end
 
     for k, v in pairs(Input.mappings[name]) do
         if v[1] == "k" then
             if love.keyboard.isDown(v[2]) then return true end
-        elseif v[2] == "j" then
-            if this.joystick.isGamepadDown(v[2]) then return true end
+        elseif Input.joystick then
+            if v[1] == "j" then
+                if Input.joystick:isGamepadDown(v[2]) then return true end
+            elseif v[1] == "ja" then
+                local axis = Input.joystick:getGamepadAxis(v[2])
+                if v[3] >= 0 then
+                    if axis >= v[3] then return true end
+                else
+                    if axis <= v[3] then return true end
+                end
+            end
         end
     end
 
