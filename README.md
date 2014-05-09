@@ -41,8 +41,18 @@ up towards the tops of pipes, and continue falling after hitting a surface.
 The work here relates to the collision detection being unable to resolve a
 good direction to send mario when resolving a diagonal collision pixel.
 
+I'm going to try using mario's incident vector to determine the side of the
+tile being collided with. Then I'll try to send the player in the normal
+direction from that side.
+
 Collision Detection
 -------------------
+
+Last night (May 8th) Chris Beaver played to 9-1 and experienced two bugs:
+
+- he died mysteriously in 9-1 when jumping against a corner.
+- he got stuck in the floor in 5-1 but did not die. This was
+  after double jumping a great distance (I think)
 
 _RESOLVED_
 

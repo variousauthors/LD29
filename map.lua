@@ -433,6 +433,16 @@ Map = function (tmx)
         end
     end
 
+    local collisionDirection = function (p, v, tx, ty, value)
+        print("in collisionDirection")
+        -- value gives us the current diagonal direction
+        inspect(value)
+        -- create a line from p and v
+        -- iterate over 4 sides of the tile
+        --
+        return value
+    end
+
     -- given a real number, snap its value to the next
     -- integer in the direction of that real from 0
     local discretize = function (x)
@@ -446,11 +456,18 @@ Map = function (tmx)
 
         -- the position of the tile we are colliding with
         local tx, ty         = pixel_to_tile(p.getX() + corner.x, p.getY() + corner.y)
-        tile_x, tile_y       = tx, ty -- debug stuff
+        tile_x, tile_y       = tx, ty -- this is actually used globally to determine band
 
         if collision then
             print("before resolution")
             inspect({ p.getX(), p.getY() })
+        end
+
+        if collision and value.x ~= 0 and value.y ~= 0 then
+            -- transform value so that it is an axis bound vector
+            
+            -- find the intersection of the vector v and the tile's sides
+            value = collisionDirection(p, v, tx, ty, value)
         end
 
         adjustPosition(p, v, value, corner, layer)
