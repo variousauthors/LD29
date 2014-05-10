@@ -8,174 +8,23 @@ function math.round(val, decimal)
   return math.ceil(val * exp - 0.5) / exp
 end
 
-require("sound") -- Sound global object
-require("input")
-
-require("sprites")
-require("player")
-require("vector")
-
--- globals having to do with the tile library
-global              = {}
-global.limitDrawing = true  -- If true then the drawing range example is shown
-global.benchmark    = false -- If true the map is drawn 20 times instead of 1
-global.useBatch     = false -- If true then the layers are rendered with sprite batches
-global.tx           = 0     -- X translation of the screen
-global.ty           = 0     -- Y translation of the screen
-global.scale        = 2     -- Scale of the screen
-global.tile_size    = 16    -- the pixels in a tile square
-global.tile_height  = 15    -- the tile squares in a window
-global.flower_get   = false -- whether a flower was got this tic
-global.flowers      = 0     -- the number of flowers collected so far
-global.double_jump  = false -- EVERYTHING IS GLOBAL NOW...  prorgamming!
-
-local MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 14)
-
+love.graphics.setDefaultFilter("nearest", "nearest", 0)
+MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 16)
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
 
 require("sound") -- Sound global object
+require("input")
+
 require("cutscenes")
 require("sprites")
 require("player")
 require("vector")
 
--- debugging stuff
-tile_x        = nil
-tile_y        = nil
-player_vx     = ""
-player_vy     = ""
-sprite_quad   = ""
-sprite_facing = ""
-collisions    = {}
-time          = 0
-teleport      = ""
-
 -- we store the levels in a table and I expect when there are more of them we will just
 -- iterate
 local Map = require("map")
-
-local maps = {
-    -- 1-1
-    LevelOne("map1-1.tmx", {
-        sprite = Sprites.bigguy,
-        doors = {
-            {
-                coords = { 204, 12 },
-                event  = "onVictory"
-            }
-        },
-        scenes = {
-            init = "StartScreen",
-            sub = "Pre11"
-        }
-    }),
-
-    -- 2-1
-    SubsequentLevels("map2-1.tmx", {
-        sprite = Sprites.ladyguy,
-        doors = {
-            {
-                coords = { 204, 12 },
-                event  = "onVictory"
-            },
-
-            {
-                coords = { 98, 27 },
-                event  = "enterDoubleJumpShrine"
-            },
-        },
-        scenes = {
-            init = "Pre21",
-            sub  = "Pre21Sub"
-        }
-    }),
-
-    -- 5-1
-    SubsequentLevels("map5-1.tmx", {
-        sprite = Sprites.lilguy,
-        doors = {
-            {
-                coords = { 202, 27 },
-                event  = "onVictory"
-            },
-
-            {
-                coords = { 36, 27 },
-                event  = "enterCloudShrine"
-            },
-
-            {
-                coords = { 98, 42 },
-                event  = "enterDoubleJumpShrine"
-            },
-        },
-        scenes = {
-            init = "Pre51",
-            sub  = "Pre51Sub"
-        },
-        -- this is the top left corner of the starting screen,
-        -- in tile form
-        start = {
-            x = 0,
-            y = 14 -- TODO this was 15, but I made it fourteen for testing mini mario
-        }
-    }),
-
-    -- 9-1
-    SubsequentLevels("map9-1.tmx", {
-        sprite = Sprites.oldguy,
-        doors = {
-            {
-                coords = { 196, 52 },
-                event  = "onVictory"
-            },
-
-            {
-                coords = { 36, 27 },
-                event  = "enterCloudShrine"
-            },
-
-            {
-                coords = { 82, 82 },
-                event  = "enterTreeShrine"
-            },
-
-            {
-                coords = { 98, 67 },
-                event  = "enterDoubleJumpShrine"
-            },
-        },
-        scenes = {
-            init = "Pre91",
-            sub  = "Pre91Sub"
-        },
-
-        start = {
-            x = 5,
-            y = 25
-        }
-    }),
-
-    -- 10-0
-    SubsequentLevels("map9-1.tmx", {
-        sprite = Sprites.oldguy,
-        doors = {
-            {
-                coords = { 196, 52 },
-                event  = "onVictory"
-            }
-        },
-        scenes = {
-            init = "Finale100"
-        },
-
-        start = {
-            x = 0,
-            y = 40
-        }
-    })
-}
+local maps = require("map_data")
 
 local num = 1                   -- The map we're currently on
 local fps = 0                   -- Frames Per Second
@@ -329,7 +178,11 @@ end
 
 local inputPressed = function(k, isRepeat)
     -- No jumping during cutscenes
-    if not Cutscenes.current.isRunning() then player.keypressed(k) end
+    if Cutscenes.current.isRunning() then
+        if not isRepeat then Cutscenes.current.update(65535) end
+    else
+        player.keypressed(k)
+    end
 
     -- Call keypressed in our maps if it is defined
     if maps[num].keypressed then maps[num].keypressed(k) end

@@ -84,16 +84,7 @@ function Cutscenes:scene(options)
 
     local update = function (dt)
         if not isRunning() then return false end
-        if not delay then -- wait for keypress
-            if love.keyboard.isDown("up", "down", "left", "right", " ") then
-                frameIter = frameIter + 1
-                if (frameIter > #frames) then
-                    finish()
-                else
-                    current_frame = frames[frameIter]
-                end
-            end
-        elseif (type(delay) == "number") then -- count up delay
+        if (type(delay) == "number") then -- count up delay
             timer = timer + dt
             if timer >= delay then
                 timer = 0
