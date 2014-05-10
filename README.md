@@ -3,7 +3,58 @@ LD29
 
 Super Mario Bros.
 
-BUG
+
+Screen Scrolling & Bands
+------------------------
+
+### Bands as a property on Player
+
+We want the current band to be a property on mario that is checked whenever the
+player lands on a platform, rather than something based purely on tx, ty coords.
+
+The screen should only jump up or down when mario has landed on a tile in a new
+band. We can use `mid_air` to determine that.
+
+### Map Origin
+
+Currently the bands depend on mario's starting tx, ty but this is lame. Instead
+each level should define an "origin" on the map (top left of the start screen)
+and base the bands on that offset. Mario's starting tx, ty should also be based
+on that offset.
+
+### Starting Position
+
+Currently mario seems to be detecting as slightly below his current position,
+and in particular when starting mario is often sucked into the earth, and out
+of time forever.
+
+Wall Sliding
+------------
+
+As it stands, Mario slides up surfaces. Mario can catch his forehead on a ledge
+and slide down it, or increase his maximum jump height by sliding up a ledge.
+
+When mario jumps into an object or surface, we expect him to lose all forward
+momentum, but to retain momentum along the y-axis. He should appear to "slide"
+up towards the tops of pipes, and continue falling after hitting a surface.
+
+The work here relates to the collision detection being unable to resolve a
+good direction to send mario when resolving a diagonal collision pixel.
+
+I'm going to try using mario's incident vector to determine the side of the
+tile being collided with. Then I'll try to send the player in the normal
+direction from that side.
+
+Collision Detection
+-------------------
+
+Last night (May 8th) Chris Beaver played to 9-1 and experienced two bugs:
+
+- he died mysteriously in 9-1 when jumping against a corner.
+- he got stuck in the floor in 5-1 but did not die. This was
+  after double jumping a great distance (I think)
+
+_RESOLVED_
 
 OK So small Mario is falling through the floor sometimes. To figure out why,
 I stood on the first flower block in 5-1, centered mario so that his bottom
@@ -13,6 +64,7 @@ capture only the collision that causes mario to slip down through the floor.
 
 Here is the collision:
 
+```
     before resolution
     { 250.50054608999, 196.13867341042 }
     after resolution
@@ -24,10 +76,12 @@ Here is the collision:
     { 1, -0 }
       tile:
     { 22, 20 }
+```
 
 Then mario, having slipped through the floor, landed (normally)
 on the next block below:
 
+```
     before resolution
     { 232.50054608999, 289.51609361011 }
     after resolution
@@ -39,6 +93,7 @@ on the next block below:
     { -0, 1 }
       tile:
     { 21, 24 }
+```
 
 We can see that he was standing on tile (22, 20) but was moved 18 pixels
 to the left by the collision, which put him on tile (21, 20) (mid air).
@@ -56,6 +111,7 @@ of the two collision loops (LOOP A)
 Here is the output from a more recent run (in this run mario was given a
 perfectly square bounding box).
 
+```
     LOOP A <-- WTF
     before resolution
     { 237.12184571, 196.78205050003 }
@@ -68,6 +124,7 @@ perfectly square bounding box).
     { 1, -0 }
       tile:
     { 22, 20 }
+```
 
 I feel there might be something wrong with the "detect" function.
 
@@ -90,3 +147,5 @@ In the original Japanese Mario, the jumps are _very_ slow.
 Mario still "slides" up stairs. This is because of the corners again. We want
 him to lose his X velocity but maintain the Y in these cases... but how to detect
 the cases.
+
+

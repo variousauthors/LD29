@@ -17,9 +17,10 @@ Player = function (point, sprite)
     print("sprite")
     inspect({ sprite.width, sprite.height })
 
-    local sprite_width = (sprite.width or 16)
-    local draw_w = sprite_width * global.scale -- ( sprite_width / 2 ) -- skinny for collisions
-    local draw_h = (sprite.height or 16) * global.scale
+    local sprite_width  = (sprite.width or 16) * global.scale
+    local sprite_height = (sprite.height or 16) * global.scale
+    local draw_w        = sprite_width - (sprite_width / 8) -- skinny for collisions
+    local draw_h        = sprite_height - (sprite_height / 8)
 
     local forces = {
         key        = Vector(0, 0),
