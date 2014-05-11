@@ -32,6 +32,14 @@ Map = function (tmx)
     local missing_tiles_glitch = Glitches()
     missing_tiles_glitch.load_layer(map.layers["obstacle"])
 
+    local rng = love.math.newRandomGenerator(os.time())
+    rng:random()
+    rng:random()
+    local crazy_death_glitch = Glitches(function(layer, x, y, p)
+        layer:set(x, y, map.tiles[rng:random(900,923)])
+    end)
+    crazy_death_glitch.load_layer(map.layers["glitches"])
+
     local getGlitchMusic = function ()
         return "M100tp5e".. math.min(glitch_lvl, glitch_max)
     end
@@ -46,6 +54,10 @@ Map = function (tmx)
 
         missing_tiles_glitch.generate_glitches(20)
         missing_tiles_glitch.modify_layer()
+
+        crazy_death_glitch.generate_glitches(50, "single", true)
+        crazy_death_glitch.modify_layer()
+
         glitch_lvl = glitch_lvl + 1
         --Sound.playMusic()
     end
@@ -236,6 +248,15 @@ Map = function (tmx)
 
     -- Resets the example
     local reset = function ()
+        -- reset shrine effects
+        if map.layers["clouds"] then
+            map.layers["clouds"].properties["obstacle"] = nil
+        end
+        if map.layers["trees"] then
+            map.layers["trees"].properties["obstacle"] = nil
+        end
+        global.double_jump = false
+
         -- tx and ty are the offset of the tilemap
         global.tx = 0
         global.ty = origin_y
@@ -465,7 +486,7 @@ Map = function (tmx)
 
         if collision and value.x ~= 0 and value.y ~= 0 then
             -- transform value so that it is an axis bound vector
-            
+
             -- find the intersection of the vector v and the tile's sides
             value = collisionDirection(p, v, tx, ty, value)
         end
@@ -545,7 +566,7 @@ Map = function (tmx)
             end
         end
 
-        return p, new_v, mid_air 
+        return p, new_v, mid_air
     end
 
     -- data is a serialization of some object. I guess I'm just being a dick,
