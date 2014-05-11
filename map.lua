@@ -236,6 +236,15 @@ Map = function (tmx)
 
     -- Resets the example
     local reset = function ()
+        -- reset shrine effects
+        if map.layers["clouds"] then
+            map.layers["clouds"].properties["obstacle"] = nil
+        end
+        if map.layers["trees"] then
+            map.layers["trees"].properties["obstacle"] = nil
+        end
+        global.double_jump = false
+
         -- tx and ty are the offset of the tilemap
         global.tx = 0
         global.ty = origin_y
@@ -465,7 +474,7 @@ Map = function (tmx)
 
         if collision and value.x ~= 0 and value.y ~= 0 then
             -- transform value so that it is an axis bound vector
-            
+
             -- find the intersection of the vector v and the tile's sides
             value = collisionDirection(p, v, tx, ty, value)
         end
@@ -545,7 +554,7 @@ Map = function (tmx)
             end
         end
 
-        return p, new_v, mid_air 
+        return p, new_v, mid_air
     end
 
     -- data is a serialization of some object. I guess I'm just being a dick,
