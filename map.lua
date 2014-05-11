@@ -32,6 +32,14 @@ Map = function (tmx)
     local missing_tiles_glitch = Glitches()
     missing_tiles_glitch.load_layer(map.layers["obstacle"])
 
+    local rng = love.math.newRandomGenerator(os.time())
+    rng:random()
+    rng:random()
+    local crazy_death_glitch = Glitches(function(layer, x, y, p)
+        layer:set(x, y, map.tiles[rng:random(900,923)])
+    end)
+    crazy_death_glitch.load_layer(map.layers["glitches"])
+
     local getGlitchMusic = function ()
         return "M100tp5e".. math.min(glitch_lvl, glitch_max)
     end
@@ -46,6 +54,10 @@ Map = function (tmx)
 
         missing_tiles_glitch.generate_glitches(20)
         missing_tiles_glitch.modify_layer()
+
+        crazy_death_glitch.generate_glitches(50, "single", true)
+        crazy_death_glitch.modify_layer()
+
         glitch_lvl = glitch_lvl + 1
         --Sound.playMusic()
     end
