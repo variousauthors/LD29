@@ -68,7 +68,7 @@ Glitches = function(param)
         if (glitch_coords[x] == nil) then
             glitch_coords[x] = {}
         end
-        glitch_coords[x][y] = p
+        glitch_coords[x][y] = {p}
     end
 
     -- add a cross-shaped glitch
@@ -86,8 +86,8 @@ Glitches = function(param)
         for i = 1, num_glitches, 1 do
             local x, y, p = nil, nil, nil
             if(whole_map) then
-                x = rng:random(0, map_w - 1)
-                y = rng:random(0, map_h - 1)
+                x = rng:random(1, map_w)
+                y = rng:random(1, map_h)
                 -- store tile properties if they exist
                 p = map_layer(x, y)
                 if (p) then p = p.properties end
@@ -109,9 +109,7 @@ Glitches = function(param)
     local modify_layer = function ()
         local x, y = nil, nil
         for x, y in glitch_coords_iterate() do
-            if (map_layer(x,y)) then
-                callback_func(map_layer, x, y, p)
-            end
+            callback_func(map_layer, x, y, p)
         end
     end
 
