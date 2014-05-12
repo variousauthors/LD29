@@ -1,3 +1,7 @@
+if math.infinity == nil then
+    math.infinity = "INF"
+end
+
 -- @param _construct: map args   --> object
 -- @param tcurtsnoc_: map object --> args
 Klass = function (_construct, tcurtsnoc_)
@@ -63,6 +67,19 @@ Vector = Klass((function ()
         -- this is the "magnitude" of the vector, or its length as a line
         p.length = function ()
             return math.sqrt(p.getX() ^ 2 + p.getY() ^ 2)
+        end
+
+        p.getSlope = function ()
+            local slope
+
+            -- the slope is infinite
+            if -0.1 < x and x < 0.1 then
+                slope = math.infinity
+            else
+                slope = y / x
+            end
+
+            return slope
         end
 
         -- returns a new vector with a length of 1, for stuff

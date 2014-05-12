@@ -315,6 +315,19 @@ Map = function (tmx)
         return math.floor(rel_x / tile_width), math.floor(rel_y / tile_width)
     end
 
+    local tile_to_pixel = function (tx, ty)
+        local tile_width = map.tileWidth * global.scale;
+
+        -- x, y relative to a moving frame
+        local rel_x = tile_width * tx
+        local rel_y = tile_width * ty
+
+        local pixel_x = rel_x + global.tx * global.scale
+        local pixel_y = rel_y + global.ty * global.scale
+
+        return pixel_x, pixel_y
+    end
+
     -- given a vector, determine which collision point should be checked
     -- first by converting the vector into a diagonal vector
     -- and using that as an index
@@ -454,13 +467,147 @@ Map = function (tmx)
         end
     end
 
-    local collisionDirection = function (p, v, tx, ty, value)
+    local collisionDirection = function (px, py, v, tx, ty, value)
         print("in collisionDirection")
         -- value gives us the current diagonal direction
         inspect(value)
         -- create a line from p and v
         -- iterate over 4 sides of the tile
         --
+
+        local v_slope = v.getSlope()
+
+        -- if the slope is infinite, mario is colliding with the top
+        -- or bottom of a tile
+        if v_slope == math.infinity then
+            value.x = 0
+            return value
+        end
+
+        -- TODO these should all also incorporate global.ty
+        -- the earlier point should be the current point minus the vector
+        local px_0       = px - v.getX() * global.scale - global.tx * global.scale
+        local py_0       = py - v.getY() * global.scale
+        local px_1       = px - global.tx * global.scale
+        local py_1       = py
+
+        -- distance from y = 0 to the line
+        print(global.ty)
+        local height = py_1 - v_slope * px_1
+
+        print("POS")
+        inspect({ px_0, py_0 })
+        inspect({ px_1, py_1 })
+
+        print("slope")
+        print(v_slope)
+        -- use the value to determine which TWO sides are
+        -- likely in collision
+
+        -- DURP DURP JUST DOING MY THING
+        -- TODO this is now causing mario to stop inside walls forever,
+        -- because sometimes his vector crosses both a vertical and a horizontal
+        -- light. We can stop this by bailing early, but I think it will be better
+        -- if we use his original value.x, value.y to determine the two sides
+        -- we care about (the corner he is approaching)
+        for i = 0, 1 do
+            for j = 0, 1 do
+                local a = i == 1
+                local b = j == 1
+
+                -- I'm sure there is an operator for this, but I don't have
+                -- internet access
+                local a_xor_b = not ((a and b) or not (a or b))
+
+                -- these describe pairs of corners of a unit square
+                local x_0, y_0, x_1, y_1 = 0, 0, 0, 0
+                if a       then x_0 = 1 end
+                if a_xor_b then y_0 = 1 end
+                if a_xor_b then x_1 = 1 end
+                if not a   then y_1 = 1 end
+
+                -- pixel coords of this tile
+                local ox, oy = tile_to_pixel(tx, ty)
+
+                local tx_0       = ox + x_0 * (global.tile_width  * global.scale) - global.tx * global.scale
+                local ty_0       = oy + y_0 * (global.tile_height * global.scale)
+
+                local tx_1       = ox + x_1 * (global.tile_width  * global.scale) - global.tx * global.scale
+                local ty_1       = oy + y_1 * (global.tile_height * global.scale)
+
+
+                local side = Vector(tx_0 - tx_1, ty_0 - ty_1)
+                local side_m = side.getSlope()
+
+                print("line")
+                inspect({ tx_0, ty_0 })
+                inspect({ tx_1, ty_1 })
+
+                -- so if the slope is infinite then we have x = c'
+                -- if the slow is zero we have y = c'
+                --
+                -- the vector is y = m*x + c,
+                -- c' = m*x + c
+                -- so we can solve for the variable in both cases
+                if side_m == math.infinity then
+                    -- solve for y
+                    local x = tx_0
+                    local y = v_slope * x + height
+
+                    print("vertical")
+                    inspect({ x, y })
+
+                    local in_px = 0 <= math.abs(x - px_0) and math.abs(x - px_0) <= math.abs(px_1 - px_0)
+                    local in_py = 0 <= math.abs(y - py_0) and math.abs(y - py_0) <= math.abs(py_1 - py_0)
+
+                    local in_tx = 0 <= math.abs(x - tx_0) and math.abs(x - tx_0) <= math.abs(tx_1 - tx_0)
+                    local in_ty = 0 <= math.abs(y - ty_0) and math.abs(y - ty_0) <= math.abs(ty_1 - ty_0)
+
+                    inspect({
+                        p = { in_px, in_py },
+                        t = { in_tx, in_ty }
+                    })
+
+                    if in_px and in_py and in_tx and in_ty then
+                        print("setting value.y to zero")
+                        value.y = 0
+                        return value
+                    end
+                    -- now locate x, y on the line
+                else
+                    -- solve for x
+                    local y = ty_0
+                    local x = (y - height) / v_slope
+
+                    print("horizontal")
+                    inspect({ x, y })
+
+                    print("m: ")
+                    print(v_slope)
+                    print("c: ")
+                    print(height)
+
+                    local in_px = 0 <= math.abs(x - px_0) and math.abs(x - px_0) <= math.abs(px_1 - px_0)
+                    local in_py = 0 <= math.abs(y - py_0) and math.abs(y - py_0) <= math.abs(py_1 - py_0)
+
+                    local in_tx = 0 <= math.abs(x - tx_0) and math.abs(x - tx_0) <= math.abs(tx_1 - tx_0)
+                    local in_ty = 0 <= math.abs(y - ty_0) and math.abs(y - ty_0) <= math.abs(ty_1 - ty_0)
+
+                    inspect({
+                        p = { in_px, in_py },
+                        t = { in_tx, in_ty }
+                    })
+                    -- now locate x, y on the line
+                    --
+                    if in_px and in_py and in_tx and in_ty then
+                        print("setting value.x to zero")
+                        value.x = 0
+                        return value
+                    end
+                end
+            end
+        end
+
         return value
     end
 
@@ -476,36 +623,20 @@ Map = function (tmx)
         local collision = tile ~= nil
 
         -- the position of the tile we are colliding with
-        local tx, ty         = pixel_to_tile(p.getX() + corner.x, p.getY() + corner.y)
+        local px, py         = p.getX() + corner.x, p.getY() + corner.y
+        local tx, ty         = pixel_to_tile(px, py)
         tile_x, tile_y       = tx, ty -- this is actually used globally to determine band
-
-        if collision then
-            print("before resolution")
-            inspect({ p.getX(), p.getY() })
-        end
 
         if collision and value.x ~= 0 and value.y ~= 0 then
             -- transform value so that it is an axis bound vector
 
             -- find the intersection of the vector v and the tile's sides
-            value = collisionDirection(p, v, tx, ty, value)
+            value = collisionDirection(px, py, v, tx, ty, value)
         end
 
         adjustPosition(p, v, value, corner, layer)
 
         if collision then
-            print("after resolution")
-            inspect({ p.getX(), p.getY() })
-        end
-
-        if collision then
-            print("collision:")
-            print("  corner:")
-            inspect({ corner.x, corner.y })
-            print("  direction:")
-            inspect({ value.x, value.y })
-            print("  tile:")
-            inspect({ tx, ty })
             runCollisionEffects(tx, ty, p, v, corner, layer)
         end
 
