@@ -74980,7 +74980,7 @@
  <layer name="glitches" width="208" height="45">
   <properties>
    <property name="obstacle" value="1"/>
-   <property name="onDeath" value="1"/>
+   <property name="onGlitchout" value="1"/>
   </properties>
   <data>
    <tile gid="0"/>

@@ -106,10 +106,12 @@ Glitches = function(param)
 
     -- Modify glitched tiles from a map layer.
     -- Shouldn't choke if impossible/nonexistent tiles are in the list.
-    local modify_layer = function ()
+    local modify_layer = function (safe_col)
         local x, y = nil, nil
         for x, y in glitch_coords_iterate() do
-            callback_func(map_layer, x, y, p)
+            if (not safe_col or (x > safe_col + 1 or x < safe_col -1)) then
+                callback_func(map_layer, x, y, p)
+            end
         end
     end
 
