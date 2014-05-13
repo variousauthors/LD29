@@ -45,6 +45,40 @@ I'm going to try using mario's incident vector to determine the side of the
 tile being collided with. Then I'll try to send the player in the normal
 direction from that side.
 
+So close! Feed this into an algebra system:
+
+=======================
+POS
+{ 1214.8668933601, 357.63696589014 }
+{ 1218.8668933601, 342.63696589014 }
+line
+{ 1248, 320 }
+{ 1216, 320 }
+horizontal
+line
+{ 1216, 320 }
+{ 1216, 350 }
+vertical
+m' = infinity
+m: 
+-3.75
+c: 
+4913.3878159904
+x: 
+1216
+{ true, true }
+{ true, false }
+intersection:
+{ 1216, 353.38781599036 }
+y - ty_0
+33.387815990362
+ty_1 - ty_0
+30
+
+My collisionDirection function believes that there is no intersection.
+Let's make sure there is one before trying to bug fix.
+
+
 Collision Detection
 -------------------
 

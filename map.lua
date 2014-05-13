@@ -545,8 +545,9 @@ Map = function (tmx)
             -- so we can solve for the variable in both cases
             if side_m == math.infinity then
                 print("vertical")
+
                 -- solve for y
-                local x = tx_0
+                local x = tx_0 + 1
                 local y = v_slope * x + height
 
                 local in_px = 0 <= math.abs(x - px_0) and math.abs(x - px_0) <= math.abs(px_1 - px_0)
@@ -591,6 +592,8 @@ Map = function (tmx)
             end
         end
 
+        -- something strange: there was a collision, but we were not able to
+        -- find the vector's intersection with the tile... so there was no collision?
         return value
     end
 
