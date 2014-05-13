@@ -332,6 +332,16 @@ Map = function (tmx)
         global.backwards = true
     end
 
+    local enterWallJumpShrine = function ()
+        if global.walljump == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Walljump
+        Cutscenes.current.start()
+
+        global.walljump = true
+    end
+
     -- important methods for the public interface
     -- reset, update, draw
 
@@ -345,6 +355,7 @@ Map = function (tmx)
             map.layers["trees"].properties["obstacle"] = nil
         end
         global.double_jump = false
+        global.walljump    = false
         global.backwards   = false
         -- tx and ty are the offset of the tilemap
         global.tx = 0
@@ -446,7 +457,8 @@ Map = function (tmx)
     callbacks["enterDoubleJumpShrine51"] = enterDoubleJumpShrine51
     callbacks["enterDoubleJumpShrine91"] = enterDoubleJumpShrine91
     callbacks["enterBackwardsShrine51"]  = enterBackwardsShrine51
-    callbacks["enterBackwardsShrine91"]  = enterDoubleJumpShrine91
+    callbacks["enterBackwardsShrine91"]  = enterBackwardsShrine91
+    callbacks["enterWallJumpShrine"]     = enterWallJumpShrine
 
     -- callbacks for layer properties
     callbacks["obstacle"] = function (layer, v, tx, ty, rx, ry)

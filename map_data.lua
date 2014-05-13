@@ -91,6 +91,11 @@ local maps = {
             },
 
             {
+                coords = { 18, 65 },
+                event  = "enterWallJumpShrine"
+            },
+
+            {
                 coords = { 36, 52 },
                 event  = "enterCloudShrine91"
             },
