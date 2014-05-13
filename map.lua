@@ -27,6 +27,9 @@ Map = function (tmx)
     local origin_y = 0
     local start_y  = 0
 
+    local origin_x = 0
+    local start_x  = 0
+
     local proceed_handler, death_handler, victory_handler, glitchout_handler
 
     -- initialize the various glitches
@@ -54,10 +57,10 @@ Map = function (tmx)
         end
 
         missing_tiles_glitch.generate_glitches(20)
-        missing_tiles_glitch.modify_layer()
+        missing_tiles_glitch.modify_layer(start_x)
 
         crazy_death_glitch.generate_glitches(50, "single", true)
-        crazy_death_glitch.modify_layer()
+        crazy_death_glitch.modify_layer(start_x)
 
         glitch_lvl = glitch_lvl + 1
         --Sound.playMusic()
@@ -111,6 +114,9 @@ Map = function (tmx)
         if origin ~= nil then
             origin_y = -(origin.y * global.tile_size)
             start_y  = origin.y
+
+            origin_x = (origin.x * global.tile_size) -- ADDED FOR SYMMETRY, NEVER USED
+            start_x  = origin.x
         end
     end
 
@@ -123,7 +129,7 @@ Map = function (tmx)
             arbitrary_offset = -7
         end
 
-        local x = 200 -- arbitrary for now
+        local x = global.tile_size * start_x * global.scale
         local y = -global.ty + (global.tile_size * global.scale * arbitrary_offset)
 
         return Point(x, y)
@@ -651,6 +657,7 @@ LevelOne = function (tmx, options)
     local map = Map(tmx)
 
     map.setEvents(options.doors)
+    map.setOrigin(options.start)
 
     map.setDeathHandler(function ()
 

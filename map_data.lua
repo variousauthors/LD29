@@ -14,6 +14,10 @@ local maps = {
         scenes = {
             init = "StartScreen",
             sub = "Pre11"
+        },
+        start = {
+            x = 5,
+            y = 0
         }
     }),
 
@@ -34,6 +38,10 @@ local maps = {
         scenes = {
             init = "Pre21",
             sub  = "Pre21Sub"
+        },
+        start = {
+            x = 5,
+            y = 0
         }
     }),
 
@@ -63,7 +71,7 @@ local maps = {
         -- this is the top left corner of the starting screen,
         -- in tile form
         start = {
-            x = 0,
+            x = 5,
             y = 14 -- TODO this was 15, but I made it fourteen for testing mini mario
         }
     }),
@@ -117,7 +125,7 @@ local maps = {
         },
 
         start = {
-            x = 0,
+            x = 5,
             y = 40
         }
     })
