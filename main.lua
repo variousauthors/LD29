@@ -150,16 +150,33 @@ function love.update(dt)
             end
         end
 
-        -- If no scene has started, show the "subsequent runs" screen.
-        if not Cutscenes.current.isRunning() then
+        if maps[num].isGlitchedout() then
+            -- play the glichout scene
+            maps[num].setGlitchedout(false)
+            if(Cutscenes[maps[num].scenes.glitch]) then
+                Cutscenes.current = Cutscenes[maps[num].scenes.glitch]
+                if (num ~= #maps) then
+                    Cutscenes.current.start( function ()
+                        Sound.playMusic(maps[num].getGlitchMusic())
+                    end)
+                end
+            else
+                -- if no glitch cutscene
+                Sound.playMusic(maps[num].getGlitchMusic())
+            end
+        elseif not Cutscenes.current.isRunning() then
+            -- No "new level" cutscene running, not glitchout, so finish
+            -- by castle ("subsequent runs")
             if(Cutscenes[maps[num].scenes.sub]) then
                 Cutscenes.current = Cutscenes[maps[num].scenes.sub]
                 -- Callback here is kind of hacky. The purpose is to
                 -- Make sure the level retains the proper glitchy music.
                 Cutscenes.current.start( function ()
-                    Sound.stopMusic()
                     Sound.playMusic(maps[num].getGlitchMusic())
                 end)
+            else
+                -- if no sub cutscene
+                Sound.playMusic(maps[num].getGlitchMusic())
             end
         end
 
