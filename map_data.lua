@@ -78,7 +78,7 @@ local maps = {
             },
 
             {
-                coords = { 36, 27 },
+                coords = { 36, 52 },
                 event  = "enterCloudShrine"
             },
 
