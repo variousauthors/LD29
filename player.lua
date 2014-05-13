@@ -4,14 +4,14 @@ Player = function (point, sprite)
     local p, v                    = point.copy(), Vector(0, 0)
     local prev                    = nil -- the previous point position
     local speed                   = 100
-    local max_horizontal_speed    = 2
-    local max_vertical_speed      = 10
+    local max_horizontal_speed    = 1 * global.scale
+    local max_vertical_speed      = 5 * global.scale
     local sprite                  = sprite
     local cur_state, prev_state   = "stand", nil
     local cur_facing, prev_facing = sprite.base_facing, nil
     local current_quad            = cur_state
     local double_jump             = false
-    local jump_force              = 10
+    local jump_force              = 5 * global.scale
 
     -- height/width of the sprite's shape
     print("sprite")
@@ -24,8 +24,8 @@ Player = function (point, sprite)
 
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 0.5),
-        resistance = Vector(0.3, 0.1)
+        gravity    = Vector(0, 0.25 * global.scale),
+        resistance = Vector(0.15 * global.scale, 0.05 * global.scale)
     }
 
     -- these are offsets from the Player's x, y as describe
@@ -148,10 +148,10 @@ Player = function (point, sprite)
             -- Both directions! Do Nothing!
         elseif Input.isPressed("left") then
             setFacing("left")
-            forces.key.setX(-0.4)
+            forces.key.setX(-0.2 * global.scale)
         elseif Input.isPressed("right") then
             setFacing("right")
-            forces.key.setX(0.4)
+            forces.key.setX(0.2 * global.scale)
         end
     end
 
@@ -282,8 +282,8 @@ Player = function (point, sprite)
             oy = sprite.height
         end
 
-        local x = p.getX() + draw_w / 2 -- + ( sprite_width / 4 )
-        local y = p.getY() + draw_h / 2
+        local x = p.getX() + draw_w / global.scale -- + ( sprite_width / 4 )
+        local y = p.getY() + draw_h / global.scale
 
         love.graphics.setColor(255, 0, 0)
         love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
@@ -294,7 +294,7 @@ Player = function (point, sprite)
         love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
                            x - sprite.width, y - sprite.height, r, sx, sy, ox, oy)
 
-        love.graphics.rectangle("fill", x, y, 3, 3)
+        love.graphics.rectangle("fill", p.getX() + draw_w / 2, p.getY() + draw_h / 2, 3, 3)
 
         love.graphics.setColor(255, 255, 255)
         for i = 0, 3 do
