@@ -9,7 +9,7 @@ function math.round(val, decimal)
 end
 
 love.graphics.setDefaultFilter("nearest", "nearest", 0)
-MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 16)
+MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 8 * global.scale)
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
 
@@ -247,7 +247,7 @@ function love.draw()
     end
 
     if not Cutscenes.current.isRunning() then
-        love.graphics.print("FLOWERS x " .. global.flowers, W_WIDTH - 200, 20)
+        love.graphics.print("FLOWERS x " .. global.flowers, W_WIDTH - (100 * global.scale), (10 * global.scale))
     end
 end
 

@@ -160,12 +160,12 @@ Map = function (tmx)
 
     local getCameraForBand = function (band)
 
-        if band.zone == "catacombs" and band.transition == false  then return -(( global.tile_height ) * global.tile_size * global.scale) + origin_y end
-        if band.zone == "dungeon" and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y end
-        if band.zone == "dungeon" and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y end
+        if band.zone == "catacombs" and band.transition == false  then return -(( global.tile_height ) * global.tile_size * 2) + origin_y end
+        if band.zone == "dungeon" and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * 2) + origin_y end
+        if band.zone == "dungeon" and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * 2) + origin_y end
         if band.zone == "ground"  and band.transition == false  then return 0 + origin_y                                                               end
-        if band.zone == "clouds"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y  end
-        if band.zone == "clouds"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y  end
+        if band.zone == "clouds"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * 2) + origin_y  end
+        if band.zone == "clouds"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * 2) + origin_y  end
 
         -- unimplemented
         if band.zone == "stratosphere"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y  end
