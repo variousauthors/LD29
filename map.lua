@@ -19,6 +19,7 @@ Map = function (tmx)
     local sprite          = {}
     local glitch_lvl      = 0
     local glitch_max      = 4
+    local is_glitchedout  = false
     local death_line      = map.height - 1
     local old_collectible = {}
 
@@ -26,7 +27,7 @@ Map = function (tmx)
     local origin_y = 0
     local start_y  = 0
 
-    local proceed_handler, death_handler, victory_handler
+    local proceed_handler, death_handler, victory_handler, glitchout_handler
 
     -- initialize the various glitches
     local missing_tiles_glitch = Glitches()
@@ -70,6 +71,15 @@ Map = function (tmx)
     local setFinished = function (finished)
 
         is_finished = finished
+    end
+
+    local isGlitchedout = function ()
+        return is_glitchedout
+    end
+
+    local setGlitchedout = function (glitchedout)
+
+        is_glitchedout = glitchedout
     end
 
     -- each map has a number of "doors" and stuff that
@@ -182,6 +192,10 @@ Map = function (tmx)
         victory_handler = callback
     end
 
+    local setGlitchoutHandler = function (callback)
+        glitchout_handler = callback
+    end
+
     local setProceedHandler = function (callback)
         proceed_handler = callback
     end
@@ -195,6 +209,12 @@ Map = function (tmx)
 
     local onVictory = function ()
         if victory_handler ~= nil then victory_handler() end
+
+        global.double_jump = false
+    end
+
+    local onGlitchout = function ()
+        if glitchout_handler ~= nil then glitchout_handler() end
 
         global.double_jump = false
     end
@@ -349,6 +369,7 @@ Map = function (tmx)
     local callbacks = {}
     callbacks["onDeath"]               = onDeath
     callbacks["onVictory"]             = onVictory
+    callbacks["onGlitchout"]           = onGlitchout
     callbacks["enterCloudShrine"]      = enterCloudShrine
     callbacks["enterTreeShrine"]       = enterTreeShrine
     callbacks["enterDoubleJumpShrine"] = enterDoubleJumpShrine
@@ -604,7 +625,11 @@ Map = function (tmx)
         isFinished        = isFinished,
         setFinished       = setFinished,
 
+        isGlitchedout        = isGlitchedout,
+        setGlitchedout       = setGlitchedout,
+
         setVictoryHandler = setVictoryHandler,
+        setGlitchoutHandler = setGlitchoutHandler,
         setDeathHandler   = setDeathHandler,
         setProceedHandler = setProceedHandler,
         setEvents         = setEvents,
@@ -671,6 +696,19 @@ SubsequentLevels = function (tmx, options)
         map.setProceedHandler(function ()
             -- you aren't finished here mario...
             map.setFinished(false)
+
+            map.glitch()
+            map.reset()
+        end)
+    end)
+
+    map.setGlitchoutHandler(function ()
+        map.setFinished(true)
+
+        map.setProceedHandler(function ()
+            -- you aren't finished here mario...
+            map.setFinished(false)
+            map.setGlitchedout(true)
 
             map.glitch()
             map.reset()
