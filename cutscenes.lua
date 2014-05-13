@@ -57,9 +57,6 @@ function Cutscenes:scene(options)
 
     local finish = function ()
         stop()
-        if musicStart or musicDone then
-            Sound.stopMusic()
-        end
         if musicDone then
             Sound.playMusic(musicDone, musicDoneNL)
         else
