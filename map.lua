@@ -229,7 +229,26 @@ Map = function (tmx)
         if proceed_handler ~= nil then proceed_handler() end
     end
 
-    local enterCloudShrine = function ()
+    -- Sorry the code below is so ugly, but there wasn't an easier way to
+    -- have different cutscenes for each shrine in each level
+    -- so I just reduplicated the code
+
+    local enterCloudShrine51 = function ()
+        -- start the cutscene
+
+        if map.layers["clouds"] then
+            if map.layers["clouds"].properties["obstacle"] == 1 then
+                return
+            end
+
+            Cutscenes.current = Cutscenes.Shrines.Clouds
+            Cutscenes.current.start()
+
+            map.layers["clouds"].properties["obstacle"] = 1
+        end
+    end
+
+    local enterCloudShrine91 = function ()
         -- start the cutscene
 
         if map.layers["clouds"] then
@@ -259,7 +278,11 @@ Map = function (tmx)
         end
     end
 
-    local enterDoubleJumpShrine = function ()
+    -- Sorry the code below is so ugly, but there wasn't an easier way to
+    -- have different cutscenes for each shrine in each level
+    -- so I just reduplicated the code
+
+    local enterDoubleJumpShrine21 = function ()
         if global.double_jump == true then return end
 
         -- start the cutscene
@@ -267,6 +290,46 @@ Map = function (tmx)
         Cutscenes.current.start()
 
         global.double_jump = true
+    end
+
+    local enterDoubleJumpShrine51 = function ()
+        if global.double_jump == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Doublejump
+        Cutscenes.current.start()
+
+        global.double_jump = true
+    end
+
+    local enterDoubleJumpShrine91 = function ()
+        if global.double_jump == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Doublejump
+        Cutscenes.current.start()
+
+        global.double_jump = true
+    end
+
+    local enterBackwardsShrine51 = function ()
+        if global.backwards == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Backwards
+        Cutscenes.current.start()
+
+        global.backwards = true
+    end
+
+    local enterBackwardsShrine91 = function ()
+        if global.backwards == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Backwards
+        Cutscenes.current.start()
+
+        global.backwards = true
     end
 
     -- important methods for the public interface
@@ -282,7 +345,7 @@ Map = function (tmx)
             map.layers["trees"].properties["obstacle"] = nil
         end
         global.double_jump = false
-
+        global.backwards   = false
         -- tx and ty are the offset of the tilemap
         global.tx = 0
         global.ty = origin_y
@@ -376,9 +439,14 @@ Map = function (tmx)
     callbacks["onDeath"]               = onDeath
     callbacks["onVictory"]             = onVictory
     callbacks["onGlitchout"]           = onGlitchout
-    callbacks["enterCloudShrine"]      = enterCloudShrine
+    callbacks["enterCloudShrine51"]      = enterCloudShrine51
+    callbacks["enterCloudShrine91"]      = enterCloudShrine91
     callbacks["enterTreeShrine"]       = enterTreeShrine
-    callbacks["enterDoubleJumpShrine"] = enterDoubleJumpShrine
+    callbacks["enterDoubleJumpShrine21"] = enterDoubleJumpShrine21
+    callbacks["enterDoubleJumpShrine51"] = enterDoubleJumpShrine51
+    callbacks["enterDoubleJumpShrine91"] = enterDoubleJumpShrine91
+    callbacks["enterBackwardsShrine51"]  = enterBackwardsShrine51
+    callbacks["enterBackwardsShrine91"]  = enterDoubleJumpShrine91
 
     -- callbacks for layer properties
     callbacks["obstacle"] = function (layer, v, tx, ty, rx, ry)

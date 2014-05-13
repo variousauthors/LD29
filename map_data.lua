@@ -32,7 +32,7 @@ local maps = {
 
             {
                 coords = { 98, 27 },
-                event  = "enterDoubleJumpShrine"
+                event  = "enterDoubleJumpShrine21"
             },
         },
         scenes = {
@@ -56,12 +56,17 @@ local maps = {
 
             {
                 coords = { 36, 27 },
-                event  = "enterCloudShrine"
+                event  = "enterCloudShrine51"
             },
 
             {
                 coords = { 98, 42 },
-                event  = "enterDoubleJumpShrine"
+                event  = "enterDoubleJumpShrine51"
+            },
+
+            {
+                coords = { 187, 5 },
+                event  = "enterBackwardsShrine51"
             },
         },
         scenes = {
@@ -87,7 +92,7 @@ local maps = {
 
             {
                 coords = { 36, 52 },
-                event  = "enterCloudShrine"
+                event  = "enterCloudShrine91"
             },
 
             {
@@ -97,7 +102,12 @@ local maps = {
 
             {
                 coords = { 98, 67 },
-                event  = "enterDoubleJumpShrine"
+                event  = "enterDoubleJumpShrine91"
+            },
+
+            {
+                coords = { 187, 30 },
+                event  = "enterBackwardsShrine91"
             },
         },
         scenes = {
