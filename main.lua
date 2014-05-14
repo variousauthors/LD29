@@ -84,14 +84,20 @@ function love.update(dt)
     global.resolveFlower()
 
     -- the player pushes the screen along
-    if player.getX() > W_WIDTH / 2 and player.getX() > global.tx then
+    -- if global.tx < global.max_tx
+    -- then mario should push the screen
+    -- if mario can move backwards
+    -- and global.tx > 0
+    -- then mario should push the screen
+    if player.getX() > W_WIDTH / 2 and math.abs(global.tx) < global.max_tx then
         local v = player.getV()
-        global.tx = global.tx - ( math.min(v.getX(), 1.5) * dt * 100 )
+        global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
         player.setX(W_WIDTH / 2)
     end
 
-    -- the player cannot go backwards
+    -- the player cannot leave the screen
     if player.getX() < 0 then player.setX(0) end
+    if player.getX() > global.window_width then player.setX(global.window_width) end
 
     -- if the player is standing on the 12th block (the ground)
     -- the screen should always be centered

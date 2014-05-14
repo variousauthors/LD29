@@ -4,7 +4,7 @@ Player = function (point, sprite)
     local p, v                    = point.copy(), Vector(0, 0)
     local prev                    = nil -- the previous point position
     local speed                   = 100
-    local max_horizontal_speed    = 1 * global.scale
+    local max_horizontal_speed    = 1.5 * global.scale
     local max_vertical_speed      = 5 * global.scale
     local sprite                  = sprite
     local cur_state, prev_state   = "stand", nil
@@ -72,6 +72,10 @@ Player = function (point, sprite)
 
     local getState = function ()
         return cur_state, prev_state
+    end
+
+    local getSpeed = function () 
+        return speed
     end
 
     local isStateCont = function ()
@@ -334,7 +338,8 @@ Player = function (point, sprite)
 
         getV = function ()
             return v.copy()
-        end
+        end,
 
+        getSpeed = getSpeed
     }
 end
