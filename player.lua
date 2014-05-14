@@ -340,6 +340,10 @@ Player = function (point, sprite)
             return v.copy()
         end,
 
-        getSpeed = getSpeed
+        getSpeed = getSpeed,
+
+        canExplore = function ()
+            return true
+        end
     }
 end
