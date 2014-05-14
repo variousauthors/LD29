@@ -12,6 +12,8 @@ global.tile_width   = 16    -- the tile squares in a window
 global.flower_get   = false -- whether a flower was got this tic
 global.flowers      = 0     -- the number of flowers collected so far
 global.double_jump  = false -- EVERYTHING IS GLOBAL NOW...  prorgamming!
+global.walljump     = false -- arbitrary shrine, no gamplay effect
+global.backwards	= false -- HOOK IN HERE ZIGGY, this doesn't actually have gameplay yet
 
 -- debugging stuff
 tile_x        = nil
