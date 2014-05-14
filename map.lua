@@ -19,6 +19,7 @@ Map = function (tmx)
     local sprite          = {}
     local glitch_lvl      = 0
     local glitch_max      = 4
+    local is_glitchedout  = false
     local death_line      = map.height - 1
     local old_collectible = {}
 
@@ -26,7 +27,10 @@ Map = function (tmx)
     local origin_y = 0
     local start_y  = 0
 
-    local proceed_handler, death_handler, victory_handler
+    local origin_x = 0
+    local start_x  = 0
+
+    local proceed_handler, death_handler, victory_handler, glitchout_handler
 
     -- initialize the various glitches
     local missing_tiles_glitch = Glitches()
@@ -53,10 +57,10 @@ Map = function (tmx)
         end
 
         missing_tiles_glitch.generate_glitches(20)
-        missing_tiles_glitch.modify_layer()
+        missing_tiles_glitch.modify_layer(start_x)
 
         crazy_death_glitch.generate_glitches(50, "single", true)
-        crazy_death_glitch.modify_layer()
+        crazy_death_glitch.modify_layer(start_x)
 
         glitch_lvl = glitch_lvl + 1
         --Sound.playMusic()
@@ -70,6 +74,15 @@ Map = function (tmx)
     local setFinished = function (finished)
 
         is_finished = finished
+    end
+
+    local isGlitchedout = function ()
+        return is_glitchedout
+    end
+
+    local setGlitchedout = function (glitchedout)
+
+        is_glitchedout = glitchedout
     end
 
     -- each map has a number of "doors" and stuff that
@@ -101,6 +114,9 @@ Map = function (tmx)
         if origin ~= nil then
             origin_y = -(origin.y * global.tile_size)
             start_y  = origin.y
+
+            origin_x = (origin.x * global.tile_size) -- ADDED FOR SYMMETRY, NEVER USED
+            start_x  = origin.x
         end
     end
 
@@ -113,7 +129,7 @@ Map = function (tmx)
             arbitrary_offset = -7
         end
 
-        local x = 200 -- arbitrary for now
+        local x = global.tile_size * start_x * global.scale
         local y = -global.ty + (global.tile_size * global.scale * arbitrary_offset)
 
         return Point(x, y)
@@ -160,12 +176,12 @@ Map = function (tmx)
 
     local getCameraForBand = function (band)
 
-        if band.zone == "catacombs" and band.transition == false  then return -(( global.tile_height ) * global.tile_size * global.scale) + origin_y end
-        if band.zone == "dungeon" and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y end
-        if band.zone == "dungeon" and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y end
+        if band.zone == "catacombs" and band.transition == false  then return -(( global.tile_height ) * global.tile_size * 2) + origin_y end
+        if band.zone == "dungeon" and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * 2) + origin_y end
+        if band.zone == "dungeon" and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * 2) + origin_y end
         if band.zone == "ground"  and band.transition == false  then return 0 + origin_y                                                               end
-        if band.zone == "clouds"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y  end
-        if band.zone == "clouds"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y  end
+        if band.zone == "clouds"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * 2) + origin_y  end
+        if band.zone == "clouds"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * 2) + origin_y  end
 
         -- unimplemented
         if band.zone == "stratosphere"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y  end
@@ -180,6 +196,10 @@ Map = function (tmx)
 
     local setVictoryHandler = function (callback)
         victory_handler = callback
+    end
+
+    local setGlitchoutHandler = function (callback)
+        glitchout_handler = callback
     end
 
     local setProceedHandler = function (callback)
@@ -199,11 +219,36 @@ Map = function (tmx)
         global.double_jump = false
     end
 
+    local onGlitchout = function ()
+        if glitchout_handler ~= nil then glitchout_handler() end
+
+        global.double_jump = false
+    end
+
     local onProceed = function ()
         if proceed_handler ~= nil then proceed_handler() end
     end
 
-    local enterCloudShrine = function ()
+    -- Sorry the code below is so ugly, but there wasn't an easier way to
+    -- have different cutscenes for each shrine in each level
+    -- so I just reduplicated the code
+
+    local enterCloudShrine51 = function ()
+        -- start the cutscene
+
+        if map.layers["clouds"] then
+            if map.layers["clouds"].properties["obstacle"] == 1 then
+                return
+            end
+
+            Cutscenes.current = Cutscenes.Shrines.Clouds
+            Cutscenes.current.start()
+
+            map.layers["clouds"].properties["obstacle"] = 1
+        end
+    end
+
+    local enterCloudShrine91 = function ()
         -- start the cutscene
 
         if map.layers["clouds"] then
@@ -233,7 +278,11 @@ Map = function (tmx)
         end
     end
 
-    local enterDoubleJumpShrine = function ()
+    -- Sorry the code below is so ugly, but there wasn't an easier way to
+    -- have different cutscenes for each shrine in each level
+    -- so I just reduplicated the code
+
+    local enterDoubleJumpShrine21 = function ()
         if global.double_jump == true then return end
 
         -- start the cutscene
@@ -241,6 +290,56 @@ Map = function (tmx)
         Cutscenes.current.start()
 
         global.double_jump = true
+    end
+
+    local enterDoubleJumpShrine51 = function ()
+        if global.double_jump == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Doublejump
+        Cutscenes.current.start()
+
+        global.double_jump = true
+    end
+
+    local enterDoubleJumpShrine91 = function ()
+        if global.double_jump == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Doublejump
+        Cutscenes.current.start()
+
+        global.double_jump = true
+    end
+
+    local enterBackwardsShrine51 = function ()
+        if global.backwards == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Backwards
+        Cutscenes.current.start()
+
+        global.backwards = true
+    end
+
+    local enterBackwardsShrine91 = function ()
+        if global.backwards == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Backwards
+        Cutscenes.current.start()
+
+        global.backwards = true
+    end
+
+    local enterWallJumpShrine = function ()
+        if global.walljump == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Walljump
+        Cutscenes.current.start()
+
+        global.walljump = true
     end
 
     -- important methods for the public interface
@@ -256,7 +355,8 @@ Map = function (tmx)
             map.layers["trees"].properties["obstacle"] = nil
         end
         global.double_jump = false
-
+        global.walljump    = false
+        global.backwards   = false
         -- tx and ty are the offset of the tilemap
         global.tx = 0
         global.ty = origin_y
@@ -362,9 +462,16 @@ Map = function (tmx)
     local callbacks = {}
     callbacks["onDeath"]               = onDeath
     callbacks["onVictory"]             = onVictory
-    callbacks["enterCloudShrine"]      = enterCloudShrine
+    callbacks["onGlitchout"]           = onGlitchout
+    callbacks["enterCloudShrine51"]      = enterCloudShrine51
+    callbacks["enterCloudShrine91"]      = enterCloudShrine91
     callbacks["enterTreeShrine"]       = enterTreeShrine
-    callbacks["enterDoubleJumpShrine"] = enterDoubleJumpShrine
+    callbacks["enterDoubleJumpShrine21"] = enterDoubleJumpShrine21
+    callbacks["enterDoubleJumpShrine51"] = enterDoubleJumpShrine51
+    callbacks["enterDoubleJumpShrine91"] = enterDoubleJumpShrine91
+    callbacks["enterBackwardsShrine51"]  = enterBackwardsShrine51
+    callbacks["enterBackwardsShrine91"]  = enterBackwardsShrine91
+    callbacks["enterWallJumpShrine"]     = enterWallJumpShrine
 
     -- callbacks for layer properties
     callbacks["obstacle"] = function (layer, v, tx, ty, rx, ry)
@@ -722,7 +829,11 @@ Map = function (tmx)
         isFinished        = isFinished,
         setFinished       = setFinished,
 
+        isGlitchedout        = isGlitchedout,
+        setGlitchedout       = setGlitchedout,
+
         setVictoryHandler = setVictoryHandler,
+        setGlitchoutHandler = setGlitchoutHandler,
         setDeathHandler   = setDeathHandler,
         setProceedHandler = setProceedHandler,
         setEvents         = setEvents,
@@ -744,6 +855,7 @@ LevelOne = function (tmx, options)
     local map = Map(tmx)
 
     map.setEvents(options.doors)
+    map.setOrigin(options.start)
 
     map.setDeathHandler(function ()
 
@@ -789,6 +901,19 @@ SubsequentLevels = function (tmx, options)
         map.setProceedHandler(function ()
             -- you aren't finished here mario...
             map.setFinished(false)
+
+            map.glitch()
+            map.reset()
+        end)
+    end)
+
+    map.setGlitchoutHandler(function ()
+        map.setFinished(true)
+
+        map.setProceedHandler(function ()
+            -- you aren't finished here mario...
+            map.setFinished(false)
+            map.setGlitchedout(true)
 
             map.glitch()
             map.reset()

@@ -14,6 +14,10 @@ local maps = {
         scenes = {
             init = "StartScreen",
             sub = "Pre11"
+        },
+        start = {
+            x = 5,
+            y = 0
         }
     }),
 
@@ -28,12 +32,16 @@ local maps = {
 
             {
                 coords = { 98, 27 },
-                event  = "enterDoubleJumpShrine"
+                event  = "enterDoubleJumpShrine21"
             },
         },
         scenes = {
             init = "Pre21",
             sub  = "Pre21Sub"
+        },
+        start = {
+            x = 5,
+            y = 0
         }
     }),
 
@@ -48,12 +56,17 @@ local maps = {
 
             {
                 coords = { 36, 27 },
-                event  = "enterCloudShrine"
+                event  = "enterCloudShrine51"
             },
 
             {
                 coords = { 98, 42 },
-                event  = "enterDoubleJumpShrine"
+                event  = "enterDoubleJumpShrine51"
+            },
+
+            {
+                coords = { 187, 5 },
+                event  = "enterBackwardsShrine51"
             },
         },
         scenes = {
@@ -63,7 +76,7 @@ local maps = {
         -- this is the top left corner of the starting screen,
         -- in tile form
         start = {
-            x = 0,
+            x = 5,
             y = 14 -- TODO this was 15, but I made it fourteen for testing mini mario
         }
     }),
@@ -78,8 +91,13 @@ local maps = {
             },
 
             {
-                coords = { 36, 27 },
-                event  = "enterCloudShrine"
+                coords = { 18, 65 },
+                event  = "enterWallJumpShrine"
+            },
+
+            {
+                coords = { 36, 52 },
+                event  = "enterCloudShrine91"
             },
 
             {
@@ -89,7 +107,12 @@ local maps = {
 
             {
                 coords = { 98, 67 },
-                event  = "enterDoubleJumpShrine"
+                event  = "enterDoubleJumpShrine91"
+            },
+
+            {
+                coords = { 187, 30 },
+                event  = "enterBackwardsShrine91"
             },
         },
         scenes = {
@@ -117,7 +140,7 @@ local maps = {
         },
 
         start = {
-            x = 0,
+            x = 5,
             y = 40
         }
     })
