@@ -418,8 +418,8 @@ Cutscenes.Shrines.Doublejump21 = Cutscenes:scene({
     name = "Shrines.Doublejump21",
     frames = {
         {imgdoublejump2101, 0.5},
-        {imgdoublejump2102, 1.5},
-        {imgdoublejump2103, 2.5},
+        {imgdoublejump2102, 2},
+        {imgdoublejump2103, 3},
         {imgdoublejump2101, 0.5}, -- 04 is same as 01
         {imgdoublejump2105, 2}
     },
