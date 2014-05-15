@@ -15,9 +15,13 @@ local maps = {
             init = "StartScreen",
             sub = "Pre11"
         },
+        origin = {
+            x = 0,
+            y = 0
+        },
         start = {
             x = 5,
-            y = 0
+            y = 12
         }
     }),
 
@@ -39,9 +43,17 @@ local maps = {
             init = "Pre21",
             sub  = "Pre21Sub"
         },
+        -- the distance in tiles between the top left corner of the MAP
+        -- and the top left corner of the starting screen (with the castle)
+        origin = {
+            x = 0,
+            y = 0
+        },
+        -- mario's starting location, relative to the origin (the top left
+        -- corner of the castle screen)
         start = {
             x = 5,
-            y = 0
+            y = 12
         }
     }),
 
@@ -73,11 +85,17 @@ local maps = {
             init = "Pre51",
             sub  = "Pre51Sub"
         },
-        -- this is the top left corner of the starting screen,
-        -- in tile form
+        -- the distance in tiles between the top left corner of the MAP
+        -- and the top left corner of the starting screen (with the castle)
+        origin = {
+            x = 0,
+            y = 15
+        },
+        -- mario's starting location, relative to the origin (the top left
+        -- corner of the castle screen)
         start = {
             x = 5,
-            y = 14 -- TODO this was 15, but I made it fourteen for testing mini mario
+            y = 12
         }
     }),
 
@@ -120,9 +138,17 @@ local maps = {
             sub  = "Pre91Sub"
         },
 
+        -- the distance in tiles between the top left corner of the MAP
+        -- and the top left corner of the starting screen (with the castle)
+        origin = {
+            x = 0,
+            y = 40
+        },
+        -- mario's starting location, relative to the origin (the top left
+        -- corner of the castle screen)
         start = {
             x = 5,
-            y = 25
+            y = 12
         }
     }),
 
@@ -139,9 +165,17 @@ local maps = {
             init = "Finale100"
         },
 
+        -- the distance in tiles between the top left corner of the MAP
+        -- and the top left corner of the starting screen (with the castle)
+        origin = {
+            x = 0,
+            y = 40
+        },
+        -- mario's starting location, relative to the origin (the top left
+        -- corner of the castle screen)
         start = {
             x = 5,
-            y = 40
+            y = 12
         }
     })
 }
