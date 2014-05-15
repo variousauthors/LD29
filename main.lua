@@ -260,12 +260,6 @@ function love.gamepadpressed(j, k)
 end
 
 function love.draw()
-    local red, green, blue = love.graphics.getColor()
-    -- we are all the red square
-    -- love.graphics.setColor(146, 144, 255)
-    -- love.graphics.rectangle("fill", 0, 0, W_WIDTH, W_HEIGHT)
-    -- love.graphics.setColor(red, green, blue)
-
     -- Draw cutscene or map
     if Cutscenes.current.isRunning() then
         Cutscenes.current.draw()
