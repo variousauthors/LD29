@@ -110,27 +110,76 @@ Map = function (tmx)
         end
     end
 
-    local setOrigin = function (origin)
-        if origin ~= nil then
-            origin_y = -(origin.y * global.tile_size)
-            start_y  = origin.y
+    -- the player's position is a point (x, y) in pixels, but I couldn't
+    -- find a function in the tile library that lets us ask for "the tile
+    -- around these pixels" So for now I'm just converting, but later I
+    -- will implement such a lookup.
+    local pixel_to_tile = function (pixel_x, pixel_y)
+        local tile_width = map.tileWidth * global.scale;
 
-            origin_x = (origin.x * global.tile_size) -- ADDED FOR SYMMETRY, NEVER USED
-            start_x  = origin.x
-        end
+        -- x, y relative to a moving frame
+        local rel_x = pixel_x - global.tx * global.scale
+        local rel_y = pixel_y - global.ty * global.scale
+
+        return math.floor(rel_x / tile_width), math.floor(rel_y / tile_width)
+    end
+
+    local tile_to_pixel = function (tx, ty)
+        print("in tile_to_pixel")
+        local tile_width = map.tileWidth * global.scale;
+
+        inspect({ tx, ty })
+        print(map.tileWidth)
+        print(global.scale)
+        print(tile_width)
+
+        -- x, y relative to a moving frame
+        local rel_x = tile_width * tx
+        local rel_y = tile_width * ty
+
+        print("rel")
+        inspect({ rel_x, rel_y })
+
+        local pixel_x = rel_x + global.tx * global.scale
+        local pixel_y = rel_y + global.ty * global.scale
+
+        print("pixel")
+        inspect({ pixel_x, pixel_y })
+
+        print("out tile_to_pixel")
+        return pixel_x, pixel_y
+    end
+
+
+    local setOrigin = function (origin, start)
+
+        -- the tile value for the upper left corner of the start
+        -- screen as an offset from the upper left corner of the Tiled Map
+        origin_x, origin_y = origin.x, origin.y
+
+        -- mario needs to know where to start. This is usually an offset from
+        -- the corner of the start screen. For now it is the same in every level
+        -- 12 tiles down, 5 over
+        start_x = origin_x + start.x
+        start_y = origin_y + start.y
+
+      --if origin ~= nil then
+      --    -- origin x and y determine the initial global.tx ty in pixels
+      --    origin_x = (origin.x * global.tile_size * global.scale) -- ADDED FOR SYMMETRY, NEVER USED
+      --    origin_y = -(origin.y * global.tile_size * global.scale)
+
+      --    inspect({ origin_x, origin_y })
+
+      --    -- start x and y are the tile coords at which mario should start
+      --    start_x  = origin.x
+      --    start_y  = origin.y
+      --end
     end
 
     -- returns the pixel coords at which mario shouls appear
     -- mario should start on the ground (5 tiles below the center)
     local getStart = function ()
-        local arbitrary_offset = 5
-        -- look, on level 9-1 for some reason, the player starts in the wrong place.
-        if start_y == 40 then
-            arbitrary_offset = -7
-        end
-
-        local x = global.tile_size * start_x * global.scale
-        local y = -global.ty + (global.tile_size * global.scale * arbitrary_offset)
+        local x, y = tile_to_pixel(start_x, start_y)
 
         return Point(x, y)
     end
@@ -358,8 +407,15 @@ Map = function (tmx)
         global.walljump    = false
         global.backwards   = false
         -- tx and ty are the offset of the tilemap
+        --
+        -- global tx and ty need to be set without SCALE because the map draw
+        -- function already knows how to scale things
+        -- global tx moves the WORLD RIGHT
+        -- global ty moves the WORLD DOWN
+        -- at the start of the game we want to move the world UP so that
+        -- the origin_x, origin_y are in the corner of the screen
         global.tx = 0
-        global.ty = origin_y
+        global.ty = - origin_y * global.tile_width
     end
 
     -- at some point we will probably want code in here
@@ -400,33 +456,6 @@ Map = function (tmx)
     end
 
     -- COLLISION CODE STARTS HERE
-
-    -- the player's position is a point (x, y) in pixels, but I couldn't
-    -- find a function in the tile library that lets us ask for "the tile
-    -- around these pixels" So for now I'm just converting, but later I
-    -- will implement such a lookup.
-    local pixel_to_tile = function (pixel_x, pixel_y)
-        local tile_width = map.tileWidth * global.scale;
-
-        -- x, y relative to a moving frame
-        local rel_x = pixel_x - global.tx * global.scale
-        local rel_y = pixel_y - global.ty * global.scale
-
-        return math.floor(rel_x / tile_width), math.floor(rel_y / tile_width)
-    end
-
-    local tile_to_pixel = function (tx, ty)
-        local tile_width = map.tileWidth * global.scale;
-
-        -- x, y relative to a moving frame
-        local rel_x = tile_width * tx
-        local rel_y = tile_width * ty
-
-        local pixel_x = rel_x + global.tx * global.scale
-        local pixel_y = rel_y + global.ty * global.scale
-
-        return pixel_x, pixel_y
-    end
 
     -- given a vector, determine which collision point should be checked
     -- first by converting the vector into a diagonal vector
@@ -599,10 +628,6 @@ Map = function (tmx)
         -- distance from y = 0 to the line
         local height = py_1 - v_slope * px_1
 
-        print("POS")
-        inspect({ px_0, py_0 })
-        inspect({ px_1, py_1 })
-
         -- use the value to determine which TWO sides are
         -- likely in collision
         local bridge = { x = -value.x / 2 + 1 / 2, y = -value.y / 2 + 1 / 2 }
@@ -628,10 +653,6 @@ Map = function (tmx)
             local side = Vector(tx_0 - tx_1, ty_0 - ty_1)
             local side_m = side.getSlope()
 
-            print("line")
-            inspect({ tx_0, ty_0 })
-            inspect({ tx_1, ty_1 })
-
             bob = {}
             table.insert(bob, { 
                 a = {
@@ -651,8 +672,6 @@ Map = function (tmx)
             -- c' = m*x + c
             -- so we can solve for the variable in both cases
             if side_m == math.infinity then
-                print("vertical")
-
                 -- solve for y
                 local x = tx_0 + 1
                 local y = v_slope * x + height
@@ -660,25 +679,15 @@ Map = function (tmx)
                 local in_px = 0 <= math.abs(x - px_0) and math.abs(x - px_0) <= math.abs(px_1 - px_0)
                 local in_py = 0 <= math.abs(y - py_0) and math.abs(y - py_0) <= math.abs(py_1 - py_0)
 
-                inspect({ in_px, in_py })
-
                 local in_tx = 0 <= math.abs(x - tx_0) and math.abs(x - tx_0) <= math.abs(tx_1 - tx_0)
                 local in_ty = 0 <= math.abs(y - ty_0) and math.abs(y - ty_0) <= math.abs(ty_1 - ty_0)
-                print("y - ty_0")
-                print(math.abs(y - ty_0))
-                print("ty_1 - ty_0")
-                print(math.abs(ty_1 - ty_0))
-
-                inspect({ in_tx, in_ty })
 
                 if in_px and in_py and in_tx and in_ty then
-                    print("collision with vertical")
                     value.y = 0
                     return value
                 end
                 -- now locate x, y on the line
             else
-                print("horizontal")
                 -- solve for x
                 local y = ty_0
                 local x = (y - height) / v_slope
@@ -692,7 +701,6 @@ Map = function (tmx)
                 -- now locate x, y on the line
                 --
                 if in_px and in_py and in_tx and in_ty then
-                    print("collision with horizontal")
                     value.x = 0
                     return value
                 end
@@ -855,7 +863,7 @@ LevelOne = function (tmx, options)
     local map = Map(tmx)
 
     map.setEvents(options.doors)
-    map.setOrigin(options.start)
+    map.setOrigin(options.origin, options.start)
 
     map.setDeathHandler(function ()
 
@@ -885,7 +893,7 @@ SubsequentLevels = function (tmx, options)
     local map = Map(tmx)
 
     map.setEvents(options.doors)
-    map.setOrigin(options.start)
+    map.setOrigin(options.origin, options.start)
 
     map.setDeathHandler(function ()
         map.setFinished(true)

@@ -241,14 +241,15 @@ function love.keypressed(k, isRepeat)
         global.tx = -dest
     end
 
+    local increment = global.tile_width
     if k =='s' then
-        global.ty = global.ty - 100
-        player.setY(player.getY() - 200)
+        global.ty = global.ty - increment
+        player.setY(player.getY() - increment)
     end
 
     if k =='w' then
-        global.ty = global.ty + 100
-        player.setY(player.getY() + 200)
+        global.ty = global.ty + increment
+        player.setY(player.getY() + increment)
     end
 
     inputPressed(k, isRepeat)
