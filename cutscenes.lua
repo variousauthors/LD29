@@ -409,6 +409,24 @@ Cutscenes.Shrines.Clouds = Cutscenes:scene({
     delay = "frames"
 })
 
+local imgdoublejump2101 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump2101.jpg")
+local imgdoublejump2102 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump2102.jpg")
+local imgdoublejump2103 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump2103.jpg")
+local imgdoublejump2105 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump2105.jpg")
+
+Cutscenes.Shrines.Doublejump21 = Cutscenes:scene({
+    name = "Shrines.Doublejump21",
+    frames = {
+        {imgdoublejump2101, 0.5},
+        {imgdoublejump2102, 1.5},
+        {imgdoublejump2103, 2.5},
+        {imgdoublejump2101, 0.5}, -- 04 is same as 01
+        {imgdoublejump2105, 2}
+    },
+    frameX = 0,
+    delay = "frames"
+})
+
 local imgdoublejump01 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump01.jpg")
 local imgdoublejump02 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump02.jpg")
 
