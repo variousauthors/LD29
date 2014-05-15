@@ -22,6 +22,8 @@ Map = function (tmx)
     local is_glitchedout  = false
     local death_line      = map.height - 1
     local old_collectible = {}
+    local map_midpoint    = map.properties["midpoint"] or map.height -- if not set, then all sky
+    local map_midpoint_px = map_midpoint * global.tile_size
 
     -- the amount to cheat the screen by on level start
     local origin_y = 0
@@ -442,6 +444,14 @@ Map = function (tmx)
         else
             map:autoDrawRange(ftx, fty, global.scale, 50)
         end
+
+        -- draw the sky
+        -- a bit wider than the whole map, for scrolling
+        local map_drawx, map_drawy  = map:getDrawRange()
+        local red, green, blue = love.graphics.getColor()
+        love.graphics.setColor(146, 144, 255)
+        love.graphics.rectangle("fill", 0, map_drawy, map.width * global.tile_size + 512, map_midpoint_px-map_drawy)
+        love.graphics.setColor(red, green, blue)
 
         -- Queue our guy to be drawn after the tile he's on and then draw the map.
         local maxDraw = global.benchmark and 20 or 1
