@@ -93,7 +93,7 @@ function love.update(dt)
         local v = player.getV()
         global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
         player.setX(W_WIDTH / 2 + 50)
-    elseif player.canExplore() and player.getX() < W_WIDTH / 2 - 50 and global.tx < 0 then
+    elseif global.backwards and player.getX() < W_WIDTH / 2 - 50 and global.tx < 0 then
         local v = player.getV()
         global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
         player.setX(W_WIDTH / 2 - 50)
