@@ -279,7 +279,7 @@ Map = function (tmx)
                 return
             end
 
-            Cutscenes.current = Cutscenes.Shrines.Clouds
+            Cutscenes.current = Cutscenes.Shrines.Clouds51
             Cutscenes.current.start()
 
             map.layers["clouds"].properties["obstacle"] = 1
