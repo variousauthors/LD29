@@ -519,14 +519,27 @@ Cutscenes.Shrines.Walljump = Cutscenes:scene({
 
 local imgtrees01 = love.graphics.newImage("assets/scenes/trees/shrines_trees01.jpg")
 local imgtrees02 = love.graphics.newImage("assets/scenes/trees/shrines_trees02.jpg")
+local imgtrees03 = love.graphics.newImage("assets/scenes/trees/shrines_trees03.jpg")
+local imgtrees04 = love.graphics.newImage("assets/scenes/trees/shrines_trees04.jpg")
+local imgtrees06 = love.graphics.newImage("assets/scenes/trees/shrines_trees06.jpg")
 
 Cutscenes.Shrines.Trees = Cutscenes:scene({
     name = "Shrines.Trees",
     frames = {
         {imgtrees01, 1},
-        {imgtrees02, 2}
+        {imgtrees02, 0.1},
+        {imgtrees01, 0.1},
+        {imgtrees02, 0.1},
+        {imgtrees01, 0.1},
+        {imgtrees02, 0.1},
+        {imgtrees01, 0.1},
+        {imgtrees02, 0.75},
+        {imgtrees03, 2.5},
+        {imgtrees04, 2.5},
+        {imgtrees02, 0.5},
+        {imgtrees06, 2.5}
     },
-    frameX = centerX(imgtrees01),
+    frameX = 0,
     delay = "frames"
 })
 
