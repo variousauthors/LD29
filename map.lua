@@ -247,24 +247,14 @@ Map = function (tmx)
     -- respond to events like "onVictory"
     local onDeath = function ()
         if death_handler ~= nil then death_handler() end
-
-        global.double_jump = false
     end
 
     local onVictory = function ()
         if victory_handler ~= nil then victory_handler() end
-
-        global.double_jump = false
     end
 
     local onGlitchout = function ()
         if glitchout_handler ~= nil then glitchout_handler() end
-
-        global.double_jump = false
-    end
-
-    local onProceed = function ()
-        if proceed_handler ~= nil then proceed_handler() end
     end
 
     -- Sorry the code below is so ugly, but there wasn't an easier way to
@@ -386,15 +376,18 @@ Map = function (tmx)
     -- Resets the example
     local reset = function ()
         -- reset shrine effects
-        if map.layers["clouds"] then
-            map.layers["clouds"].properties["obstacle"] = nil
+        if isFinished() then
+            if map.layers["clouds"] then
+                map.layers["clouds"].properties["obstacle"] = nil
+            end
+            if map.layers["trees"] then
+                map.layers["trees"].properties["obstacle"] = nil
+            end
+            global.double_jump = false
+            global.walljump    = false
+            global.backwards   = false
         end
-        if map.layers["trees"] then
-            map.layers["trees"].properties["obstacle"] = nil
-        end
-        global.double_jump = false
-        global.walljump    = false
-        global.backwards   = false
+
         -- tx and ty are the offset of the tilemap
         --
         -- global tx and ty need to be set without SCALE because the map draw
@@ -815,6 +808,13 @@ Map = function (tmx)
             is_dead = checkForDeath(tx, ty)
         }
     end
+
+    local onProceed = function ()
+        if proceed_handler ~= nil then proceed_handler() end
+
+        reset()
+    end
+
     -- public interface for map
     return {
         update            = update,
@@ -866,7 +866,6 @@ LevelOne = function (tmx, options)
 
         map.setProceedHandler(function ()
             map.setFinished(false)
-            map.reset()
         end)
     end)
 
@@ -874,6 +873,7 @@ LevelOne = function (tmx, options)
         map.setFinished(true)
 
         map.setProceedHandler(function ()
+
             -- NOP because we want to change worlds
         end)
     end)
@@ -894,6 +894,7 @@ SubsequentLevels = function (tmx, options)
         map.setFinished(true)
 
         map.setProceedHandler(function ()
+
             -- nop because we want to change worlds
         end)
     end)
@@ -906,7 +907,6 @@ SubsequentLevels = function (tmx, options)
             map.setFinished(false)
 
             map.glitch(options.glitches)
-            map.reset()
         end)
     end)
 
@@ -916,10 +916,10 @@ SubsequentLevels = function (tmx, options)
         map.setProceedHandler(function ()
             -- you aren't finished here mario...
             map.setFinished(false)
+
             map.setGlitchedout(true)
 
             map.glitch(options.glitches)
-            map.reset()
         end)
     end)
 

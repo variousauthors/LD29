@@ -31,9 +31,6 @@ local fps = 0                   -- Frames Per Second
 local fpsCount = 0              -- FPS count of the current second
 local fpsTime = 0               -- Keeps track of the elapsed time
 
--- Reset the current example
-if maps[num].reset then maps[num].reset() end
-
 local origin, player
 
 function init_player (p, s)
@@ -61,7 +58,6 @@ end
 
 global.resolveFlower = function ()
     if global.flower_get then
-        print("getting a flower")
         global.flowers = global.flowers + 1
     end
 
@@ -108,7 +104,6 @@ function love.update(dt)
     band            = maps[num].getBand(tile_y)
 
     if band ~= nil then
-    print(band.zone)
         local scroll = 10
         camera = maps[num].getCameraForBand(band)
 
@@ -134,7 +129,7 @@ function love.update(dt)
             -- something to hold back following code until anim & music are done
         end
 
-        -- "proceed" either loads the next world or the next level
+        -- "proceed" either decides to load the next world or the next level
         -- depending on the map state
         maps[num].onProceed()
 
