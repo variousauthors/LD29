@@ -38,6 +38,12 @@ Map = function (tmx)
     local missing_tiles_glitch = Glitches()
     missing_tiles_glitch.load_layer(map.layers["obstacle"])
 
+    local missing_dtiles_glitch = Glitches()
+    missing_dtiles_glitch.load_layer(map.layers["destructible"])
+
+    local missing_ctiles_glitch = Glitches()
+    missing_ctiles_glitch.load_layer(map.layers["clouds"])
+
     local rng = love.math.newRandomGenerator(os.time())
     rng:random()
     rng:random()
@@ -51,17 +57,32 @@ Map = function (tmx)
     end
 
     -- run all the glitches
-    local glitch = function ()
+    local glitch = function (glitch_options)
+        if not glitch_options then
+            glitch_options = { }
+        end
+        glitch_options.missing  = glitch_options.missing or 20
+        glitch_options.dmissing = glitch_options.dmissing or 10
+        glitch_options.cmissing = glitch_options.cmissing or 0
+        glitch_options.crazy    = glitch_options.crazy or 50
+
+
         local layer = map.layers["collectible"]
 
         for key, value in pairs(old_collectible) do
             layer:set(value.x, value.y, value.tile)
         end
 
-        missing_tiles_glitch.generate_glitches(20)
+        missing_tiles_glitch.generate_glitches(glitch_options.missing)
         missing_tiles_glitch.modify_layer(start_x)
 
-        crazy_death_glitch.generate_glitches(50, "single", true)
+        missing_dtiles_glitch.generate_glitches(glitch_options.dmissing, "single")
+        missing_dtiles_glitch.modify_layer(start_x)
+
+        missing_ctiles_glitch.generate_glitches(glitch_options.cmissing, "single")
+        missing_ctiles_glitch.modify_layer(start_x)
+
+        crazy_death_glitch.generate_glitches(glitch_options.crazy, "single", true)
         crazy_death_glitch.modify_layer(start_x)
 
         glitch_lvl = glitch_lvl + 1
@@ -631,10 +652,10 @@ Map = function (tmx)
             local side_m = side.getSlope()
 
             bob = {}
-            table.insert(bob, { 
+            table.insert(bob, {
                 a = {
                     x = tx_0,
-                    y = ty_0 
+                    y = ty_0
                 },
                 b = {
                     x = tx_1,
@@ -884,7 +905,7 @@ SubsequentLevels = function (tmx, options)
             -- you aren't finished here mario...
             map.setFinished(false)
 
-            map.glitch()
+            map.glitch(options.glitches)
             map.reset()
         end)
     end)
@@ -897,7 +918,7 @@ SubsequentLevels = function (tmx, options)
             map.setFinished(false)
             map.setGlitchedout(true)
 
-            map.glitch()
+            map.glitch(options.glitches)
             map.reset()
         end)
     end)
