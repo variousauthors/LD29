@@ -10,6 +10,7 @@ local gen_spriteset = function(image, gridW, gridH, base_facing, names)
 
     local width = image:getWidth()
     local height = image:getHeight()
+    local tile_height = height / global.tile_size
     local quads = {}
     local namedQuads = {}
     for y = 0, height / gridH - 1 do
@@ -20,8 +21,15 @@ local gen_spriteset = function(image, gridW, gridH, base_facing, names)
         end
     end
 
-    return {image = image, quads = quads, namedQuads = namedQuads,
-            base_facing = base_facing, width = gridW, height = gridH}
+    return {
+        image       = image,
+        quads       = quads,
+        namedQuads  = namedQuads,
+        base_facing = base_facing,
+        width       = gridW,
+        height      = gridH,
+        tile_height = tile_height
+    }
 end
 
 

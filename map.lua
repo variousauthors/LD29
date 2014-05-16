@@ -127,34 +127,20 @@ Map = function (tmx)
     end
 
     local tile_to_pixel = function (tx, ty)
-        print("in tile_to_pixel")
         local tile_width = map.tileWidth * global.scale;
-
-        inspect({ tx, ty })
-        print(map.tileWidth)
-        print(global.scale)
-        print(tile_width)
 
         -- x, y relative to a moving frame
         local rel_x = tile_width * tx
         local rel_y = tile_width * ty
 
-        print("rel")
-        inspect({ rel_x, rel_y })
-
         local pixel_x = rel_x + global.tx * global.scale
         local pixel_y = rel_y + global.ty * global.scale
 
-        print("pixel")
-        inspect({ pixel_x, pixel_y })
-
-        print("out tile_to_pixel")
         return pixel_x, pixel_y
     end
 
 
     local setOrigin = function (origin, start)
-
         -- the tile value for the upper left corner of the start
         -- screen as an offset from the upper left corner of the Tiled Map
         origin_x, origin_y = origin.x, origin.y
@@ -164,18 +150,6 @@ Map = function (tmx)
         -- 12 tiles down, 5 over
         start_x = origin_x + start.x
         start_y = origin_y + start.y
-
-      --if origin ~= nil then
-      --    -- origin x and y determine the initial global.tx ty in pixels
-      --    origin_x = (origin.x * global.tile_size * global.scale) -- ADDED FOR SYMMETRY, NEVER USED
-      --    origin_y = -(origin.y * global.tile_size * global.scale)
-
-      --    inspect({ origin_x, origin_y })
-
-      --    -- start x and y are the tile coords at which mario should start
-      --    start_x  = origin.x
-      --    start_y  = origin.y
-      --end
     end
 
     -- returns the pixel coords at which mario shouls appear
@@ -202,42 +176,32 @@ Map = function (tmx)
         return true
     end
 
-    local getGroundY = function ()
-        return 0 + origin_y
-    end
-
-    local getTransitionY = function ()
-        return -(( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y
-    end
-
-    local getDungeonY = function ()
-        return -(( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y
-    end
-
     local getBand = function (tile)
         if tile == nil then return nil end
 
-        if tile > 30 + start_y                                                  then return { zone = "catacombs", transition = false } end
-        if tile > 15 + start_y                                                  then return { zone = "dungeon",   transition = false } end
-        if tile == 15 + start_y or tile == 14 + start_y or tile == 13 + start_y then return { zone = "dungeon",   transition = true  } end
-        if tile > 0 + start_y and tile < 12 + start_y                           then return { zone = "ground" ,   transition = false } end
-        if tile == 0 + start_y or tile == -1 + start_y                          then return { zone = "clouds",    transition = true  } end
-        if tile < -1 + start_y                                                  then return { zone = "clouds",    transition = false } end
+        tile = tile - origin_y
+
+        if tile > 30                              then return { zone = "catacombs", transition = false } end
+        if tile > 15                              then return { zone = "dungeon",   transition = false } end
+        if tile == 15 or tile == 14 or tile == 13 then return { zone = "dungeon",   transition = true  } end
+        if tile > 0 and tile <= 12                then return { zone = "ground" ,   transition = false } end
+        if tile == 0 or tile == -1                then return { zone = "clouds",    transition = true  } end
+        if tile < -1                              then return { zone = "clouds",    transition = false } end
     end
 
     local getCameraForBand = function (band)
 
-        if band.zone == "catacombs" and band.transition == false  then return -(( global.tile_height ) * global.tile_size * 2) + origin_y end
-        if band.zone == "dungeon" and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * 2) + origin_y end
-        if band.zone == "dungeon" and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * 2) + origin_y end
-        if band.zone == "ground"  and band.transition == false  then return 0 + origin_y                                                               end
-        if band.zone == "clouds"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * 2) + origin_y  end
-        if band.zone == "clouds"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * 2) + origin_y  end
+        if band.zone == "catacombs" and band.transition == false  then return -(( global.tile_height ) * global.tile_size * 2) - pixel_origin_y end
+        if band.zone == "dungeon" and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * 2) - pixel_origin_y end
+        if band.zone == "dungeon" and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * 2) - pixel_origin_y end
+        if band.zone == "ground"  and band.transition == false  then return 0 - pixel_origin_y                                                               end
+        if band.zone == "clouds"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * 2) - pixel_origin_y  end
+        if band.zone == "clouds"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * 2) - pixel_origin_y  end
 
         -- unimplemented
-        if band.zone == "stratosphere"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y  end
-        if band.zone == "mesosphere"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * global.scale) + origin_y  end
-        if band.zone == "mesosphere"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) + origin_y  end
+        if band.zone == "stratosphere"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) - pixel_origin_y  end
+        if band.zone == "mesosphere"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * global.scale) - pixel_origin_y  end
+        if band.zone == "mesosphere"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) - pixel_origin_y  end
     end
 
     -- set handlers for events like "onVictory"
@@ -416,8 +380,9 @@ Map = function (tmx)
         -- global ty moves the WORLD DOWN
         -- at the start of the game we want to move the world UP so that
         -- the origin_x, origin_y are in the corner of the screen
+        pixel_origin_y = origin_y * global.tile_width
         global.tx = 0
-        global.ty = - origin_y * global.tile_width
+        global.ty = - pixel_origin_y
     end
 
     -- at some point we will probably want code in here
@@ -837,9 +802,6 @@ Map = function (tmx)
         isInTransition    = isInTransition,
         isOnGround        = isOnGround,
         isCloudWalking    = isCloudWalking,
-        getGroundY        = getGroundY,
-        getTransitionY    = getTransitionY,
-        getDungeonY       = getDungeonY,
 
         getBand           = getBand,
         getCameraForBand  = getCameraForBand,

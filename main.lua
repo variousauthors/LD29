@@ -37,8 +37,6 @@ if maps[num].reset then maps[num].reset() end
 local origin, player
 
 function init_player (p, s)
-    inspect({ global.tx, global.ty })
-    inspect({ p.getX(), p.getY() })
     player = Player(p, s)
 end
 
@@ -106,9 +104,11 @@ function love.update(dt)
     -- if the player is standing on the 12th block (the ground)
     -- the screen should always be centered
     --
-    band   = maps[num].getBand(tile_y)
+    local tile_tall = maps[num].sprite.tile_height
+    band            = maps[num].getBand(tile_y)
 
     if band ~= nil then
+    print(band.zone)
         local scroll = 10
         camera = maps[num].getCameraForBand(band)
 
@@ -250,6 +250,10 @@ function love.keypressed(k, isRepeat)
     if k =='w' then
         global.ty = global.ty + increment
         player.setY(player.getY() + increment)
+    end
+
+    if k == 'd' then
+        global.double_jump = true
     end
 
     inputPressed(k, isRepeat)
