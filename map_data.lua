@@ -43,6 +43,11 @@ local maps = {
             init = "Pre21",
             sub  = "Pre21Sub"
         },
+        glitches = {
+            missing = 20,
+            dmissing = 10,
+            crazy = 50
+        },
         -- the distance in tiles between the top left corner of the MAP
         -- and the top left corner of the starting screen (with the castle)
         origin = {
@@ -84,6 +89,12 @@ local maps = {
         scenes = {
             init = "Pre51",
             sub  = "Pre51Sub"
+        },
+        glitches = {
+            missing = 20,
+            dmissing = 10,
+            cmissing = 5,
+            crazy = 75
         },
         -- the distance in tiles between the top left corner of the MAP
         -- and the top left corner of the starting screen (with the castle)
@@ -136,6 +147,12 @@ local maps = {
         scenes = {
             init = "Pre91",
             sub  = "Pre91Sub"
+        },
+        glitches = {
+            missing = 20,
+            dmissing = 10,
+            cmissing = 10,
+            crazy = 110
         },
 
         -- the distance in tiles between the top left corner of the MAP
