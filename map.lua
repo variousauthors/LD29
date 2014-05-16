@@ -181,27 +181,29 @@ Map = function (tmx)
 
         tile = tile - origin_y
 
-        if tile > 30                              then return { zone = "catacombs", transition = false } end
-        if tile > 15                              then return { zone = "dungeon",   transition = false } end
-        if tile == 15 or tile == 14 or tile == 13 then return { zone = "dungeon",   transition = true  } end
-        if tile > 0 and tile <= 12                then return { zone = "ground" ,   transition = false } end
-        if tile == 0 or tile == -1                then return { zone = "clouds",    transition = true  } end
-        if tile < -1                              then return { zone = "clouds",    transition = false } end
+        if tile > 30                              then return { zone = "catacombs",    transition = false } end
+        if tile > 15                              then return { zone = "dungeon",      transition = false } end
+        if tile == 15 or tile == 14 or tile == 13 then return { zone = "dungeon",      transition = true  } end
+        if tile > 0 and tile <= 12                then return { zone = "ground" ,      transition = false } end
+        if tile == 0 or tile == -1                then return { zone = "clouds",       transition = true  } end
+        if tile < -28                             then return { zone = "mesosphere",   transition = false } end
+        if tile < -16                             then return { zone = "stratosphere", transition = false } end
+        if tile < -1                              then return { zone = "clouds",       transition = false } end
     end
 
     local getCameraForBand = function (band)
 
+        -- TODO someone can explain to me why these have to be 2 while the global scale is 3...
         if band.zone == "catacombs" and band.transition == false  then return -(( global.tile_height ) * global.tile_size * 2) - pixel_origin_y end
-        if band.zone == "dungeon" and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * 2) - pixel_origin_y end
-        if band.zone == "dungeon" and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * 2) - pixel_origin_y end
-        if band.zone == "ground"  and band.transition == false  then return 0 - pixel_origin_y                                                               end
-        if band.zone == "clouds"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * 2) - pixel_origin_y  end
-        if band.zone == "clouds"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * 2) - pixel_origin_y  end
+        if band.zone == "dungeon"   and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * 2) - pixel_origin_y end
+        if band.zone == "dungeon"   and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * 2) - pixel_origin_y end
+        if band.zone == "ground"    and band.transition == false  then return 0 - pixel_origin_y                                                               end
+        if band.zone == "clouds"    and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * 2) - pixel_origin_y  end
+        if band.zone == "clouds"    and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * 2) - pixel_origin_y  end
 
         -- unimplemented
-        if band.zone == "stratosphere"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) - pixel_origin_y  end
-        if band.zone == "mesosphere"  and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * global.scale) - pixel_origin_y  end
-        if band.zone == "mesosphere"  and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * global.scale) - pixel_origin_y  end
+        if band.zone == "stratosphere"  and band.transition == false  then return (( global.tile_height - 2 ) * global.tile_size * 2) - pixel_origin_y  end
+        if band.zone == "mesosphere"    and band.transition == false   then return (( global.tile_height * (4/3)) * global.tile_size * 2) - pixel_origin_y  end
     end
 
     -- set handlers for events like "onVictory"
