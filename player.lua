@@ -134,6 +134,7 @@ Player = function (point, sprite)
                 double_jump = true
 
                 Sound.playSFX("ptooi_big")
+                v.setY(0) -- double jump don't need no bs downwards, biotch!
                 forces.key.setY(-jump_force)
             elseif isJumping() then
                 -- NOP
