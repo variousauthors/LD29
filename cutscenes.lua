@@ -212,7 +212,31 @@ Cutscenes.Pre21b = Cutscenes:scene({
     frames = { img21Start },
     delay = 3,
     frameX = centerX(img21Start),
-    musicDone = "M100tp5e0"
+    nextCutscene = "Intro21"
+})
+
+local img21intro01 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro01.jpg")
+local img21intro02 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro02.jpg")
+local img21intro03 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro03.jpg")
+local img21intro04 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro04.jpg")
+local img21intro05 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro05.jpg")
+
+Cutscenes.Intro21 = Cutscenes:scene({
+    name   = "Intro21",
+    frames = {
+            { img21intro01, 0.5},
+            { img21intro02, 1},
+            { img21intro03, 2.5},
+            { img21intro02, 0.5},
+            { img21intro04, 3},
+            { img21intro02, 0.5},
+            { img21intro05, 2},
+            { img21intro02, 0.5},
+            { img21intro01, 0.5},
+    },
+    delay = "frames",
+    frameX = centerX(img21Start),
+    musicStart = "M100tp5e0"
 })
 
 -- Subsequent 2-1 runs
