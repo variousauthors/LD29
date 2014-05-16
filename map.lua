@@ -334,7 +334,7 @@ Map = function (tmx)
         if global.double_jump == true then return end
 
         -- start the cutscene
-        Cutscenes.current = Cutscenes.Shrines.Doublejump
+        Cutscenes.current = Cutscenes.Shrines.Doublejump51
         Cutscenes.current.start()
 
         global.double_jump = true
@@ -344,7 +344,7 @@ Map = function (tmx)
         if global.double_jump == true then return end
 
         -- start the cutscene
-        Cutscenes.current = Cutscenes.Shrines.Doublejump
+        Cutscenes.current = Cutscenes.Shrines.Doublejump91
         Cutscenes.current.start()
 
         global.double_jump = true

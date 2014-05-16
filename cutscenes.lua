@@ -445,16 +445,39 @@ Cutscenes.Shrines.Doublejump21 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgdoublejump01 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump01.jpg")
-local imgdoublejump02 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump02.jpg")
+local imgdoublejump5101 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5101.jpg")
+local imgdoublejump5102 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5102.jpg")
+local imgdoublejump5103 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5103.jpg")
+local imgdoublejump5105 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5105.jpg")
 
-Cutscenes.Shrines.Doublejump = Cutscenes:scene({
-    name = "Shrines.Doublejump",
+Cutscenes.Shrines.Doublejump51 = Cutscenes:scene({
+    name = "Shrines.Doublejump21",
     frames = {
-        {imgdoublejump01, 1},
-        {imgdoublejump02, 2}
+        {imgdoublejump5101, 0.5},
+        {imgdoublejump5102, 3},
+        {imgdoublejump5103, 3},
+        {imgdoublejump5101, 0.5}, -- 04 is same as 01
+        {imgdoublejump5105, 2}
     },
-    frameX = centerX(imgdoublejump01),
+    frameX = 0,
+    delay = "frames"
+})
+
+local imgdoublejump9101 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9101.jpg")
+local imgdoublejump9102 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9102.jpg")
+local imgdoublejump9103 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9103.jpg")
+local imgdoublejump9105 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9105.jpg")
+
+Cutscenes.Shrines.Doublejump91 = Cutscenes:scene({
+    name = "Shrines.Doublejump21",
+    frames = {
+        {imgdoublejump9101, 0.5},
+        {imgdoublejump9102, 3},
+        {imgdoublejump9103, 3},
+        {imgdoublejump9101, 0.5}, -- 04 is same as 01
+        {imgdoublejump9105, 2}
+    },
+    frameX = 0,
     delay = "frames"
 })
 
