@@ -22,8 +22,15 @@ function Cutscenes:scene(options)
     local done_callback = options.done_callback
     local old_done_callback = nil
 
+    -- ALL THE HUDS
+    local show_hud = true
+
     local isRunning = function ()
         return is_running
+    end
+
+    local showHUD = function ()
+        return show_hud
     end
 
     local start = function (cb)
@@ -124,6 +131,7 @@ function Cutscenes:scene(options)
 
     return {
         isRunning = isRunning,
+        showHUD   = showHUD,
         start     = start,
         stop      = stop,
         update    = update,

@@ -23,15 +23,16 @@ require("vector")
 
 -- we store the levels in a table and I expect when there are more of them we will just
 -- iterate
-local Map = require("map")
-local maps = require("map_data")
+local Map            = require("map")
+local HeadsUpDisplay = require("heads_up_display")
+local maps           = require("map_data")
 
 local num = 1                   -- The map we're currently on
 local fps = 0                   -- Frames Per Second
 local fpsCount = 0              -- FPS count of the current second
 local fpsTime = 0               -- Keeps track of the elapsed time
 
-local origin, player
+local origin, player, hud
 
 function init_player (p, s)
     player = Player(p, s)
@@ -47,6 +48,8 @@ function love.load()
     --First cutscene.
     Cutscenes.current = Cutscenes.StartScreen
     Cutscenes.current.start()
+
+    hud = HeadsUpDisplay()
 end
 
 local deflower = false
@@ -201,7 +204,8 @@ end
 local inputPressed = function(k, isRepeat)
     -- No jumping during cutscenes
     if Cutscenes.current.isRunning() then
-        if not isRepeat then Cutscenes.current.update(65535) end
+        -- in order to ski pa cutscene we just pass in a huge number of seconds
+        -- if not isRepeat then Cutscenes.current.update(65535) end
     else
         player.keypressed(k)
     end
@@ -251,6 +255,22 @@ function love.keypressed(k, isRepeat)
         global.double_jump = true
     end
 
+    if k == "k" then
+        hud.decrementY()
+    end
+
+    if k == "j" then
+        hud.incrementY()
+    end
+
+    if k == "h" then
+        hud.decrementX()
+    end
+
+    if k == "l" then
+        hud.incrementX()
+    end
+
     inputPressed(k, isRepeat)
 end
 
@@ -267,8 +287,7 @@ function love.draw()
         player.draw()
     end
 
-    if not Cutscenes.current.isRunning() then
-        love.graphics.print("FLOWERS x " .. global.flowers, W_WIDTH - (100 * global.scale), (10 * global.scale))
+    if not Cutscenes.current.isRunning() or Cutscenes.current.showHUD() then
+        hud.draw()
     end
 end
-
