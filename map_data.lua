@@ -4,6 +4,7 @@
 local maps = {
     -- 1-1
     LevelOne("map1-1.tmx", {
+        name = "1-1",
         sprite = Sprites.bigguy,
         doors = {
             {
@@ -27,6 +28,7 @@ local maps = {
 
     -- 2-1
     SubsequentLevels("map2-1.tmx", {
+        name = "2-1",
         sprite = Sprites.ladyguy,
         doors = {
             {
@@ -64,6 +66,7 @@ local maps = {
 
     -- 5-1
     SubsequentLevels("map5-1.tmx", {
+        name = "5-1",
         sprite = Sprites.lilguy,
         doors = {
             {
@@ -112,6 +115,7 @@ local maps = {
 
     -- 9-1
     SubsequentLevels("map9-1.tmx", {
+        name = "9-1",
         sprite = Sprites.oldguy,
         doors = {
             {
@@ -171,6 +175,7 @@ local maps = {
 
     -- 10-0
     SubsequentLevels("map9-1.tmx", {
+        name = "9-1",
         sprite = Sprites.oldguy,
         doors = {
             {

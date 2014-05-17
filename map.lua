@@ -14,6 +14,7 @@ loader.path      = "assets/images/maps/"
 
 Map = function (tmx)
     local map             = loader.load(tmx)
+    local name            = ""
     local is_finished     = false
     local events          = {}
     local sprite          = {}
@@ -171,6 +172,14 @@ Map = function (tmx)
         -- 12 tiles down, 5 over
         start_x = origin_x + start.x
         start_y = origin_y + start.y
+    end
+
+    local setName = function (world_name)
+        name = world_name
+    end
+
+    local getName = function ()
+        return name
     end
 
     -- returns the pixel coords at which mario shouls appear
@@ -841,6 +850,8 @@ Map = function (tmx)
         setProceedHandler = setProceedHandler,
         setEvents         = setEvents,
         setOrigin         = setOrigin,
+        setName           = setName,
+        getName           = getName,
         getStart          = getStart,
 
         getGlitchMusic    = getGlitchMusic,
@@ -857,6 +868,7 @@ end
 LevelOne = function (tmx, options)
     local map = Map(tmx)
 
+    map.setName(options.name)
     map.setEvents(options.doors)
     map.setOrigin(options.origin, options.start)
 
@@ -887,6 +899,7 @@ end
 SubsequentLevels = function (tmx, options)
     local map = Map(tmx)
 
+    map.setName(options.name)
     map.setEvents(options.doors)
     map.setOrigin(options.origin, options.start)
 

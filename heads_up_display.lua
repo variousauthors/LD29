@@ -66,13 +66,33 @@ local HeadsUpDisplay = function ()
         return data["score"]
     end
 
+    local getTimer = function ()
+        return "" .. data["timer"]
+    end
+
+    local getWorld = function ()
+        return data["world"]
+    end
+
+    local setScore = function (score)
+        data["score"] = score
+    end
+
+    local setWorld = function (world)
+        data["world"] = world
+    end
+
+    local setTimer = function (time)
+        data["timer"] = "" .. (400 - time)
+    end
+
     -- draw rules for the components: score, flowers/coins, world, time
     -- ALL 5 CHARS! I AM SO EXCITED
     local components = {
-        score = Component(-1, 0, Component(0, 0, Component(0, 0, "MARIO"), Component(0, 20, getScore))),
+        score = Component(-1, 0, Component(0, 0, Component(0, 0, "MARIO"), Component(0, 30, getScore))),
         items = Component(194, 0, "items", "items"),
-        world = Component(359, 0, "WORLD", "world"),
-        world = Component(527, 0, "TIME", "timer")
+        world = Component(359, 0, Component(0, 0, Component(0, 0, "WORLD"), Component(0, 30, getWorld))),
+        timer = Component(527, 0, Component(0, 0, Component(0, 0, "TIME"), Component(25, 30, getTimer)))
     }
 
     local current_component = components["world"]
@@ -105,7 +125,11 @@ local HeadsUpDisplay = function ()
         incrementY = incrementY,
         decrementY = decrementY,
         incrementX = incrementX,
-        decrementX = decrementX
+        decrementX = decrementX,
+
+        setScore = setScore,
+        setTimer = setTimer,
+        setWorld = setWorld
     }
 end
 
