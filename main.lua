@@ -108,7 +108,7 @@ function love.update(dt)
     band            = maps[num].getBand(tile_y)
 
     if band ~= nil then
-    print(band.zone)
+    -- print(band.zone)
         local scroll = 10
         camera = maps[num].getCameraForBand(band)
 
