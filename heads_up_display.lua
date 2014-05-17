@@ -94,7 +94,7 @@ local HeadsUpDisplay = function ()
 
     -- TODO time should display leading zeroes
     local setTimer = function (time)
-        data["timer"] = "" .. (400 - time)
+        data["timer"] = "" .. time
     end
 
     -- TODO items should have a coin or a flower

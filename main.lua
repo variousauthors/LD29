@@ -128,6 +128,7 @@ function love.update(dt)
 
     -- Call update in our example if it is defined
     if maps[num].update then maps[num].update(dt) end
+    hud.setTimer(maps[num].getTime())
 
     if maps[num].isFinished() then
         if player.isDead() then
@@ -199,7 +200,6 @@ function love.update(dt)
         init_player(maps[num].getStart(), maps[num].sprite)
     end
 
-    hud.setTimer(math.floor(time))
 
   --if #collisions > 0 then
   --    print("======================")

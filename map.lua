@@ -16,6 +16,8 @@ Map = function (tmx)
     local map             = loader.load(tmx)
     local name            = ""
     local item            = ""
+    local time            = 0
+    local time_limit      = 400
     local is_finished     = false
     local events          = {}
     local sprite          = {}
@@ -181,6 +183,10 @@ Map = function (tmx)
 
     local getName = function ()
         return name
+    end
+
+    local getTime = function ()
+        return time_limit - math.floor(time)
     end
 
     local setItem = function (item_type)
@@ -419,9 +425,20 @@ Map = function (tmx)
         global.ty = - pixel_origin_y
     end
 
+    local resetTimer = function ()
+        print("reset Timer")
+        time = 0
+    end
+
     -- at some point we will probably want code in here
     local update = function (dt)
+        time = time + dt
 
+        -- timu rimito uppu!
+        if getTime() == 0 then
+            onDeath()
+            is_dead = true
+        end
     end
 
     -- Called from love.draw()
@@ -862,6 +879,7 @@ Map = function (tmx)
         setName           = setName,
         setItem           = setItem,
         getName           = getName,
+        getTime           = getTime,
         getItem           = getItem,
         getStart          = getStart,
 
@@ -869,6 +887,7 @@ Map = function (tmx)
 
         glitch            = glitch,
         reset             = reset,
+        resetTimer        = resetTimer,
 
         onProceed         = onProceed,
 
@@ -885,8 +904,10 @@ LevelOne = function (tmx, options)
     map.setOrigin(options.origin, options.start)
 
     map.setDeathHandler(function ()
+        print("in death handler")
 
         map.setFinished(true)
+        map.resetTimer()
 
         map.setProceedHandler(function ()
             map.setFinished(false)
@@ -927,6 +948,7 @@ SubsequentLevels = function (tmx, options)
 
     map.setVictoryHandler(function ()
         map.setFinished(true)
+        map.resetTimer()
 
         map.setProceedHandler(function ()
             -- you aren't finished here mario...
