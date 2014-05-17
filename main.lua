@@ -50,8 +50,8 @@ function love.load()
     Cutscenes.current.start()
 
     hud = HeadsUpDisplay()
-    print(maps[num].getName())
     hud.setWorld(maps[num].getName())
+    hud.setItemType(maps[num].getItem())
 end
 
 local deflower = false
@@ -65,6 +65,7 @@ global.resolveFlower = function ()
     if global.flower_get then
         global.flowers = global.flowers + 1
         hud.setScore(global.flowers * 100)
+        hud.setItems(global.flowers)
     end
 
     global.flower_get = false
@@ -146,6 +147,7 @@ function love.update(dt)
             num = num + 1
             maps[num].reset()
             hud.setWorld(maps[num].getName())
+            hud.setItemType(maps[num].getItem())
 
             -- New map means new "initial" scene
             if(Cutscenes[maps[num].scenes.init]) then
