@@ -205,7 +205,7 @@ local inputPressed = function(k, isRepeat)
     -- No jumping during cutscenes
     if Cutscenes.current.isRunning() then
         -- in order to ski pa cutscene we just pass in a huge number of seconds
-        -- if not isRepeat then Cutscenes.current.update(65535) end
+        if not isRepeat then Cutscenes.current.update(65535) end
     else
         player.keypressed(k)
     end

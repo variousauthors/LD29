@@ -1,21 +1,59 @@
 local HeadsUpDisplay = function ()
     -- this needs to account for global.scale
-    local frame_y = 44
-    local frame_x = 70
+    local x = 70
+    local y = 44
 
     local data = {
-        score = "",
+        score = "00000",
         items = "",
         world = "",
         timer = ""
     }
 
     -- private class WHUT?
-    local Component = function (x, y, text, key)
+    -- @param ... any number of constructors, or a string or a function that returns a string
+    local Component = function (x, y, ...)
         local offset = { x = x, y = y }
+        local text, func, components = nil, nil, {}
 
-        local draw = function ()
-            love.graphics.print(text .. data[key], frame_x + offset.x, frame_y + offset.y)
+        -- iterate over the args, until we hit a string
+        -- or a function
+        -- a component either: shows a string, or shows the result of a function
+        -- call, and shows all of its components
+        -- We call these: static, dynamic, and composite components
+        local initialize = function (...)
+            for i, arg in ipairs({...}) do
+
+                if type(arg) == "string" then
+                    text = arg
+                    return
+
+                -- later we should maybe replace func with a free standing
+                -- draw function, rather than a function that returns a string.
+                -- That way we will be able to have coin and flower pictures
+                elseif type(arg) == "function" then
+                    func = arg
+                    return
+
+                elseif type(arg) == "table" then
+                    table.insert(components, arg)
+                end
+            end
+        end
+
+        initialize(unpack({...}))
+
+        -- the draw function takes the position of the parent component
+        local draw = function (frame_x, frame_y)
+            if text ~= nil then
+                love.graphics.print(text, frame_x + offset.x, frame_y + offset.y)
+            elseif func ~= nil then
+                love.graphics.print(func(), frame_x + offset.x, frame_y + offset.y)
+            end
+
+            for key, value in pairs(components) do
+                value.draw(frame_x + offset.x, frame_y + offset.y)
+            end
         end
 
         return {
@@ -24,10 +62,14 @@ local HeadsUpDisplay = function ()
         }
     end
 
+    local getScore = function ()
+        return data["score"]
+    end
+
     -- draw rules for the components: score, flowers/coins, world, time
     -- ALL 5 CHARS! I AM SO EXCITED
     local components = {
-        score = Component(-1, 0, "MARIO", "score"),
+        score = Component(-1, 0, Component(0, 0, Component(0, 0, "MARIO"), Component(0, 20, getScore))),
         items = Component(194, 0, "items", "items"),
         world = Component(359, 0, "WORLD", "world"),
         world = Component(527, 0, "TIME", "timer")
@@ -36,12 +78,10 @@ local HeadsUpDisplay = function ()
     local current_component = components["world"]
 
     local draw = function ()
-        inspect(current_component.offset)
 
         for key, value in pairs(components) do
-            value.draw()
+            value.draw(x, y)
         end
-
     end
 
     local incrementY = function ()
