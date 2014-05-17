@@ -220,7 +220,31 @@ Cutscenes.Pre21b = Cutscenes:scene({
     frames = { img21Start },
     delay = 3,
     frameX = centerX(img21Start),
-    musicDone = "M100tp5e0"
+    nextCutscene = "Intro21"
+})
+
+local img21intro01 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro01.jpg")
+local img21intro02 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro02.jpg")
+local img21intro03 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro03.jpg")
+local img21intro04 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro04.jpg")
+local img21intro05 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro05.jpg")
+
+Cutscenes.Intro21 = Cutscenes:scene({
+    name   = "Intro21",
+    frames = {
+            { img21intro01, 0.5},
+            { img21intro02, 1},
+            { img21intro03, 2.5},
+            { img21intro02, 0.5},
+            { img21intro04, 3},
+            { img21intro02, 0.5},
+            { img21intro05, 2},
+            { img21intro02, 0.5},
+            { img21intro01, 0.5},
+    },
+    delay = "frames",
+    frameX = centerX(img21Start),
+    musicStart = "M100tp5e0"
 })
 
 -- Subsequent 2-1 runs
@@ -404,6 +428,49 @@ Cutscenes.Shrines.Backwards = Cutscenes:scene({
     delay = "frames"
 })
 
+local imgbackwards5101 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5101.jpg")
+local imgbackwards5102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5102.jpg")
+local imgbackwards5102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5102.jpg")
+local imgbackwards5103 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5103.jpg")
+local imgbackwards5105 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5105.jpg")
+
+Cutscenes.Shrines.Backwards51 = Cutscenes:scene({
+    name = "Shrines.Backwards51",
+    frames = {
+        {imgbackwards5101, 1},
+        {imgbackwards5102, 0.1},
+        {imgbackwards5101, 0.1},
+        {imgbackwards5102, 0.1},
+        {imgbackwards5101, 0.1},
+        {imgbackwards5102, 0.1},
+        {imgbackwards5101, 0.1},
+        {imgbackwards5102, 0.5},
+        {imgbackwards5103, 3.5},
+        {imgbackwards5102, 0.5},
+        {imgbackwards5105, 2}
+    },
+    frameX = centerX(imgbackwards01),
+    delay = "frames"
+})
+
+local imgclouds5101 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds5101.jpg")
+local imgclouds5102 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds5102.jpg")
+local imgclouds5103 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds5103.jpg")
+local imgclouds5105 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds5105.jpg")
+
+Cutscenes.Shrines.Clouds51 = Cutscenes:scene({
+    name = "Shrines.Clouds51",
+    frames = {
+        {imgclouds5101, 0.5},
+        {imgclouds5102, 3},
+        {imgclouds5103, 3.5},
+        {imgclouds5101, 0.5}, -- 04 is same as 01
+        {imgclouds5105, 2}
+    },
+    frameX = 0,
+    delay = "frames"
+})
+
 local imgclouds01 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds01.jpg")
 local imgclouds02 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds02.jpg")
 
@@ -426,7 +493,7 @@ Cutscenes.Shrines.Doublejump21 = Cutscenes:scene({
     name = "Shrines.Doublejump21",
     frames = {
         {imgdoublejump2101, 0.5},
-        {imgdoublejump2102, 2},
+        {imgdoublejump2102, 3},
         {imgdoublejump2103, 3},
         {imgdoublejump2101, 0.5}, -- 04 is same as 01
         {imgdoublejump2105, 2}
@@ -435,16 +502,39 @@ Cutscenes.Shrines.Doublejump21 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgdoublejump01 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump01.jpg")
-local imgdoublejump02 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump02.jpg")
+local imgdoublejump5101 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5101.jpg")
+local imgdoublejump5102 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5102.jpg")
+local imgdoublejump5103 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5103.jpg")
+local imgdoublejump5105 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5105.jpg")
 
-Cutscenes.Shrines.Doublejump = Cutscenes:scene({
-    name = "Shrines.Doublejump",
+Cutscenes.Shrines.Doublejump51 = Cutscenes:scene({
+    name = "Shrines.Doublejump21",
     frames = {
-        {imgdoublejump01, 1},
-        {imgdoublejump02, 2}
+        {imgdoublejump5101, 0.5},
+        {imgdoublejump5102, 3},
+        {imgdoublejump5103, 3},
+        {imgdoublejump5101, 0.5}, -- 04 is same as 01
+        {imgdoublejump5105, 2}
     },
-    frameX = centerX(imgdoublejump01),
+    frameX = 0,
+    delay = "frames"
+})
+
+local imgdoublejump9101 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9101.jpg")
+local imgdoublejump9102 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9102.jpg")
+local imgdoublejump9103 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9103.jpg")
+local imgdoublejump9105 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9105.jpg")
+
+Cutscenes.Shrines.Doublejump91 = Cutscenes:scene({
+    name = "Shrines.Doublejump21",
+    frames = {
+        {imgdoublejump9101, 0.5},
+        {imgdoublejump9102, 3},
+        {imgdoublejump9103, 3},
+        {imgdoublejump9101, 0.5}, -- 04 is same as 01
+        {imgdoublejump9105, 2}
+    },
+    frameX = 0,
     delay = "frames"
 })
 
@@ -461,14 +551,27 @@ Cutscenes.Shrines.Walljump = Cutscenes:scene({
 
 local imgtrees01 = love.graphics.newImage("assets/scenes/trees/shrines_trees01.jpg")
 local imgtrees02 = love.graphics.newImage("assets/scenes/trees/shrines_trees02.jpg")
+local imgtrees03 = love.graphics.newImage("assets/scenes/trees/shrines_trees03.jpg")
+local imgtrees04 = love.graphics.newImage("assets/scenes/trees/shrines_trees04.jpg")
+local imgtrees06 = love.graphics.newImage("assets/scenes/trees/shrines_trees06.jpg")
 
 Cutscenes.Shrines.Trees = Cutscenes:scene({
     name = "Shrines.Trees",
     frames = {
         {imgtrees01, 1},
-        {imgtrees02, 2}
+        {imgtrees02, 0.1},
+        {imgtrees01, 0.1},
+        {imgtrees02, 0.1},
+        {imgtrees01, 0.1},
+        {imgtrees02, 0.1},
+        {imgtrees01, 0.1},
+        {imgtrees02, 0.75},
+        {imgtrees03, 2.5},
+        {imgtrees04, 2.5},
+        {imgtrees02, 0.5},
+        {imgtrees06, 2.5}
     },
-    frameX = centerX(imgtrees01),
+    frameX = 0,
     delay = "frames"
 })
 
