@@ -5,7 +5,7 @@ Player = function (point, sprite)
     local prev                    = nil -- the previous point position
     local speed                   = 100
     local max_horizontal_speed    = 1.5 * global.scale
-    local max_vertical_speed      = 5 * global.scale
+    local max_vertical_speed      = 4 * global.scale
     local sprite                  = sprite
     local cur_state, prev_state   = "stand", nil
     local cur_facing, prev_facing = sprite.base_facing, nil
@@ -19,7 +19,7 @@ Player = function (point, sprite)
 
     local sprite_width  = (sprite.width or 16) * global.scale
     local sprite_height = (sprite.height or 16) * global.scale
-    local draw_w        = sprite_width - (sprite_width / 8) -- skinny for collisions
+    local draw_w        = sprite_width - (sprite_width / 4) -- skinny for collisions
     local draw_h        = sprite_height - (sprite_height / 8)
 
     local forces = {
@@ -234,7 +234,9 @@ Player = function (point, sprite)
 
         -- clamp speeds
         v.setX(math.max(-max_horizontal_speed, math.min(v.getX(), max_horizontal_speed)))
-        v.setY(math.max(-max_vertical_speed, math.min(v.getY(), max_vertical_speed)))
+        if v.getY() > 0 then
+            v.setY(math.max(-max_vertical_speed, math.min(v.getY(), max_vertical_speed)))
+        end
 
         -- update position optimistically
         p.setY(p.getY() + v.getY() * dt * speed)
