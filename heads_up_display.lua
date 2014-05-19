@@ -4,6 +4,14 @@ local Component = function (x, y, ...)
     local offset = { x = x, y = y }
     local text, func, components = nil, nil, {}
 
+    -- by default the component draws its components,
+    -- but leaf components will draw something else
+    local draw_logic = function (x, y)
+        for key, value in pairs(components) do
+            value.draw(x, y)
+        end
+    end
+
     -- iterate over the args, until we hit a string
     -- or a function
     -- a component either: shows a string, or shows the result of a function
@@ -13,14 +21,18 @@ local Component = function (x, y, ...)
         for i, arg in ipairs({...}) do
 
             if type(arg) == "string" then
-                text = arg
+                draw_logic = function (x, y)
+                    love.graphics.print(arg, x, y)
+                end
+
                 return
 
             -- later we should maybe replace func with a free standing
             -- draw function, rather than a function that returns a string.
             -- That way we will be able to have coin and flower pictures
             elseif type(arg) == "function" then
-                func = arg
+                -- close around out offsets
+                draw_logic = arg
                 return
 
             elseif type(arg) == "table" then
@@ -29,20 +41,12 @@ local Component = function (x, y, ...)
         end
     end
 
-    initialize(unpack({...}))
-
-    -- the draw function takes the position of the parent component
+    -- @params frame_x,_y the position of the parent component
     local draw = function (frame_x, frame_y)
-        if text ~= nil then
-            love.graphics.print(text, frame_x + offset.x, frame_y + offset.y)
-        elseif func ~= nil then
-            love.graphics.print(func(), frame_x + offset.x, frame_y + offset.y)
-        end
-
-        for key, value in pairs(components) do
-            value.draw(frame_x + offset.x, frame_y + offset.y)
-        end
+        draw_logic(frame_x + offset.x, frame_y + offset.y)
     end
+
+    initialize(unpack({...}))
 
     return {
         draw   = draw,
@@ -63,25 +67,25 @@ local HeadsUpDisplay = function ()
         timer = ""
     }
 
-    local getScore = function ()
-        return data["score"]
+    local drawScore = function (x, y)
+        love.graphics.print(data["score"], x, y)
     end
 
-    local getTimer = function ()
-        return "" .. data["timer"]
+    local drawTimer = function (x, y)
+        love.graphics.print("" .. data["timer"], x, y)
     end
 
-    local getWorld = function ()
-        return data["world"]
+    local drawWorld = function (x, y)
+        love.graphics.print(data["world"], x, y)
     end
 
-    local getItems = function ()
+    local drawItems = function (x, y)
         local item
 
         if data["item_type"] == "coin"   then item = "C" end
         if data["item_type"] == "flower" then item = "F" end
 
-        return item .. "x" .. data["items"]
+        love.graphics.print(item .. "x" .. data["items"], x, y)
     end
 
     local setScore = function (score)
@@ -108,10 +112,10 @@ local HeadsUpDisplay = function ()
 
 
     local component = Component(x, y,
-        Component(-1, 0, Component(0, 0, Component(0, 0, "MARIO"), Component(0, 30, getScore))),
-        Component(194, 0, Component(0, 0, Component(0, 0, ""), Component(0, 30, getItems))),
-        Component(359, 0, Component(0, 0, Component(0, 0, "WORLD"), Component(0, 30, getWorld))),
-        Component(527, 0, Component(0, 0, Component(0, 0, "TIME"), Component(25, 30, getTimer)))
+        Component(-1, 0, Component(0, 0, Component(0, 0, "MARIO"), Component(0, 24, drawScore))),
+        Component(194, 0, Component(0, 0, Component(0, 0, ""), Component(-2, 24, drawItems))),
+        Component(359, 0, Component(0, 0, Component(0, 0, "WORLD"), Component(24, 24, drawWorld))),
+        Component(527, 0, Component(0, 0, Component(0, 0, "TIME"), Component(25, 24, drawTimer)))
     )
 
     local current_component = component
