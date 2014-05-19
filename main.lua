@@ -228,57 +228,6 @@ function love.keypressed(k, isRepeat)
         love.event.push("quit")
     end
 
-    if k == "0"
-    or k == "1"
-    or k == "2"
-    or k == "3"
-    or k == "4"
-    or k == "5"
-    or k == "6"
-    or k == "7"
-    or k == "8"
-    or k == "9" then
-        teleport = teleport .. k
-    end
-
-    if #teleport == 4 then
-        local dest = tonumber(teleport)
-        teleport = ""
-
-        global.tx = -dest
-    end
-
-    local increment = global.tile_width
-    if k =='s' then
-        global.ty = global.ty - increment
-        player.setY(player.getY() - increment)
-    end
-
-    if k =='w' then
-        global.ty = global.ty + increment
-        player.setY(player.getY() + increment)
-    end
-
-    if k == 'd' then
-        global.double_jump = true
-    end
-
-    if k == "k" then
-        hud.decrementY()
-    end
-
-    if k == "j" then
-        hud.incrementY()
-    end
-
-    if k == "h" then
-        hud.decrementX()
-    end
-
-    if k == "l" then
-        hud.incrementX()
-    end
-
     inputPressed(k, isRepeat)
 end
 
