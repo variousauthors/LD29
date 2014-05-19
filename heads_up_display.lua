@@ -82,10 +82,21 @@ local HeadsUpDisplay = function ()
     local drawItems = function (x, y)
         local item
 
-        if data["item_type"] == "coin"   then item = "C" end
-        if data["item_type"] == "flower" then item = "F" end
+        if data["item_type"] == "coin"   then image = "assets/images/coin_icon.png" end
+        if data["item_type"] == "flower" then image = "assets/images/coin_icon.png" end
 
-        love.graphics.print(item .. "x" .. data["items"], x, y)
+        local image = love.graphics.newImage(image)
+        image:setFilter("nearest", "nearest")
+
+        local sx, sy    = global.scale, global.scale
+        local r, ox, oy = 0, 0, 0
+        local width     = image:getWidth()
+        local height    = image:getHeight()
+
+
+        love.graphics.draw(image, x + 5, y + 4, r, sx, sy, ox, oy)
+        love.graphics.print("x" .. data["items"], x + 23, y)
+
     end
 
     local setScore = function (score)

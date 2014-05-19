@@ -39,7 +39,6 @@ function Cutscenes:scene(options)
             done_callback = cb
         end
         is_running = true
-        print("Scene started: " .. sceneName)
         timer, frameIter = 0, 1
 
         if (not delay or type(delay) == "number") then
@@ -59,7 +58,6 @@ function Cutscenes:scene(options)
 
     local stop = function ()
         is_running = false
-        print("Scene stopped: "..sceneName)
     end
 
     local finish = function ()
@@ -77,10 +75,8 @@ function Cutscenes:scene(options)
                 done_callback = nil
             end
         end
-        print("Scene complete: "..sceneName)
         -- cutscene immediately following. kinda hacky, but TIIIIME
         if nextCutscene then
-            print("Starting following scene: "..nextCutscene)
             self.current = self[nextCutscene]
             self.current.start()
         end

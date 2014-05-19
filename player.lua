@@ -14,7 +14,6 @@ Player = function (point, sprite)
     local jump_force              = 5 * global.scale
 
     -- height/width of the sprite's shape
-    print("sprite")
     inspect({ sprite.width, sprite.height })
 
     local sprite_width  = (sprite.width or 16) * global.scale
