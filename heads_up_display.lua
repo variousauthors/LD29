@@ -3,6 +3,7 @@
 local Component = function (x, y, ...)
     local offset = { x = x, y = y }
     local text, func, components = nil, nil, {}
+    local image
 
     -- by default the component draws its components,
     -- but leaf components will draw something else
@@ -80,12 +81,6 @@ local HeadsUpDisplay = function ()
     end
 
     local drawItems = function (x, y)
-        local item
-
-        if data["item_type"] == "coin"   then image = "assets/images/coin_icon.png" end
-        if data["item_type"] == "flower" then image = "assets/images/coin_icon.png" end
-
-        local image = love.graphics.newImage(image)
         image:setFilter("nearest", "nearest")
 
         local sx, sy    = global.scale, global.scale
@@ -119,6 +114,11 @@ local HeadsUpDisplay = function ()
 
     local setItemType = function (item_type)
         data["item_type"] = item_type
+
+        if data["item_type"] == "coin"   then image = "assets/images/coin_icon.png" end
+        if data["item_type"] == "flower" then image = "assets/images/coin_icon.png" end
+
+        image = love.graphics.newImage(image)
     end
 
 
