@@ -24,6 +24,11 @@ function Cutscenes:scene(options)
 
     -- ALL THE HUDS
     local show_hud = true
+    if options.showHUD ~= nil then
+        show_hud = options.showHUD
+    end
+
+
 
     local isRunning = function ()
         return is_running
@@ -160,7 +165,8 @@ Cutscenes.StartScreen = Cutscenes:scene({
     frames = { imgStartScreen },
     delay = 3,
     frameX = centerX(imgStartScreen),
-    nextCutscene = "Pre11"
+    nextCutscene = "Pre11",
+    showHUD = false
 })
 
 -- Plays before 1-1
@@ -171,7 +177,8 @@ Cutscenes.Pre11 = Cutscenes:scene({
     frames = { img11Start },
     delay = 3,
     frameX = centerX(img11Start),
-    musicDone = "M100tp5e0"
+    musicDone = "M100tp5e0",
+    showHUD = false
 })
 
 -- Plays before 2-1
