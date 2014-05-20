@@ -98,7 +98,7 @@ local maps = {
         },
         glitches = {
             missing = 30,
-            dmissing = 15,
+            dmissing = 20,
             cmissing = 10,
             crazy = 50
         },
@@ -157,10 +157,10 @@ local maps = {
             sub  = "Pre91Sub"
         },
         glitches = {
-            missing = 20,
-            dmissing = 10,
+            missing = 30,
+            dmissing = 20,
             cmissing = 10,
-            crazy = 110
+            crazy = 70
         },
 
         -- the distance in tiles between the top left corner of the MAP
