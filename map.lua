@@ -12,22 +12,23 @@ loader.path      = "assets/images/maps/"
 -- Also on the TODO list is pulling the collision code out of here.
 --
 
-Map = function (tmx)
-    local map             = loader.load(tmx)
-    local name            = ""
-    local item            = ""
-    local time            = 0
-    local time_limit      = 400
-    local is_finished     = false
-    local events          = {}
-    local sprite          = {}
-    local glitch_lvl      = 0
-    local glitch_max      = 4
-    local is_glitchedout  = false
-    local death_line      = map.height - 1
-    local old_collectible = {}
-    local map_midpoint    = map.properties["midpoint"] or map.height -- if not set, then all sky
-    local map_midpoint_px = map_midpoint * global.tile_size
+Map                         = function (tmx)
+    local map               = loader.load(tmx)
+    local name              = ""
+    local item              = ""
+    local time              = 0
+    local time_limit        = 400
+    local is_finished       = false
+    local events            = {}
+    local sprite            = {}
+    local glitch_lvl        = 0
+    local glitch_max        = 4
+    local is_glitchedout    = false
+    local glitchout_penalty = 10
+    local death_line        = map.height - 1
+    local old_collectible   = {}
+    local map_midpoint      = map.properties["midpoint"] or map.height -- if not set, then all sky
+    local map_midpoint_px   = map_midpoint * global.tile_size
 
     -- the amount to cheat the screen by on level start
     local origin_y = 0
@@ -191,6 +192,10 @@ Map = function (tmx)
 
     local getTime = function ()
         return time_limit - math.floor(time)
+    end
+
+    local adjustTime = function (adjustment)
+        time = time + adjustment
     end
 
     local setItem = function (item_type)
@@ -436,10 +441,10 @@ Map = function (tmx)
 
     -- at some point we will probably want code in here
     local update = function (dt)
-        time = time + dt
+        adjustTime(dt)
 
         -- timu rimito uppu!
-        if getTime() == 0 then
+        if getTime() <= 0 then
             onDeath()
             is_dead = true
         end
@@ -874,18 +879,19 @@ Map = function (tmx)
         isGlitchedout        = isGlitchedout,
         setGlitchedout       = setGlitchedout,
 
-        setVictoryHandler = setVictoryHandler,
+        setVictoryHandler   = setVictoryHandler,
         setGlitchoutHandler = setGlitchoutHandler,
-        setDeathHandler   = setDeathHandler,
-        setProceedHandler = setProceedHandler,
-        setEvents         = setEvents,
-        setOrigin         = setOrigin,
-        setName           = setName,
-        setItem           = setItem,
-        getName           = getName,
-        getTime           = getTime,
-        getItem           = getItem,
-        getStart          = getStart,
+        setDeathHandler     = setDeathHandler,
+        setProceedHandler   = setProceedHandler,
+        setEvents           = setEvents,
+        setOrigin           = setOrigin,
+        setName             = setName,
+        setItem             = setItem,
+        getName             = getName,
+        getTime             = getTime,
+        adjustTime          = adjustTime,
+        getItem             = getItem,
+        getStart            = getStart,
 
         getGlitchMusic    = getGlitchMusic,
 
@@ -964,6 +970,7 @@ SubsequentLevels = function (tmx, options)
 
     map.setGlitchoutHandler(function ()
         map.setFinished(true)
+        map.adjustTime(options.glitch_penalty) -- removes ten seconds
 
         map.setProceedHandler(function ()
             -- you aren't finished here mario...
