@@ -14,7 +14,6 @@ Player = function (point, sprite)
     local jump_force              = 5 * global.scale
 
     -- height/width of the sprite's shape
-    print("sprite")
     inspect({ sprite.width, sprite.height })
 
     local sprite_width  = (sprite.width or 16) * global.scale
@@ -289,38 +288,12 @@ Player = function (point, sprite)
             oy = sprite.height
         end
 
-        local x = p.getX() + draw_w / global.scale -- + ( sprite_width / 4 )
+        local x = p.getX() + draw_w / global.scale
         local y = p.getY() + draw_h / global.scale
-
-        love.graphics.setColor(255, 0, 0)
-        love.graphics.rectangle("fill", p.getX(), p.getY(), draw_w, draw_h)
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.rectangle("fill", p.getX(), p.getY(), 3, 3)
 
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
                            x - sprite.width, y - sprite.height, r, sx, sy, ox, oy)
-
-        love.graphics.rectangle("fill", p.getX() + draw_w / 2, p.getY() + draw_h / 2, 3, 3)
-
-        love.graphics.setColor(255, 255, 255)
-        for i = 0, 3 do
-            local x      = math.round(math.cos(i * (math.pi / 2)))
-            local y      = math.round(math.sin(i * (math.pi / 2)))
-            local corner = collision_points[x][y]
-
-            love.graphics.rectangle("fill", p.getX() + corner.x, p.getY() + corner.y, 3, 3)
-        end
-
-        -- and now we'll hit the diagonals (but they should mostly already be resolved)
-        for i = 0, 3 do
-            local x      = math.round(math.cos(i * (math.pi / 2) + (math.pi / 4)))
-            local y      = math.round(math.sin(i * (math.pi / 2) + (math.pi / 4)))
-            local corner = collision_points[x][y]
-
-            love.graphics.rectangle("fill", p.getX() + corner.x, p.getY() + corner.y, 3, 3)
-        end
-
     end
 
     -- lean public interface of Player is pretty lean
