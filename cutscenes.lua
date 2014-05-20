@@ -284,12 +284,36 @@ Cutscenes.Pre21Subb = Cutscenes:scene({
 -- Plays before 5-1 (Map 3)
 local img51Start = love.graphics.newImage("assets/scenes/5-1start.png")
 
-Cutscenes.Pre51 = Cutscenes:scene({
+Cutscenes.Pre51 = Cutscenes:scene({ -- 5-1 lives screen
     name   = "Pre51",
-    frames = { img51Start },
+    frames = { img51Start }, 
     delay = 3,
     frameX = centerX(img51Start),
-    musicDone = "M100tp5e0"
+    nextCutscene = "Intro51"
+})
+
+local img51intro01 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro01.jpg")
+local img51intro02 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro02.jpg")
+local img51intro03 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro03.jpg")
+local img51intro04 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro04.jpg")
+local img51intro05 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro05.jpg")
+
+Cutscenes.Intro51 = Cutscenes:scene({ -- 5-1 Intro Cinematic
+    name   = "Intro51",
+    frames = {
+            { img51intro01, 0.5},
+            { img51intro02, 1},
+            { img51intro03, 4.5},
+            { img51intro02, 0.5},
+            { img51intro04, 5},
+            { img51intro02, 0.5},
+            { img51intro05, 2},
+            { img51intro02, 0.5},
+            { img51intro01, 0.5},
+    },
+    delay = "frames",
+    frameX = 0,
+    musicStart = "M100tp5e0"
 })
 
 -- Subsequent 5-1 runs
