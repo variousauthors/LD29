@@ -48,7 +48,7 @@ local maps = {
             sub  = "Pre21Sub"
         },
         glitches = {
-            missing = 20,
+            missing = 30,
             dmissing = 10,
             crazy = 50
         },
@@ -97,10 +97,10 @@ local maps = {
             sub  = "Pre51Sub"
         },
         glitches = {
-            missing = 20,
-            dmissing = 10,
-            cmissing = 5,
-            crazy = 75
+            missing = 30,
+            dmissing = 20,
+            cmissing = 10,
+            crazy = 50
         },
         -- the distance in tiles between the top left corner of the MAP
         -- and the top left corner of the starting screen (with the castle)
@@ -157,10 +157,10 @@ local maps = {
             sub  = "Pre91Sub"
         },
         glitches = {
-            missing = 20,
-            dmissing = 10,
+            missing = 30,
+            dmissing = 20,
             cmissing = 10,
-            crazy = 110
+            crazy = 70
         },
 
         -- the distance in tiles between the top left corner of the MAP
