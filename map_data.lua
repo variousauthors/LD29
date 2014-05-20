@@ -48,7 +48,7 @@ local maps = {
             sub  = "Pre21Sub"
         },
         glitches = {
-            missing = 20,
+            missing = 30,
             dmissing = 10,
             crazy = 50
         },
