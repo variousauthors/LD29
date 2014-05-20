@@ -197,11 +197,11 @@ Cutscenes.Pre21 = Cutscenes:scene({
         {img11end04, 0.1},
         {img11end05, 0.1},
         {img11end06, 0.5},
-        {img11end07, 3.5},
+        {img11end07, 4},
         {img11end08, 1},
-        {img11end09, 1},
+        {img11end09, 2},
         {img11end10, 0.2},
-        {img11end11, 3.5}
+        {img11end11, 5}
     },
     frameX = centerX(img11end01),
     delay = "frames",
@@ -230,9 +230,9 @@ Cutscenes.Intro21 = Cutscenes:scene({
     frames = {
             { img21intro01, 0.5},
             { img21intro02, 1},
-            { img21intro03, 2.5},
+            { img21intro03, 4.5},
             { img21intro02, 0.5},
-            { img21intro04, 3},
+            { img21intro04, 5},
             { img21intro02, 0.5},
             { img21intro05, 2},
             { img21intro02, 0.5},
@@ -261,7 +261,7 @@ Cutscenes.Pre21Sub = Cutscenes:scene({
         {img21end04, 0.1},
         {img21end05, 0.1},
         {img21end06, 0.5},
-        {img21end07, 2} -- changed
+        {img21end07, 4} -- changed
     },
     frameX = centerX(img21end01),
     delay = "frames",
@@ -305,7 +305,7 @@ Cutscenes.Pre51Sub = Cutscenes:scene({
         {img51end04, 0.1},
         {img51end05, 0.1},
         {img51end06, 0.5},
-        {img51end07, 2}
+        {img51end07, 4}
     },
     frameX = centerX(img21end01),
     delay = "frames",
@@ -351,7 +351,7 @@ Cutscenes.Pre91Sub = Cutscenes:scene({
         {img91end04, 0.1},
         {img91end05, 0.1},
         {img91end06, 0.5},
-        {img91end07, 2}
+        {img91end07, 4}
     },
     frameX = centerX(img21end01),
     delay = "frames",
@@ -394,7 +394,7 @@ Cutscenes.Finale100 = Cutscenes:scene({
         {img100finale05, 0.1},
         {img100finale06, 0.1},
         {img100finale07, 0.5},
-        {img100finale08, 3},
+        {img100finale08, 5},
         {img100finale09, 0.5},
         {img100finale10, 0.1},
         {img100finale11, 0.1},
@@ -441,9 +441,9 @@ Cutscenes.Shrines.Backwards51 = Cutscenes:scene({
         {imgbackwards5102, 0.1},
         {imgbackwards5101, 0.1},
         {imgbackwards5102, 0.5},
-        {imgbackwards5103, 3.5},
+        {imgbackwards5103, 5},
         {imgbackwards5102, 0.5},
-        {imgbackwards5105, 2}
+        {imgbackwards5105, 3}
     },
     frameX = centerX(imgbackwards01),
     delay = "frames"
@@ -459,9 +459,9 @@ Cutscenes.Shrines.Clouds51 = Cutscenes:scene({
     frames = {
         {imgclouds5101, 0.5},
         {imgclouds5102, 3},
-        {imgclouds5103, 3.5},
+        {imgclouds5103, 5},
         {imgclouds5101, 0.5}, -- 04 is same as 01
-        {imgclouds5105, 2}
+        {imgclouds5105, 3}
     },
     frameX = 0,
     delay = "frames"
@@ -490,9 +490,9 @@ Cutscenes.Shrines.Doublejump21 = Cutscenes:scene({
     frames = {
         {imgdoublejump2101, 0.5},
         {imgdoublejump2102, 3},
-        {imgdoublejump2103, 3},
+        {imgdoublejump2103, 5},
         {imgdoublejump2101, 0.5}, -- 04 is same as 01
-        {imgdoublejump2105, 2}
+        {imgdoublejump2105, 3}
     },
     frameX = 0,
     delay = "frames"
@@ -508,9 +508,9 @@ Cutscenes.Shrines.Doublejump51 = Cutscenes:scene({
     frames = {
         {imgdoublejump5101, 0.5},
         {imgdoublejump5102, 3},
-        {imgdoublejump5103, 3},
+        {imgdoublejump5103, 5},
         {imgdoublejump5101, 0.5}, -- 04 is same as 01
-        {imgdoublejump5105, 2}
+        {imgdoublejump5105, 3}
     },
     frameX = 0,
     delay = "frames"
@@ -526,9 +526,9 @@ Cutscenes.Shrines.Doublejump91 = Cutscenes:scene({
     frames = {
         {imgdoublejump9101, 0.5},
         {imgdoublejump9102, 3},
-        {imgdoublejump9103, 3},
+        {imgdoublejump9103, 5},
         {imgdoublejump9101, 0.5}, -- 04 is same as 01
-        {imgdoublejump9105, 2}
+        {imgdoublejump9105, 3}
     },
     frameX = 0,
     delay = "frames"
@@ -562,10 +562,10 @@ Cutscenes.Shrines.Trees = Cutscenes:scene({
         {imgtrees02, 0.1},
         {imgtrees01, 0.1},
         {imgtrees02, 0.75},
-        {imgtrees03, 2.5},
-        {imgtrees04, 2.5},
+        {imgtrees03, 3},
+        {imgtrees04, 5},
         {imgtrees02, 0.5},
-        {imgtrees06, 2.5}
+        {imgtrees06, 3}
     },
     frameX = 0,
     delay = "frames"
