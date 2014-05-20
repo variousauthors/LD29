@@ -31,6 +31,7 @@ local maps = {
     SubsequentLevels("map2-1.tmx", {
         name = "2-1",
         item = "flower",
+        glitch_penalty = 10,
         sprite = Sprites.ladyguy,
         doors = {
             {
@@ -70,6 +71,7 @@ local maps = {
     SubsequentLevels("map5-1.tmx", {
         name = "5-1",
         item = "flower",
+        glitch_penalty = 10,
         sprite = Sprites.lilguy,
         doors = {
             {
@@ -121,6 +123,7 @@ local maps = {
         name = "9-1",
         item = "flower",
         sprite = Sprites.oldguy,
+        glitch_penalty = 10,
         doors = {
             {
                 coords = { 196, 52 },
@@ -182,6 +185,7 @@ local maps = {
         name = "9-1",
         item = "flower",
         sprite = Sprites.oldguy,
+        glitch_penalty = 10,
         doors = {
             {
                 coords = { 196, 52 },
