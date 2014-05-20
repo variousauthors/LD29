@@ -78,7 +78,11 @@ Map = function (tmx)
         end
 
         missing_tiles_glitch.generate_glitches(glitch_options.missing)
-        missing_tiles_glitch.modify_layer(start_x)
+        if glitch_lvl < 4 then
+            missing_tiles_glitch.modify_layer(start_x)
+        else
+            missing_tiles_glitch.modify_layer()
+        end
 
         missing_dtiles_glitch.generate_glitches(glitch_options.dmissing, "single")
         missing_dtiles_glitch.modify_layer(start_x)
