@@ -483,7 +483,7 @@ Map                         = function (tmx)
         for i = 1, maxDraw do
             map:draw()
         end
-        love.graphics.rectangle("line", map:getDrawRange())
+        --love.graphics.rectangle("line", map:getDrawRange())
 
         -- Reset the scale and translation.
         love.graphics.pop()
