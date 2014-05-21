@@ -46,7 +46,8 @@ local maps = {
         },
         scenes = {
             init = "Pre21",
-            sub  = "Pre21Sub"
+            sub  = "Pre21Sub",
+            glitch = "Pre21G"
         },
         glitches = {
             missing = 30,
@@ -96,7 +97,8 @@ local maps = {
         },
         scenes = {
             init = "Pre51",
-            sub  = "Pre51Sub"
+            sub  = "Pre51Sub",
+            glitch = "Pre51G"
         },
         glitches = {
             missing = 30,
@@ -157,7 +159,8 @@ local maps = {
         },
         scenes = {
             init = "Pre91",
-            sub  = "Pre91Sub"
+            sub  = "Pre91Sub",
+            glitch = "Pre91G"
         },
         glitches = {
             missing = 30,
