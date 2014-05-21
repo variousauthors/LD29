@@ -22,6 +22,10 @@ function Cutscenes:scene(options)
     local done_callback = options.done_callback
     local old_done_callback = nil
 
+    local getSceneName = function ()
+        return sceneName
+    end
+
     -- ALL THE HUDS
     local show_hud = true
     if options.showHUD ~= nil then
@@ -131,12 +135,13 @@ function Cutscenes:scene(options)
     end
 
     return {
-        isRunning = isRunning,
-        showHUD   = showHUD,
-        start     = start,
-        stop      = stop,
-        update    = update,
-        draw      = draw
+        isRunning    = isRunning,
+        showHUD      = showHUD,
+        start        = start,
+        stop         = stop,
+        update       = update,
+        draw         = draw,
+        getSceneName = getSceneName
     }
 end
 
@@ -484,6 +489,16 @@ Cutscenes.Finale100 = Cutscenes:scene({
         {img100finale13, 0.1},
         {img100finale14, 0.5},
         {img100finale15, 2}
+    },
+    frameX = centerX(img100finale01),
+    delay = "frames",
+    musicStart = "M100tp5e4"
+})
+
+Cutscenes.flower_screen = Cutscenes:scene({
+    name = "flower_screen",
+    frames = {
+        { img100finale15, 65536 }
     },
     frameX = centerX(img100finale01),
     delay = "frames",

@@ -27,10 +27,12 @@ local Map            = require("map")
 local HeadsUpDisplay = require("heads_up_display")
 local maps           = require("map_data")
 
-local num = 1                   -- The map we're currently on
-local fps = 0                   -- Frames Per Second
-local fpsCount = 0              -- FPS count of the current second
-local fpsTime = 0               -- Keeps track of the elapsed time
+local num        = 1 -- The map we're currently on
+local last_level = 4
+local fps        = 0 -- Frames Per Second
+local fpsCount   = 0 -- FPS count of the current second
+local fpsTime    = 0 -- Keeps track of the elapsed time
+local final_flower = love.graphics.newImage("assets/images/mana_flower.png")
 
 local origin, player, hud
 
@@ -144,7 +146,10 @@ function love.update(dt)
         -- if we "proceed" and the map is still finished, then we move to
         -- the next world
         if maps[num].isFinished() then
-            -- TODO the end game
+            print("is still finished")
+
+            maps[num].setFinished(false)
+
             num = num + 1
             maps[num].reset()
             hud.setWorld(maps[num].getName())
@@ -160,6 +165,14 @@ function love.update(dt)
                     Cutscenes.current.start(function ()
                         --What to do after the final cutscene is done?
                         print("GAME OVER")
+                        Cutscenes.current = Cutscenes["flower_screen"]
+                        Cutscenes.current.start()
+
+                        num = 2
+                        maps[num].reset()
+                        hud.setWorld(maps[num].getName())
+                        hud.setItemType(maps[num].getItem())
+                        init_player(maps[num].getStart(), maps[num].sprite)
                     end)
                 end
             end
@@ -262,6 +275,12 @@ function love.draw()
     else
         maps[num].draw()
         player.draw()
+    end
+
+    if Cutscenes.current.getSceneName() == "flower_screen" and Cutscenes.current.isRunning() then
+        local sx, sy    = global.scale, global.scale
+        love.graphics.draw(final_flower, W_WIDTH / 2 - global.scale * global.tile_size, W_HEIGHT / 2, 0, sx, sy, 0, 0)
+        love.graphics.print("x" .. global.flowers, W_WIDTH / 2 + global.scale * global.tile_size - 20, W_HEIGHT / 2 + 20)
     end
 
     if not Cutscenes.current.isRunning() or Cutscenes.current.showHUD() then
