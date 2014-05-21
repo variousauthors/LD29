@@ -290,10 +290,11 @@ Player = function (point, sprite)
 
         local x = p.getX() + draw_w / global.scale
         local y = p.getY() + draw_h / global.scale
+        local num_tiles = (sprite.height - global.tile_size) / 16 + 1 -- one, or perhaps 2
 
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
-                           x - sprite.width, y - sprite.height, r, sx, sy, ox, oy)
+                           x - sprite.width, y - sprite.height - (1 + (num_tiles * 2)), r, sx, sy, ox, oy)
     end
 
     -- lean public interface of Player is pretty lean
