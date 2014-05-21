@@ -167,11 +167,14 @@ function love.update(dt)
                         --What to do after the final cutscene is done?
                         print("GAME OVER")
                         Cutscenes.current = Cutscenes["flower_screen"]
-                        Cutscenes.current.start()
+                        Cutscenes.current.start(function ()
+                            global.flowers = 0
+                            hud.setScore(global.flowers * 100)
+                            hud.setItems(global.flowers)
+                        end)
 
                         -- overwrite maps to fix glitches
                         maps = write_map_data()
-                        global.flowers = 0
 
                         num = 2
 
