@@ -116,7 +116,7 @@ local HeadsUpDisplay = function ()
         data["item_type"] = item_type
 
         if data["item_type"] == "coin"   then image = "assets/images/coin_icon.png" end
-        if data["item_type"] == "flower" then image = "assets/images/coin_icon.png" end
+        if data["item_type"] == "flower" then image = "assets/images/flower_icon.png" end
 
         image = love.graphics.newImage(image)
     end
