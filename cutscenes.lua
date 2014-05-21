@@ -327,13 +327,13 @@ Cutscenes.Intro51 = Cutscenes:scene({ -- 5-1 Intro Cinematic
     frames = {
             { img51intro01, 0.5},
             { img51intro02, 1},
-            { img51intro03, 4.5},
+            { img51intro03, 7},
             { img51intro02, 0.5},
-            { img51intro04, 5},
+            { img51intro04, 4},
             { img51intro02, 0.5},
             { img51intro05, 2},
             { img51intro02, 0.5},
-            { img51intro01, 0.5},
+            { img51intro01, 0.5}
     },
     delay = "frames",
     frameX = 0,
@@ -398,9 +398,31 @@ Cutscenes.Pre91 = Cutscenes:scene({
     name   = "Pre91",
     frames = { img91Start },
     delay = 3,
-    frameX = centerX(img91Start),
-    musicDone = "M100tp5e0"
+    frameX = 0,
+    nextCutscene = "Intro91"
 })
+
+local img91intro01 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro01.jpg")
+local img91intro02 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro02.jpg")
+local img91intro03 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro03.jpg")
+local img91intro04 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro04.jpg")
+
+Cutscenes.Intro91 = Cutscenes:scene({ -- 9-1 Intro Cinematic
+    name   = "Intro51",
+    frames = {
+            { img91intro01, 1.5},
+            { img91intro02, 3},
+            { img91intro01, 0.5},
+            { img91intro03, 5},
+            { img91intro01, 0.5},
+            { img91intro04, 3},
+            { img91intro01, 0.5},
+    },
+    delay = "frames",
+    frameX = 0,
+    musicStart = "M100tp5e0"
+})
+
 
 -- Subsequent 9-1 runs
 
