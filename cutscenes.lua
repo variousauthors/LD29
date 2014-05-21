@@ -532,18 +532,6 @@ Cutscenes.flower_screen = Cutscenes:scene({
 
 Cutscenes.Shrines = {}
 
-local imgbackwards01 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards01.jpg")
-local imgbackwards02 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards02.jpg")
-
-Cutscenes.Shrines.Backwards = Cutscenes:scene({
-    name = "Shrines.Backwards",
-    frames = {
-        {imgbackwards01, 3}
-    },
-    frameX = centerX(imgbackwards01),
-    delay = "frames"
-})
-
 local imgbackwards5101 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5101.jpg")
 local imgbackwards5102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5102.jpg")
 local imgbackwards5102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5102.jpg")
@@ -565,7 +553,32 @@ Cutscenes.Shrines.Backwards51 = Cutscenes:scene({
         {imgbackwards5102, 0.5},
         {imgbackwards5105, 3}
     },
-    frameX = centerX(imgbackwards01),
+    frameX = 0,
+    delay = "frames"
+})
+
+local imgbackwards9101 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9101.jpg")
+local imgbackwards9102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9102.jpg")
+local imgbackwards9102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9102.jpg")
+local imgbackwards9103 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9103.jpg")
+local imgbackwards9105 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9105.jpg")
+
+Cutscenes.Shrines.Backwards91 = Cutscenes:scene({
+    name = "Shrines.Backwards51",
+    frames = {
+        {imgbackwards9101, 1},
+        {imgbackwards9102, 0.1},
+        {imgbackwards9101, 0.1},
+        {imgbackwards9102, 0.1},
+        {imgbackwards9101, 0.1},
+        {imgbackwards9102, 0.1},
+        {imgbackwards9101, 0.1},
+        {imgbackwards9102, 0.5},
+        {imgbackwards9103, 5},
+        {imgbackwards9102, 0.5},
+        {imgbackwards9105, 3}
+    },
+    frameX = 0,
     delay = "frames"
 })
 

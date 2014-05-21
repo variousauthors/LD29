@@ -387,7 +387,7 @@ Map                         = function (tmx)
         if global.backwards == true then return end
 
         -- start the cutscene
-        Cutscenes.current = Cutscenes.Shrines.Backwards
+        Cutscenes.current = Cutscenes.Shrines.Backwards91
         Cutscenes.current.start()
 
         global.backwards = true
