@@ -25,7 +25,8 @@ require("vector")
 -- iterate
 local Map            = require("map")
 local HeadsUpDisplay = require("heads_up_display")
-local maps           = require("map_data")
+local write_map_data = require("map_data")
+local maps           = write_map_data()
 
 local num        = 1 -- The map we're currently on
 local last_level = 4
@@ -168,7 +169,12 @@ function love.update(dt)
                         Cutscenes.current = Cutscenes["flower_screen"]
                         Cutscenes.current.start()
 
+                        -- overwrite maps to fix glitches
+                        maps = write_map_data()
+                        global.flowers = 0
+
                         num = 2
+
                         maps[num].reset()
                         hud.setWorld(maps[num].getName())
                         hud.setItemType(maps[num].getItem())
