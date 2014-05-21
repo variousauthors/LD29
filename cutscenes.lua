@@ -156,6 +156,8 @@ Cutscenes.blank = Cutscenes.scene() -- blank
 
 Cutscenes.current = Cutscenes.blank -- placeholder
 
+local imgGlitchScreen = love.graphics.newImage("assets/scenes/glitchscreen.png")
+
 -- Start of Game
 
 local imgStartScreen = love.graphics.newImage("assets/scenes/0-1welcomescreen.png")
@@ -281,6 +283,23 @@ Cutscenes.Pre21Subb = Cutscenes:scene({
     frameX = centerX(img21Start)
 })
 
+Cutscenes.Pre21G = Cutscenes:scene({
+    name   = "Pre21G",
+    frames = { imgGlitchScreen },
+    frameX = centerX(imgGlitchScreen),
+    delay = 2,
+    musicStart = "M100tp5e4",
+    nextCutscene = "Pre21Gb",
+    showHUD = false
+})
+
+Cutscenes.Pre21Gb = Cutscenes:scene({
+    name   = "Pre21Gb",
+    frames = { img21Start },
+    delay = 3,
+    frameX = centerX(img21Start)
+})
+
 -- Plays before 5-1 (Map 3)
 local img51Start = love.graphics.newImage("assets/scenes/5-1start.png")
 
@@ -349,6 +368,23 @@ Cutscenes.Pre51Subb = Cutscenes:scene({
     frameX = centerX(img51Start)
 })
 
+Cutscenes.Pre51G = Cutscenes:scene({
+    name   = "Pre51G",
+    frames = { imgGlitchScreen },
+    frameX = centerX(imgGlitchScreen),
+    delay = 2,
+    musicStart = "M100tp5e4",
+    nextCutscene = "Pre51Gb",
+    showHUD = false
+})
+
+Cutscenes.Pre51Gb = Cutscenes:scene({
+    name   = "Pre51Gb",
+    frames = { img51Start },
+    delay = 3,
+    frameX = centerX(img51Start)
+})
+
 -- Plays before 9-1 (Map 4)
 
 local img91Start = love.graphics.newImage("assets/scenes/9-1start.png")
@@ -390,6 +426,23 @@ Cutscenes.Pre91Sub = Cutscenes:scene({
 
 Cutscenes.Pre91Subb = Cutscenes:scene({
     name   = "Pre91Subb",
+    frames = { img91Start },
+    delay = 3,
+    frameX = centerX(img91Start)
+})
+
+Cutscenes.Pre91G = Cutscenes:scene({
+    name   = "Pre91G",
+    frames = { imgGlitchScreen },
+    frameX = centerX(imgGlitchScreen),
+    delay = 2,
+    musicStart = "M100tp5e4",
+    nextCutscene = "Pre91Gb",
+    showHUD = false
+})
+
+Cutscenes.Pre91Gb = Cutscenes:scene({
+    name   = "Pre91Gb",
     frames = { img91Start },
     delay = 3,
     frameX = centerX(img91Start)
