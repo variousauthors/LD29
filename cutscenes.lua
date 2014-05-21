@@ -478,7 +478,8 @@ Cutscenes.flower_screen = Cutscenes:scene({
     },
     frameX = centerX(img100finale01),
     delay = "frames",
-    musicStart = "M100tp5e4"
+    musicStart = "M100tp5e4",
+    musicDone = "M100tp5e0"
 })
 
 -- Shrines
