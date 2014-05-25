@@ -32,7 +32,7 @@ local write_map_data = function ()
         SubsequentLevels("map2-1.tmx", {
             name = "2-1",
             item = "flower",
-            glitch_penalty = 10,
+            glitch_penalty = 50,
             sprite = Sprites.ladyguy,
             doors = {
                 {
@@ -51,9 +51,9 @@ local write_map_data = function ()
                 glitch = "Pre21G"
             },
             glitches = {
-                missing = 30,
-                dmissing = 20,
-                crazy = 50
+                missing = 40,
+                dmissing = 25,
+                crazy = 45
             },
             -- the distance in tiles between the top left corner of the MAP
             -- and the top left corner of the starting screen (with the castle)
