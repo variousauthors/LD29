@@ -52,7 +52,7 @@ local write_map_data = function ()
             },
             glitches = {
                 missing = 30,
-                dmissing = 10,
+                dmissing = 20,
                 crazy = 50
             },
             -- the distance in tiles between the top left corner of the MAP
