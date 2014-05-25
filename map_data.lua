@@ -112,8 +112,8 @@ local write_map_data = function ()
             -- the distance in tiles between the top left corner of the MAP
             -- and the top left corner of the starting screen (with the castle)
             origin = {
-                x = 0,
-                y = 15
+                x = mapoffset51,
+                y = 15 -- was 15
             },
             -- mario's starting location, relative to the origin (the top left
             -- corner of the castle screen)

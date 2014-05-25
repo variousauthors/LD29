@@ -15,8 +15,8 @@ global.flowers       = 0     -- the number of flowers collected so far
 global.double_jump   = false -- EVERYTHING IS GLOBAL NOW...  prorgamming!
 global.walljump      = false -- arbitrary shrine, no gamplay effect
 global.backwards     = false -- HOOK IN HERE ZIGGY, this doesn't actually have gameplay yet
-global.window_width  = global.tile_size * global.scale * global.tile_height
-global.window_height = global.tile_size * global.scale * global.tile_width
+global.window_height = global.tile_size * global.scale * global.tile_height
+global.window_width  = global.tile_size * global.scale * global.tile_width
 
 -- debugging stuff
 tile_x        = nil
@@ -31,8 +31,8 @@ teleport      = ""
 
 function love.conf(t)
     -- tile height * scale factor * layer height
-    t.window.height = global.window_width
-    t.window.width  = global.window_height
+    t.window.height = global.window_height
+    t.window.width  = global.window_width
     t.window.title = "Super Plumber Bros."
     t.modules.physics = false
 end
