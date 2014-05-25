@@ -1,6 +1,8 @@
 -- This is a little delicate, in that it requires the sprites and various other
 -- globals to exist already. Really it is just a convenience.
 
+local mapoffset51 = 14
+
 local write_map_data = function () 
     return {
         -- 1-1
@@ -73,26 +75,26 @@ local write_map_data = function ()
         SubsequentLevels("map5-1.tmx", {
             name = "5-1",
             item = "flower",
-            glitch_penalty = 10,
+            glitch_penalty = 50,
             sprite = Sprites.lilguy,
             doors = {
                 {
-                    coords = { 202, 27 },
+                    coords = { 202+mapoffset51, 27 },
                     event  = "onVictory"
                 },
 
                 {
-                    coords = { 36, 27 },
+                    coords = { 36+mapoffset51, 27 },
                     event  = "enterCloudShrine51"
                 },
 
                 {
-                    coords = { 98, 42 },
+                    coords = { 98+mapoffset51, 42 },
                     event  = "enterDoubleJumpShrine51"
                 },
 
                 {
-                    coords = { 187, 5 },
+                    coords = { 187+mapoffset51, 5 },
                     event  = "enterBackwardsShrine51"
                 },
             },
@@ -116,7 +118,7 @@ local write_map_data = function ()
             -- mario's starting location, relative to the origin (the top left
             -- corner of the castle screen)
             start = {
-                x = 5,
+                x = 5, --formerly 5
                 y = 12
             }
         }),
