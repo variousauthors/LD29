@@ -67,7 +67,7 @@ local write_map_data = function ()
             -- corner of the castle screen)
             start = {
                 x = 5,
-                y = 11.5  -- I have no idea why this # works better
+                y = 12  -- I have no idea why this # works better
             }
         }),
 
@@ -113,13 +113,13 @@ local write_map_data = function ()
             -- and the top left corner of the starting screen (with the castle)
             origin = {
                 x = mapoffset51,
-                y = 16 -- was 15
+                y = 15 -- was 15
             },
             -- mario's starting location, relative to the origin (the top left
             -- corner of the castle screen)
             start = {
                 x = 5, --formerly 5
-                y = 11
+                y = 12
             }
         }),
 
@@ -176,13 +176,13 @@ local write_map_data = function ()
             -- and the top left corner of the starting screen (with the castle)
             origin = {
                 x = 0,
-                y = 43
+                y = 40
             },
             -- mario's starting location, relative to the origin (the top left
             -- corner of the castle screen)
             start = {
                 x = 5,
-                y = 0
+                y = 12
             }
         }),
 
