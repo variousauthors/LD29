@@ -430,15 +430,16 @@ Map                         = function (tmx)
         -- global ty moves the WORLD DOWN
         -- at the start of the game we want to move the world UP so that
         -- the origin_x, origin_y are in the corner of the screen
-        pixel_origin_y = origin_y * global.tile_height
+        pixel_origin_y = origin_y * global.tile_size
         global.ty = - pixel_origin_y
-        pixel_origin_x = origin_x * global.tile_width
+
+        pixel_origin_x = origin_x * global.tile_size
         global.tx = - pixel_origin_x
+
         global.max_tx = map.width * global.tile_size - (global.tile_width * global.tile_size)
     end
 
     local resetTimer = function ()
-        print("reset Timer")
         time = 0
     end
 

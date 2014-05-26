@@ -250,25 +250,25 @@ function love.keypressed(k, isRepeat)
         love.event.push("quit")
     end
 
---  if k == "0"
---  or k == "1"
---  or k == "2"
---  or k == "3"
---  or k == "4"
---  or k == "5"
---  or k == "6"
---  or k == "7"
---  or k == "8"
---  or k == "9" then
---      teleport = teleport .. k
---  end
+    if k == "0"
+    or k == "1"
+    or k == "2"
+    or k == "3"
+    or k == "4"
+    or k == "5"
+    or k == "6"
+    or k == "7"
+    or k == "8"
+    or k == "9" then
+        teleport = teleport .. k
+    end
 
---  if #teleport == 4 then
---      local dest = tonumber(teleport)
---      teleport = ""
+    if #teleport == 4 then
+        local dest = tonumber(teleport)
+        teleport = ""
 
---      global.tx = -dest
---  end
+        global.tx = -dest
+    end
 
     inputPressed(k, isRepeat)
 end
