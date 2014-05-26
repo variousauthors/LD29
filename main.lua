@@ -114,7 +114,7 @@ function love.update(dt)
     band            = maps[num].getBand(tile_y)
 
     if band ~= nil then
-        local scroll = 10
+        local scroll = 8
         camera = maps[num].getCameraForBand(band)
 
         -- lock the player relative to the window, and scroll the background up
