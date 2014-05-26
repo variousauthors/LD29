@@ -170,7 +170,7 @@ local imgStartScreen = love.graphics.newImage("assets/scenes/0-1welcomescreen.pn
 Cutscenes.StartScreen = Cutscenes:scene({
     name = "StartScreen",
     frames = { imgStartScreen },
-    delay = 100000,
+    delay = 65536,
     frameX = centerX(imgStartScreen),
     nextCutscene = "Pre11"
 })
@@ -310,7 +310,7 @@ local img51Start = love.graphics.newImage("assets/scenes/5-1start.png")
 
 Cutscenes.Pre51 = Cutscenes:scene({ -- 5-1 lives screen
     name   = "Pre51",
-    frames = { img51Start }, 
+    frames = { img51Start },
     delay = 3,
     frameX = centerX(img51Start),
     nextCutscene = "Intro51"
@@ -532,18 +532,6 @@ Cutscenes.flower_screen = Cutscenes:scene({
 
 Cutscenes.Shrines = {}
 
-local imgbackwards01 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards01.jpg")
-local imgbackwards02 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards02.jpg")
-
-Cutscenes.Shrines.Backwards = Cutscenes:scene({
-    name = "Shrines.Backwards",
-    frames = {
-        {imgbackwards01, 3}
-    },
-    frameX = centerX(imgbackwards01),
-    delay = "frames"
-})
-
 local imgbackwards5101 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5101.jpg")
 local imgbackwards5102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5102.jpg")
 local imgbackwards5102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5102.jpg")
@@ -565,7 +553,32 @@ Cutscenes.Shrines.Backwards51 = Cutscenes:scene({
         {imgbackwards5102, 0.5},
         {imgbackwards5105, 3}
     },
-    frameX = centerX(imgbackwards01),
+    frameX = 0,
+    delay = "frames"
+})
+
+local imgbackwards9101 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9101.jpg")
+local imgbackwards9102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9102.jpg")
+local imgbackwards9102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9102.jpg")
+local imgbackwards9103 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9103.jpg")
+local imgbackwards9105 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9105.jpg")
+
+Cutscenes.Shrines.Backwards91 = Cutscenes:scene({
+    name = "Shrines.Backwards91",
+    frames = {
+        {imgbackwards9101, 1},
+        {imgbackwards9102, 0.1},
+        {imgbackwards9101, 0.1},
+        {imgbackwards9102, 0.1},
+        {imgbackwards9101, 0.1},
+        {imgbackwards9102, 0.1},
+        {imgbackwards9101, 0.1},
+        {imgbackwards9102, 0.5},
+        {imgbackwards9103, 5},
+        {imgbackwards9102, 0.5},
+        {imgbackwards9105, 3}
+    },
+    frameX = 0,
     delay = "frames"
 })
 
@@ -582,6 +595,24 @@ Cutscenes.Shrines.Clouds51 = Cutscenes:scene({
         {imgclouds5103, 5},
         {imgclouds5101, 0.5}, -- 04 is same as 01
         {imgclouds5105, 3}
+    },
+    frameX = 0,
+    delay = "frames"
+})
+
+local imgclouds9101 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds9101.jpg")
+local imgclouds9102 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds9102.jpg")
+local imgclouds9103 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds9103.jpg")
+local imgclouds9105 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds9105.jpg")
+
+Cutscenes.Shrines.Clouds91 = Cutscenes:scene({
+    name = "Shrines.Clouds91",
+    frames = {
+        {imgclouds9101, 0.5},
+        {imgclouds9102, 3},
+        {imgclouds9103, 5},
+        {imgclouds9101, 0.5}, -- 04 is same as 01
+        {imgclouds9105, 3}
     },
     frameX = 0,
     delay = "frames"
