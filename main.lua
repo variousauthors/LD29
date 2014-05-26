@@ -93,11 +93,11 @@ function love.update(dt)
     -- if mario can move backwards
     -- and global.tx > 0
     -- then mario should push the screen
-    if player.getX() > W_WIDTH / 2 + 50 and math.abs(global.tx) < global.max_tx then
+    if player.getX() > W_WIDTH / 2 + 50 and math.abs(global.tx) < global.max_tx - global.scale then
         local v = player.getV()
         global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
         player.setX(W_WIDTH / 2 + 50)
-    elseif global.backwards and player.getX() < W_WIDTH / 2 - 50 and global.tx < 0 then
+    elseif global.backwards and player.getX() < W_WIDTH / 2 - 50 and global.tx < -global.scale then
         local v = player.getV()
         global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
         player.setX(W_WIDTH / 2 - 50)
@@ -105,7 +105,7 @@ function love.update(dt)
 
     -- the player cannot leave the screen
     if player.getX() < 0 then player.setX(0) end
-    if player.getX() > global.window_width then player.setX(global.window_width) end
+    if player.getX() > (global.window_width - global.tile_size * global.scale) then player.setX(global.window_width - global.tile_size * global.scale) end
 
     -- if the player is standing on the 12th block (the ground)
     -- the screen should always be centered
