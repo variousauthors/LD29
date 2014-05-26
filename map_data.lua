@@ -3,7 +3,7 @@
 
 local mapoffset51 = 14
 
-local write_map_data = function () 
+local write_map_data = function ()
     return {
         -- 1-1
         LevelOne("map1-1.tmx", {

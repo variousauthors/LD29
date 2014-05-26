@@ -170,7 +170,7 @@ local imgStartScreen = love.graphics.newImage("assets/scenes/0-1welcomescreen.pn
 Cutscenes.StartScreen = Cutscenes:scene({
     name = "StartScreen",
     frames = { imgStartScreen },
-    delay = 100000,
+    delay = 65536,
     frameX = centerX(imgStartScreen),
     nextCutscene = "Pre11"
 })
@@ -310,7 +310,7 @@ local img51Start = love.graphics.newImage("assets/scenes/5-1start.png")
 
 Cutscenes.Pre51 = Cutscenes:scene({ -- 5-1 lives screen
     name   = "Pre51",
-    frames = { img51Start }, 
+    frames = { img51Start },
     delay = 3,
     frameX = centerX(img51Start),
     nextCutscene = "Intro51"
