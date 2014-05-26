@@ -93,11 +93,11 @@ function love.update(dt)
     -- if mario can move backwards
     -- and global.tx > 0
     -- then mario should push the screen
-    if player.getX() > W_WIDTH / 2 + 50 and math.abs(global.tx) < global.max_tx then
+    if player.getX() > W_WIDTH / 2 + 50 and math.abs(global.tx) < global.max_tx - global.scale then
         local v = player.getV()
         global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
         player.setX(W_WIDTH / 2 + 50)
-    elseif global.backwards and player.getX() < W_WIDTH / 2 - 50 and global.tx < 0 then
+    elseif global.backwards and player.getX() < W_WIDTH / 2 - 50 and global.tx < -global.scale then
         local v = player.getV()
         global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
         player.setX(W_WIDTH / 2 - 50)
@@ -105,7 +105,7 @@ function love.update(dt)
 
     -- the player cannot leave the screen
     if player.getX() < 0 then player.setX(0) end
-    if player.getX() > global.window_width then player.setX(global.window_width) end
+    if player.getX() > (global.window_width - global.tile_size * global.scale) then player.setX(global.window_width - global.tile_size * global.scale) end
 
     -- if the player is standing on the 12th block (the ground)
     -- the screen should always be centered
@@ -114,7 +114,7 @@ function love.update(dt)
     band            = maps[num].getBand(tile_y)
 
     if band ~= nil then
-        local scroll = 10
+        local scroll = 8
         camera = maps[num].getCameraForBand(band)
 
         -- lock the player relative to the window, and scroll the background up
@@ -250,25 +250,25 @@ function love.keypressed(k, isRepeat)
         love.event.push("quit")
     end
 
---  if k == "0"
---  or k == "1"
---  or k == "2"
---  or k == "3"
---  or k == "4"
---  or k == "5"
---  or k == "6"
---  or k == "7"
---  or k == "8"
---  or k == "9" then
---      teleport = teleport .. k
---  end
+    if k == "0"
+    or k == "1"
+    or k == "2"
+    or k == "3"
+    or k == "4"
+    or k == "5"
+    or k == "6"
+    or k == "7"
+    or k == "8"
+    or k == "9" then
+        teleport = teleport .. k
+    end
 
---  if #teleport == 4 then
---      local dest = tonumber(teleport)
---      teleport = ""
+    if #teleport == 4 then
+        local dest = tonumber(teleport)
+        teleport = ""
 
---      global.tx = -dest
---  end
+        global.tx = -dest
+    end
 
     inputPressed(k, isRepeat)
 end

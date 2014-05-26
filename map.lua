@@ -247,17 +247,18 @@ Map                         = function (tmx)
 
     local getCameraForBand = function (band)
 
-        -- TODO someone can explain to me why these have to be 2 while the global scale is 3...
-        if band.zone == "catacombs" and band.transition == false  then return -(( global.tile_height ) * global.tile_size * 2) - pixel_origin_y end
-        if band.zone == "dungeon"   and band.transition == false  then return -(( global.tile_height / 2 ) * global.tile_size * 2) - pixel_origin_y end
-        if band.zone == "dungeon"   and band.transition == true   then return -(( global.tile_height / 4 ) * global.tile_size * 2) - pixel_origin_y end
-        if band.zone == "ground"    and band.transition == false  then return 0 - pixel_origin_y                                                               end
-        if band.zone == "clouds"    and band.transition == true   then return (( global.tile_height / 4 ) * global.tile_size * 2) - pixel_origin_y  end
-        if band.zone == "clouds"    and band.transition == false  then return (( global.tile_height / 2 ) * global.tile_size * 2) - pixel_origin_y  end
+        -- each band is described by a number of screen heights as an offset. So the catacombs are 2 screens down, while the dungeon
+        -- transition is just half a screen down
+        if band.zone == "catacombs" and band.transition == false  then return -((2   * global.tile_height) * global.tile_size) - pixel_origin_y end
+        if band.zone == "dungeon"   and band.transition == false  then return -((1   * global.tile_height) * global.tile_size) - pixel_origin_y end
+        if band.zone == "dungeon"   and band.transition == true   then return -((0.5 * global.tile_height) * global.tile_size) - pixel_origin_y end
+        if band.zone == "ground"    and band.transition == false  then return 0 - pixel_origin_y end
+        if band.zone == "clouds"    and band.transition == true   then return  ((0.5 * global.tile_height) * global.tile_size) - pixel_origin_y  end
+        if band.zone == "clouds"    and band.transition == false  then return  ((1   * global.tile_height) * global.tile_size) - pixel_origin_y  end
 
-        -- unimplemented
+        -- these are described by fucked up constants chosen to make them "right" in the heat of a moment long past
         if band.zone == "stratosphere"  and band.transition == false  then return (( global.tile_height - 2 ) * global.tile_size * 2) - pixel_origin_y  end
-        if band.zone == "mesosphere"    and band.transition == false   then return (( global.tile_height * (4/3)) * global.tile_size * 2) - pixel_origin_y  end
+        if band.zone == "mesosphere"    and band.transition == false  then return (( global.tile_height * (8/3)) * global.tile_size) - pixel_origin_y  end
     end
 
     -- set handlers for events like "onVictory"
@@ -429,13 +430,16 @@ Map                         = function (tmx)
         -- global ty moves the WORLD DOWN
         -- at the start of the game we want to move the world UP so that
         -- the origin_x, origin_y are in the corner of the screen
-        pixel_origin_y = origin_y * global.tile_width
-        global.tx = 0
+        pixel_origin_y = origin_y * global.tile_size
         global.ty = - pixel_origin_y
+
+        pixel_origin_x = origin_x * global.tile_size
+        global.tx = - pixel_origin_x
+
+        global.max_tx = map.width * global.tile_size - (global.tile_width * global.tile_size)
     end
 
     local resetTimer = function ()
-        print("reset Timer")
         time = 0
     end
 

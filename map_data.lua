@@ -1,7 +1,9 @@
 -- This is a little delicate, in that it requires the sprites and various other
 -- globals to exist already. Really it is just a convenience.
 
-local write_map_data = function () 
+local mapoffset51 = 14
+
+local write_map_data = function ()
     return {
         -- 1-1
         LevelOne("map1-1.tmx", {
@@ -32,7 +34,7 @@ local write_map_data = function ()
         SubsequentLevels("map2-1.tmx", {
             name = "2-1",
             item = "flower",
-            glitch_penalty = 10,
+            glitch_penalty = 50,
             sprite = Sprites.ladyguy,
             doors = {
                 {
@@ -51,9 +53,9 @@ local write_map_data = function ()
                 glitch = "Pre21G"
             },
             glitches = {
-                missing = 30,
-                dmissing = 10,
-                crazy = 50
+                missing = 40,
+                dmissing = 25,
+                crazy = 45
             },
             -- the distance in tiles between the top left corner of the MAP
             -- and the top left corner of the starting screen (with the castle)
@@ -65,7 +67,7 @@ local write_map_data = function ()
             -- corner of the castle screen)
             start = {
                 x = 5,
-                y = 12
+                y = 12  -- I have no idea why this # works better
             }
         }),
 
@@ -73,26 +75,26 @@ local write_map_data = function ()
         SubsequentLevels("map5-1.tmx", {
             name = "5-1",
             item = "flower",
-            glitch_penalty = 10,
+            glitch_penalty = 50,
             sprite = Sprites.lilguy,
             doors = {
                 {
-                    coords = { 202, 27 },
+                    coords = { 202+mapoffset51, 27 },
                     event  = "onVictory"
                 },
 
                 {
-                    coords = { 36, 27 },
+                    coords = { 36+mapoffset51, 27 },
                     event  = "enterCloudShrine51"
                 },
 
                 {
-                    coords = { 98, 42 },
+                    coords = { 98+mapoffset51, 42 },
                     event  = "enterDoubleJumpShrine51"
                 },
 
                 {
-                    coords = { 187, 5 },
+                    coords = { 187+mapoffset51, 5 },
                     event  = "enterBackwardsShrine51"
                 },
             },
@@ -110,13 +112,13 @@ local write_map_data = function ()
             -- the distance in tiles between the top left corner of the MAP
             -- and the top left corner of the starting screen (with the castle)
             origin = {
-                x = 0,
-                y = 15
+                x = mapoffset51,
+                y = 15 -- was 15
             },
             -- mario's starting location, relative to the origin (the top left
             -- corner of the castle screen)
             start = {
-                x = 5,
+                x = 5, --formerly 5
                 y = 12
             }
         }),
@@ -126,7 +128,7 @@ local write_map_data = function ()
             name = "9-1",
             item = "flower",
             sprite = Sprites.oldguy,
-            glitch_penalty = 10,
+            glitch_penalty = 50,
             doors = {
                 {
                     coords = { 196, 52 },
@@ -189,7 +191,7 @@ local write_map_data = function ()
             name = "9-1",
             item = "flower",
             sprite = Sprites.oldguy,
-            glitch_penalty = 10,
+            glitch_penalty = 50,
             doors = {
                 {
                     coords = { 196, 52 },
