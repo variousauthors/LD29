@@ -104,10 +104,10 @@ local write_map_data = function ()
                 glitch = "Pre51G"
             },
             glitches = {
-                missing = 30,
-                dmissing = 20,
-                cmissing = 10,
-                crazy = 50
+                missing = 40,
+                dmissing = 25,
+                cmissing = 8,
+                crazy = 45
             },
             -- the distance in tiles between the top left corner of the MAP
             -- and the top left corner of the starting screen (with the castle)
