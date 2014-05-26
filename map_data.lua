@@ -1,7 +1,7 @@
 -- This is a little delicate, in that it requires the sprites and various other
 -- globals to exist already. Really it is just a convenience.
 
-local mapoffset51 = 14
+local mapoffset51 = 28
 
 local write_map_data = function ()
     return {
