@@ -104,7 +104,7 @@ local write_map_data = function ()
                 glitch = "Pre51G"
             },
             glitches = {
-                missing = 40,
+                missing = 45,
                 dmissing = 25,
                 cmissing = 8,
                 crazy = 45

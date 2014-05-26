@@ -417,9 +417,9 @@ Map                         = function (tmx)
             if map.layers["trees"] then
                 map.layers["trees"].properties["obstacle"] = nil
             end
-            global.double_jump = true -- SHOULD BE FALSE
+            global.double_jump = false -- SHOULD BE FALSE
             global.walljump    = false
-            global.backwards   = true -- SHOULD BE FALSE
+            global.backwards   = false -- SHOULD BE FALSE
         end
 
         -- tx and ty are the offset of the tilemap
