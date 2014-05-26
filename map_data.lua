@@ -67,7 +67,7 @@ local write_map_data = function ()
             -- corner of the castle screen)
             start = {
                 x = 5,
-                y = 12
+                y = 11.5  -- I have no idea why this # works better
             }
         }),
 
@@ -128,7 +128,7 @@ local write_map_data = function ()
             name = "9-1",
             item = "flower",
             sprite = Sprites.oldguy,
-            glitch_penalty = 10,
+            glitch_penalty = 50,
             doors = {
                 {
                     coords = { 196, 52 },
@@ -176,13 +176,13 @@ local write_map_data = function ()
             -- and the top left corner of the starting screen (with the castle)
             origin = {
                 x = 0,
-                y = 40
+                y = 43
             },
             -- mario's starting location, relative to the origin (the top left
             -- corner of the castle screen)
             start = {
                 x = 5,
-                y = 12
+                y = 0
             }
         }),
 
@@ -191,7 +191,7 @@ local write_map_data = function ()
             name = "9-1",
             item = "flower",
             sprite = Sprites.oldguy,
-            glitch_penalty = 10,
+            glitch_penalty = 50,
             doors = {
                 {
                     coords = { 196, 52 },
@@ -206,7 +206,7 @@ local write_map_data = function ()
             -- and the top left corner of the starting screen (with the castle)
             origin = {
                 x = 0,
-                y = 43
+                y = 40
             },
             -- mario's starting location, relative to the origin (the top left
             -- corner of the castle screen)
