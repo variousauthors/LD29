@@ -167,10 +167,10 @@ local write_map_data = function ()
                 glitch = "Pre91G"
             },
             glitches = {
-                missing = 55,
-                dmissing = 30,
+                missing = 65,
+                dmissing = 35,
                 cmissing = 10,
-                crazy = 55
+                crazy = 50
             },
 
             -- the distance in tiles between the top left corner of the MAP
