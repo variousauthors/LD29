@@ -170,7 +170,7 @@ local write_map_data = function ()
                 missing = 65,
                 dmissing = 35,
                 cmissing = 10,
-                crazy = 50
+                crazy = 45
             },
 
             -- the distance in tiles between the top left corner of the MAP
