@@ -224,12 +224,24 @@ Cutscenes.Pre21 = Cutscenes:scene({
     showHUD = false
 })
 
-local img21Start = love.graphics.newImage("assets/scenes/2-1start.png")
-
 Cutscenes.Pre21b = Cutscenes:scene({
     name   = "Pre21b",
-    frames = { img21Start },
-    delay = 3,
+    frames = { imgBlackScreen },
+    delay  = 2 ,
+    frameX = 0,
+    showHUD = false,
+    nextCutscene = "Pre21c"
+})
+
+local img21Start = love.graphics.newImage("assets/scenes/2-1start.png")
+
+Cutscenes.Pre21c = Cutscenes:scene({
+    name   = "Pre21c",
+    frames = {
+            { imgBlackScreen, 0.5 },
+            { img21Start, 3 }
+    },
+    delay = "frames",
     frameX = centerX(img21Start),
     nextCutscene = "Intro21"
 })
