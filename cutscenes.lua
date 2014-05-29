@@ -541,7 +541,7 @@ local img100finale15 = imgBlackScreen
 Cutscenes.Finale100 = Cutscenes:scene({
     name   = "Finale100",
     frames = {
-        {img100finale01, 2},
+        {img100finale01, 3},
         {img100finale02, 1},
         {img100finale03, 0.1},
         {img100finale04, 0.1},
