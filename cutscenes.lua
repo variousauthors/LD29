@@ -326,7 +326,7 @@ Cutscenes.Pre21Gb = Cutscenes:scene({
 Cutscenes.Pre51 = Cutscenes:scene({
     name   = "Pre51",
     frames = { imgBlackScreen },
-    delay  = 2 ,
+    delay  = 2,
     frameX = 0,
     showHUD = false,
     nextCutscene = "Pre51b"
@@ -341,7 +341,7 @@ Cutscenes.Pre51b = Cutscenes:scene({ -- 5-1 lives screen
             { img51Start, 3 }
     },
     delay = "frames",
-    frameX = centerX(img51Start),
+    frameX = 0,
     nextCutscene = "Intro51"
 })
 
@@ -422,12 +422,25 @@ Cutscenes.Pre51Gb = Cutscenes:scene({
 
 -- Plays before 9-1 (Map 4)
 
-local img91Start = love.graphics.newImage("assets/scenes/9-1start.png")
-
 Cutscenes.Pre91 = Cutscenes:scene({
     name   = "Pre91",
-    frames = { img91Start },
-    delay = 3,
+    frames = { imgBlackScreen },
+    delay  = 2,
+    frameX = 0,
+    showHUD = false,
+    nextCutscene = "Pre91b"
+})
+
+
+local img91Start = love.graphics.newImage("assets/scenes/9-1start.png")
+
+Cutscenes.Pre91b = Cutscenes:scene({
+    name   = "Pre91b",
+    frames = {
+            { imgBlackScreen, 0.5 },
+            { img91Start, 3 }
+    },
+    delay = "frames",
     frameX = 0,
     nextCutscene = "Intro91"
 })
@@ -438,7 +451,7 @@ local img91intro03 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro03.j
 local img91intro04 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro04.jpg")
 
 Cutscenes.Intro91 = Cutscenes:scene({ -- 9-1 Intro Cinematic
-    name   = "Intro51",
+    name   = "Intro91",
     frames = {
             { img91intro01, 1.5},
             { img91intro02, 3},
