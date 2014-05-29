@@ -161,7 +161,9 @@ Cutscenes.blank = Cutscenes.scene() -- blank
 
 Cutscenes.current = Cutscenes.blank -- placeholder
 
+-- shared images used in a lot of seperate cutscenes
 local imgGlitchScreen = love.graphics.newImage("assets/scenes/glitchscreen.png")
+local imgBlackScreen  = love.graphics.newImage("assets/scenes/10-0finale/10-0finale15.jpg")
 
 -- Start of Game
 
@@ -218,7 +220,8 @@ Cutscenes.Pre21 = Cutscenes:scene({
     frameX = centerX(img11end01),
     delay = "frames",
     musicStart = "M100tp5e4",
-    nextCutscene = "Pre21b"
+    nextCutscene = "Pre21b",
+    showHUD = false
 })
 
 local img21Start = love.graphics.newImage("assets/scenes/2-1start.png")
@@ -278,7 +281,8 @@ Cutscenes.Pre21Sub = Cutscenes:scene({
     frameX = centerX(img21end01),
     delay = "frames",
     musicStart = "M100tp5e4",
-    nextCutscene = "Pre21Subb"
+    nextCutscene = "Pre21Subb",
+    showHUD = false
 })
 
 Cutscenes.Pre21Subb = Cutscenes:scene({
@@ -363,7 +367,8 @@ Cutscenes.Pre51Sub = Cutscenes:scene({
     frameX = centerX(img21end01),
     delay = "frames",
     musicStart = "M100tp5e4",
-    nextCutscene = "Pre51Subb"
+    nextCutscene = "Pre51Subb",
+    showHUD = false
 })
 
 Cutscenes.Pre51Subb = Cutscenes:scene({
@@ -448,7 +453,9 @@ Cutscenes.Pre91Sub = Cutscenes:scene({
     frameX = centerX(img21end01),
     delay = "frames",
     musicStart = "M100tp5e4",
-    nextCutscene = "Pre91Subb"
+    nextCutscene = "Pre91Subb",
+    showHUD = false ,
+
 })
 
 Cutscenes.Pre91Subb = Cutscenes:scene({
@@ -491,7 +498,7 @@ local img100finale11 = love.graphics.newImage("assets/scenes/10-0finale/10-0fina
 local img100finale12 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale12.jpg")
 local img100finale13 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale13.jpg")
 local img100finale14 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale14.jpg")
-local img100finale15 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale15.jpg")
+local img100finale15 = imgBlackScreen
 
 Cutscenes.Finale100 = Cutscenes:scene({
     name   = "Finale100",
@@ -509,11 +516,11 @@ Cutscenes.Finale100 = Cutscenes:scene({
         {img100finale11, 0.1},
         {img100finale12, 0.1},
         {img100finale13, 0.1},
-        {img100finale14, 0.5},
-        {img100finale15, 2}
+        {img100finale14, 0.5}
     },
     frameX = centerX(img100finale01),
     delay = "frames",
+    showHUD = false ,
     musicStart = "M100tp5e4"
 })
 
@@ -524,6 +531,7 @@ Cutscenes.flower_screen = Cutscenes:scene({
     },
     frameX = centerX(img100finale01),
     delay = "frames",
+    showHUD = false ,
     musicStart = "M100tp5e4",
     musicDone = "M100tp5e0"
 })
