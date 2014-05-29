@@ -394,14 +394,24 @@ Map                         = function (tmx)
         global.backwards = true
     end
 
-    local enterWallJumpShrine = function ()
+    local enterWallJumpShrine91 = function ()
         if global.walljump == true then return end
 
         -- start the cutscene
-        Cutscenes.current = Cutscenes.Shrines.Walljump
+        Cutscenes.current = Cutscenes.Shrines.Walljump91
         Cutscenes.current.start()
 
         global.walljump = true
+    end
+
+    local enterSecretShrine = function ()
+        if global.secret == true then return end
+
+        -- start the cutscene
+        Cutscenes.current = Cutscenes.Shrines.Secret
+        Cutscenes.current.start()
+
+        global.secret = true
     end
 
     -- important methods for the public interface
@@ -419,6 +429,7 @@ Map                         = function (tmx)
             end
             global.double_jump = false -- SHOULD BE FALSE
             global.walljump    = false
+            global.secret      = false
             global.backwards   = false -- SHOULD BE FALSE
         end
 
@@ -541,7 +552,8 @@ Map                         = function (tmx)
     callbacks["enterDoubleJumpShrine91"] = enterDoubleJumpShrine91
     callbacks["enterBackwardsShrine51"]  = enterBackwardsShrine51
     callbacks["enterBackwardsShrine91"]  = enterBackwardsShrine91
-    callbacks["enterWallJumpShrine"]     = enterWallJumpShrine
+    callbacks["enterWallJumpShrine91"]   = enterWallJumpShrine91
+    callbacks["enterSecretShrine"]       = enterSecretShrine
 
     -- callbacks for layer properties
     callbacks["obstacle"] = function (layer, v, tx, ty, rx, ry)
