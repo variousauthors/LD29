@@ -142,6 +142,11 @@ local write_map_data = function ()
                 },
 
                 {
+                    coords = { 19+mapoffset91, 80 },
+                    event  = "enterSecretShrine"
+                },
+
+                {
                     coords = { 36+mapoffset91, 52 },
                     event  = "enterCloudShrine91"
                 },
