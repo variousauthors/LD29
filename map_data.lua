@@ -138,7 +138,7 @@ local write_map_data = function ()
 
                 {
                     coords = { 18+mapoffset91, 65 },
-                    event  = "enterWallJumpShrine"
+                    event  = "enterWallJumpShrine91"
                 },
 
                 {
