@@ -161,7 +161,9 @@ Cutscenes.blank = Cutscenes.scene() -- blank
 
 Cutscenes.current = Cutscenes.blank -- placeholder
 
+-- shared images used in a lot of seperate cutscenes
 local imgGlitchScreen = love.graphics.newImage("assets/scenes/glitchscreen.png")
+local imgBlackScreen  = love.graphics.newImage("assets/scenes/10-0finale/10-0finale15.jpg")
 
 -- Start of Game
 
@@ -218,15 +220,28 @@ Cutscenes.Pre21 = Cutscenes:scene({
     frameX = centerX(img11end01),
     delay = "frames",
     musicStart = "M100tp5e4",
-    nextCutscene = "Pre21b"
+    nextCutscene = "Pre21b",
+    showHUD = false
+})
+
+Cutscenes.Pre21b = Cutscenes:scene({
+    name   = "Pre21b",
+    frames = { imgBlackScreen },
+    delay  = 2 ,
+    frameX = 0,
+    showHUD = false,
+    nextCutscene = "Pre21c"
 })
 
 local img21Start = love.graphics.newImage("assets/scenes/2-1start.png")
 
-Cutscenes.Pre21b = Cutscenes:scene({
-    name   = "Pre21b",
-    frames = { img21Start },
-    delay = 3,
+Cutscenes.Pre21c = Cutscenes:scene({
+    name   = "Pre21c",
+    frames = {
+            { imgBlackScreen, 0.5 },
+            { img21Start, 3 }
+    },
+    delay = "frames",
     frameX = centerX(img21Start),
     nextCutscene = "Intro21"
 })
@@ -278,7 +293,8 @@ Cutscenes.Pre21Sub = Cutscenes:scene({
     frameX = centerX(img21end01),
     delay = "frames",
     musicStart = "M100tp5e4",
-    nextCutscene = "Pre21Subb"
+    nextCutscene = "Pre21Subb",
+    showHUD = false
 })
 
 Cutscenes.Pre21Subb = Cutscenes:scene({
@@ -306,13 +322,26 @@ Cutscenes.Pre21Gb = Cutscenes:scene({
 })
 
 -- Plays before 5-1 (Map 3)
+
+Cutscenes.Pre51 = Cutscenes:scene({
+    name   = "Pre51",
+    frames = { imgBlackScreen },
+    delay  = 2,
+    frameX = 0,
+    showHUD = false,
+    nextCutscene = "Pre51b"
+})
+
 local img51Start = love.graphics.newImage("assets/scenes/5-1start.png")
 
-Cutscenes.Pre51 = Cutscenes:scene({ -- 5-1 lives screen
-    name   = "Pre51",
-    frames = { img51Start },
-    delay = 3,
-    frameX = centerX(img51Start),
+Cutscenes.Pre51b = Cutscenes:scene({ -- 5-1 lives screen
+    name   = "Pre51b",
+    frames = {
+            { imgBlackScreen, 0.5 },
+            { img51Start, 3 }
+    },
+    delay = "frames",
+    frameX = 0,
     nextCutscene = "Intro51"
 })
 
@@ -363,7 +392,8 @@ Cutscenes.Pre51Sub = Cutscenes:scene({
     frameX = centerX(img21end01),
     delay = "frames",
     musicStart = "M100tp5e4",
-    nextCutscene = "Pre51Subb"
+    nextCutscene = "Pre51Subb",
+    showHUD = false
 })
 
 Cutscenes.Pre51Subb = Cutscenes:scene({
@@ -392,12 +422,25 @@ Cutscenes.Pre51Gb = Cutscenes:scene({
 
 -- Plays before 9-1 (Map 4)
 
-local img91Start = love.graphics.newImage("assets/scenes/9-1start.png")
-
 Cutscenes.Pre91 = Cutscenes:scene({
     name   = "Pre91",
-    frames = { img91Start },
-    delay = 3,
+    frames = { imgBlackScreen },
+    delay  = 2,
+    frameX = 0,
+    showHUD = false,
+    nextCutscene = "Pre91b"
+})
+
+
+local img91Start = love.graphics.newImage("assets/scenes/9-1start.png")
+
+Cutscenes.Pre91b = Cutscenes:scene({
+    name   = "Pre91b",
+    frames = {
+            { imgBlackScreen, 0.5 },
+            { img91Start, 3 }
+    },
+    delay = "frames",
     frameX = 0,
     nextCutscene = "Intro91"
 })
@@ -408,7 +451,7 @@ local img91intro03 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro03.j
 local img91intro04 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro04.jpg")
 
 Cutscenes.Intro91 = Cutscenes:scene({ -- 9-1 Intro Cinematic
-    name   = "Intro51",
+    name   = "Intro91",
     frames = {
             { img91intro01, 1.5},
             { img91intro02, 3},
@@ -448,7 +491,9 @@ Cutscenes.Pre91Sub = Cutscenes:scene({
     frameX = centerX(img21end01),
     delay = "frames",
     musicStart = "M100tp5e4",
-    nextCutscene = "Pre91Subb"
+    nextCutscene = "Pre91Subb",
+    showHUD = false ,
+
 })
 
 Cutscenes.Pre91Subb = Cutscenes:scene({
@@ -491,12 +536,12 @@ local img100finale11 = love.graphics.newImage("assets/scenes/10-0finale/10-0fina
 local img100finale12 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale12.jpg")
 local img100finale13 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale13.jpg")
 local img100finale14 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale14.jpg")
-local img100finale15 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale15.jpg")
+local img100finale15 = imgBlackScreen
 
 Cutscenes.Finale100 = Cutscenes:scene({
     name   = "Finale100",
     frames = {
-        {img100finale01, 2},
+        {img100finale01, 3},
         {img100finale02, 1},
         {img100finale03, 0.1},
         {img100finale04, 0.1},
@@ -509,11 +554,11 @@ Cutscenes.Finale100 = Cutscenes:scene({
         {img100finale11, 0.1},
         {img100finale12, 0.1},
         {img100finale13, 0.1},
-        {img100finale14, 0.5},
-        {img100finale15, 2}
+        {img100finale14, 0.5}
     },
     frameX = centerX(img100finale01),
     delay = "frames",
+    showHUD = false ,
     musicStart = "M100tp5e4"
 })
 
@@ -524,6 +569,7 @@ Cutscenes.flower_screen = Cutscenes:scene({
     },
     frameX = centerX(img100finale01),
     delay = "frames",
+    showHUD = false ,
     musicStart = "M100tp5e4",
     musicDone = "M100tp5e0"
 })
