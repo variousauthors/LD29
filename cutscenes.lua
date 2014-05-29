@@ -685,17 +685,6 @@ Cutscenes.Shrines.Doublejump91 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgwalljump = love.graphics.newImage("assets/scenes/walljump/shrines_walljump.jpg")
-
-Cutscenes.Shrines.Walljump = Cutscenes:scene({
-    name = "Shrines.Walljump",
-    frames = {
-        {imgwalljump, 3}
-    },
-    frameX = centerX(imgwalljump),
-    delay = "frames"
-})
-
 local imgwalljump9101 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9101.jpg")
 local imgwalljump9102 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9102.jpg")
 local imgwalljump9103 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9103.jpg")
@@ -709,6 +698,35 @@ Cutscenes.Shrines.Walljump91 = Cutscenes:scene({
         {imgwalljump9103, 6},
         {imgwalljump9101, 0.5}, -- 04 is same as 01
         {imgwalljump9105, 3}
+    },
+    frameX = 0,
+    delay = "frames"
+})
+
+local imgsecret01 = love.graphics.newImage("assets/scenes/secret/shrines_secret01.jpg")
+local imgsecret02 = love.graphics.newImage("assets/scenes/secret/shrines_secret02.jpg")
+local imgsecret03 = love.graphics.newImage("assets/scenes/secret/shrines_secret03.jpg")
+local imgsecret04 = love.graphics.newImage("assets/scenes/secret/shrines_secret04.jpg")
+
+Cutscenes.Shrines.Secret = Cutscenes:scene({
+    name = "Shrines.Secret",
+    frames = {
+        {imgsecret01, 1},
+        {imgsecret02, 0.1},
+        {imgsecret01, 0.1},
+        {imgsecret02, 0.1},
+        {imgsecret01, 0.1},
+        {imgsecret02, 0.1},
+        {imgsecret01, 0.1},
+        {imgsecret02, 0.75},
+        {imgsecret03, 3},
+        {imgsecret04, 5},
+        {imgsecret02, 0.75},
+        {imgsecret01, 0.1},
+        {imgsecret02, 0.1},
+        {imgsecret01, 0.1},
+        {imgsecret02, 0.1},
+        {imgsecret01, 1.5}
     },
     frameX = 0,
     delay = "frames"
