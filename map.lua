@@ -417,9 +417,9 @@ Map                         = function (tmx)
             if map.layers["trees"] then
                 map.layers["trees"].properties["obstacle"] = nil
             end
-            global.double_jump = false
+            global.double_jump = false -- SHOULD BE FALSE
             global.walljump    = false
-            global.backwards   = false
+            global.backwards   = false -- SHOULD BE FALSE
         end
 
         -- tx and ty are the offset of the tilemap
@@ -479,7 +479,9 @@ Map                         = function (tmx)
         local map_drawx, map_drawy  = map:getDrawRange()
         local red, green, blue = love.graphics.getColor()
         love.graphics.setColor(146, 144, 255)
-        love.graphics.rectangle("fill", 0, map_drawy, map.width * global.tile_size + 512, map_midpoint_px-map_drawy)
+        love.graphics.rectangle("fill", 0, map_drawy, map.width * global.tile_size, map_midpoint_px-map_drawy)
+        love.graphics.setColor(181, 33, 123)
+        love.graphics.rectangle("fill", 0, map_drawy, origin_x * global.tile_size, map_midpoint_px-map_drawy)
         love.graphics.setColor(red, green, blue)
 
         -- Queue our guy to be drawn after the tile he's on and then draw the map.

@@ -86,11 +86,11 @@ Glitches = function(param)
         for i = 1, num_glitches, 1 do
             local x, y, p = nil, nil, nil
             if(whole_map) then
-                x = rng:random(1, map_w)
-                y = rng:random(1, map_h)
-                -- store tile properties if they exist
-                p = map_layer(x, y)
-                if (p) then p = p.properties end
+                repeat -- be less naive about picking existing tiles
+                    x = rng:random(1, map_w)
+                    y = rng:random(1, map_h)
+                    p = map_layer(x, y)
+                until p == nil
             else
                 x, y, p = unpack(tile_list[rng:random(1, #tile_list)])
             end

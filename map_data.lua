@@ -1,7 +1,8 @@
 -- This is a little delicate, in that it requires the sprites and various other
 -- globals to exist already. Really it is just a convenience.
 
-local mapoffset51 = 14
+local mapoffset51 = 28
+local mapoffset91 = 55
 
 local write_map_data = function ()
     return {
@@ -53,7 +54,7 @@ local write_map_data = function ()
                 glitch = "Pre21G"
             },
             glitches = {
-                missing = 40,
+                missing = 35,
                 dmissing = 25,
                 crazy = 45
             },
@@ -104,10 +105,10 @@ local write_map_data = function ()
                 glitch = "Pre51G"
             },
             glitches = {
-                missing = 30,
-                dmissing = 20,
-                cmissing = 10,
-                crazy = 50
+                missing = 45,
+                dmissing = 25,
+                cmissing = 8,
+                crazy = 45
             },
             -- the distance in tiles between the top left corner of the MAP
             -- and the top left corner of the starting screen (with the castle)
@@ -131,32 +132,32 @@ local write_map_data = function ()
             glitch_penalty = 50,
             doors = {
                 {
-                    coords = { 196, 52 },
+                    coords = { 196+mapoffset91, 52 },
                     event  = "onVictory"
                 },
 
                 {
-                    coords = { 18, 65 },
+                    coords = { 18+mapoffset91, 65 },
                     event  = "enterWallJumpShrine"
                 },
 
                 {
-                    coords = { 36, 52 },
+                    coords = { 36+mapoffset91, 52 },
                     event  = "enterCloudShrine91"
                 },
 
                 {
-                    coords = { 82, 82 },
+                    coords = { 82+mapoffset91, 82 },
                     event  = "enterTreeShrine"
                 },
 
                 {
-                    coords = { 98, 67 },
+                    coords = { 98+mapoffset91, 67 },
                     event  = "enterDoubleJumpShrine91"
                 },
 
                 {
-                    coords = { 187, 30 },
+                    coords = { 187+mapoffset91, 30 },
                     event  = "enterBackwardsShrine91"
                 },
             },
@@ -166,16 +167,16 @@ local write_map_data = function ()
                 glitch = "Pre91G"
             },
             glitches = {
-                missing = 30,
-                dmissing = 20,
+                missing = 65,
+                dmissing = 35,
                 cmissing = 10,
-                crazy = 70
+                crazy = 45
             },
 
             -- the distance in tiles between the top left corner of the MAP
             -- and the top left corner of the starting screen (with the castle)
             origin = {
-                x = 0,
+                x = mapoffset91,
                 y = 40
             },
             -- mario's starting location, relative to the origin (the top left
