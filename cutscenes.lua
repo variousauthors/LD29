@@ -240,7 +240,7 @@ local img21intro05 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro05.j
 Cutscenes.Intro21 = Cutscenes:scene({
     name   = "Intro21",
     frames = {
-            { img21intro01, 0.5},
+            { img21intro01, 1},
             { img21intro02, 1},
             { img21intro03, 4.5},
             { img21intro02, 0.5},
@@ -325,7 +325,7 @@ local img51intro05 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro05.j
 Cutscenes.Intro51 = Cutscenes:scene({ -- 5-1 Intro Cinematic
     name   = "Intro51",
     frames = {
-            { img51intro01, 0.5},
+            { img51intro01, 1},
             { img51intro02, 1},
             { img51intro03, 7},
             { img51intro02, 0.5},
@@ -590,7 +590,7 @@ local imgclouds5105 = love.graphics.newImage("assets/scenes/clouds/shrines_cloud
 Cutscenes.Shrines.Clouds51 = Cutscenes:scene({
     name = "Shrines.Clouds51",
     frames = {
-        {imgclouds5101, 0.5},
+        {imgclouds5101, 1},
         {imgclouds5102, 3},
         {imgclouds5103, 5},
         {imgclouds5101, 0.5}, -- 04 is same as 01
@@ -608,7 +608,7 @@ local imgclouds9105 = love.graphics.newImage("assets/scenes/clouds/shrines_cloud
 Cutscenes.Shrines.Clouds91 = Cutscenes:scene({
     name = "Shrines.Clouds91",
     frames = {
-        {imgclouds9101, 0.5},
+        {imgclouds9101, 1},
         {imgclouds9102, 3},
         {imgclouds9103, 5},
         {imgclouds9101, 0.5}, -- 04 is same as 01
@@ -639,7 +639,7 @@ local imgdoublejump2105 = love.graphics.newImage("assets/scenes/doublejump/shrin
 Cutscenes.Shrines.Doublejump21 = Cutscenes:scene({
     name = "Shrines.Doublejump21",
     frames = {
-        {imgdoublejump2101, 0.5},
+        {imgdoublejump2101, 1},
         {imgdoublejump2102, 3},
         {imgdoublejump2103, 5},
         {imgdoublejump2101, 0.5}, -- 04 is same as 01
@@ -657,7 +657,7 @@ local imgdoublejump5105 = love.graphics.newImage("assets/scenes/doublejump/shrin
 Cutscenes.Shrines.Doublejump51 = Cutscenes:scene({
     name = "Shrines.Doublejump21",
     frames = {
-        {imgdoublejump5101, 0.5},
+        {imgdoublejump5101, 1},
         {imgdoublejump5102, 3},
         {imgdoublejump5103, 5},
         {imgdoublejump5101, 0.5}, -- 04 is same as 01
@@ -675,7 +675,7 @@ local imgdoublejump9105 = love.graphics.newImage("assets/scenes/doublejump/shrin
 Cutscenes.Shrines.Doublejump91 = Cutscenes:scene({
     name = "Shrines.Doublejump21",
     frames = {
-        {imgdoublejump9101, 0.5},
+        {imgdoublejump9101, 1},
         {imgdoublejump9102, 3},
         {imgdoublejump9103, 5},
         {imgdoublejump9101, 0.5}, -- 04 is same as 01
@@ -693,6 +693,24 @@ Cutscenes.Shrines.Walljump = Cutscenes:scene({
         {imgwalljump, 3}
     },
     frameX = centerX(imgwalljump),
+    delay = "frames"
+})
+
+local imgwalljump9101 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9101.jpg")
+local imgwalljump9102 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9102.jpg")
+local imgwalljump9103 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9103.jpg")
+local imgwalljump9105 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9105.jpg")
+
+Cutscenes.Shrines.Walljump91 = Cutscenes:scene({
+    name = "Shrines.Walljump21",
+    frames = {
+        {imgwalljump9101, 1},
+        {imgwalljump9102, 4},
+        {imgwalljump9103, 6},
+        {imgwalljump9101, 0.5}, -- 04 is same as 01
+        {imgwalljump9105, 3}
+    },
+    frameX = 0,
     delay = "frames"
 })
 

@@ -394,11 +394,11 @@ Map                         = function (tmx)
         global.backwards = true
     end
 
-    local enterWallJumpShrine = function ()
+    local enterWallJumpShrine91 = function ()
         if global.walljump == true then return end
 
         -- start the cutscene
-        Cutscenes.current = Cutscenes.Shrines.Walljump
+        Cutscenes.current = Cutscenes.Shrines.Walljump91
         Cutscenes.current.start()
 
         global.walljump = true
@@ -541,7 +541,7 @@ Map                         = function (tmx)
     callbacks["enterDoubleJumpShrine91"] = enterDoubleJumpShrine91
     callbacks["enterBackwardsShrine51"]  = enterBackwardsShrine51
     callbacks["enterBackwardsShrine91"]  = enterBackwardsShrine91
-    callbacks["enterWallJumpShrine"]     = enterWallJumpShrine
+    callbacks["enterWallJumpShrine91"]   = enterWallJumpShrine91
 
     -- callbacks for layer properties
     callbacks["obstacle"] = function (layer, v, tx, ty, rx, ry)
