@@ -322,12 +322,25 @@ Cutscenes.Pre21Gb = Cutscenes:scene({
 })
 
 -- Plays before 5-1 (Map 3)
+
+Cutscenes.Pre51 = Cutscenes:scene({
+    name   = "Pre51",
+    frames = { imgBlackScreen },
+    delay  = 2 ,
+    frameX = 0,
+    showHUD = false,
+    nextCutscene = "Pre51b"
+})
+
 local img51Start = love.graphics.newImage("assets/scenes/5-1start.png")
 
-Cutscenes.Pre51 = Cutscenes:scene({ -- 5-1 lives screen
-    name   = "Pre51",
-    frames = { img51Start },
-    delay = 3,
+Cutscenes.Pre51b = Cutscenes:scene({ -- 5-1 lives screen
+    name   = "Pre51b",
+    frames = {
+            { imgBlackScreen, 0.5 },
+            { img51Start, 3 }
+    },
+    delay = "frames",
     frameX = centerX(img51Start),
     nextCutscene = "Intro51"
 })
