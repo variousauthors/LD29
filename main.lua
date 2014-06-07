@@ -25,6 +25,7 @@ require("vector")
 -- iterate
 local Map            = require("map")
 local HeadsUpDisplay = require("heads_up_display")
+local GameJolt       = require("gamejolt")
 local write_map_data = require("map_data")
 local maps           = write_map_data()
 
@@ -35,7 +36,7 @@ local fpsCount   = 0 -- FPS count of the current second
 local fpsTime    = 0 -- Keeps track of the elapsed time
 local final_flower = love.graphics.newImage("assets/images/mana_flower.png")
 
-local origin, player, hud
+local origin, player, hud, gj
 
 function init_player (p, s)
     player = Player(p, s)
@@ -55,6 +56,10 @@ function love.load()
     hud = HeadsUpDisplay()
     hud.setWorld(maps[num].getName())
     hud.setItemType(maps[num].getItem())
+
+    gj = GameJolt(global.floor_height, global.side_length)
+    gj.connect_user("arrogant.gamer", "keisatsukan")
+    gj.add_score("test", 0)
 end
 
 local deflower = false
@@ -166,6 +171,12 @@ function love.update(dt)
                     Cutscenes.current.start(function ()
                         --What to do after the final cutscene is done?
                         print("GAME OVER")
+
+                        gj.connect_user("arrogant.gamer", "keisatsukan")
+
+                        local plural = ""
+                        if global.flowers > 1 or global.flowers == 0 then plural = "s" end
+                        gj.add_score(global.flowers .. " flower" .. plural, global.flowers)
                         Cutscenes.current = Cutscenes["flower_screen"]
                         Cutscenes.current.start(function ()
                             global.flowers = 0
