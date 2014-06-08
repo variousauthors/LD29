@@ -58,8 +58,6 @@ function love.load()
     hud.setItemType(maps[num].getItem())
 
     gj = GameJolt(global.floor_height, global.side_length)
-    gj.connect_user("arrogant.gamer", "keisatsukan")
-    gj.add_score("test", 0)
 end
 
 local deflower = false
@@ -152,8 +150,6 @@ function love.update(dt)
         -- if we "proceed" and the map is still finished, then we move to
         -- the next world
         if maps[num].isFinished() then
-            print("is still finished")
-
             maps[num].setFinished(false)
 
             num = num + 1
@@ -170,15 +166,15 @@ function love.update(dt)
                     --Final map == final cutscene
                     Cutscenes.current.start(function ()
                         --What to do after the final cutscene is done?
-                        print("GAME OVER")
 
-                        gj.connect_user("arrogant.gamer", "keisatsukan")
-
-                        local plural = ""
-                        if global.flowers > 1 or global.flowers == 0 then plural = "s" end
-                        gj.add_score(global.flowers .. " flower" .. plural, global.flowers)
                         Cutscenes.current = Cutscenes["flower_screen"]
                         Cutscenes.current.start(function ()
+                            gj.connect_user("arrogant.gamer", "keisatsukan")
+
+                            local plural = ""
+                            if global.flowers > 1 or global.flowers == 0 then plural = "s" end
+                            gj.add_score(global.flowers .. " flower" .. plural, global.flowers)
+
                             global.flowers = 0
                             hud.setScore(global.flowers * 100)
                             hud.setItems(global.flowers)
@@ -232,14 +228,6 @@ function love.update(dt)
         -- the right character loads
         init_player(maps[num].getStart(), maps[num].sprite)
     end
-
-
-  --if #collisions > 0 then
-  --    print("======================")
-  --    print(time)
-  --    inspect(collisions)
-  --end
-
 end
 
 local inputPressed = function(k, isRepeat)
@@ -259,26 +247,6 @@ function love.keypressed(k, isRepeat)
     -- quit
     if k == 'escape' then
         love.event.push("quit")
-    end
-
-    if k == "0"
-    or k == "1"
-    or k == "2"
-    or k == "3"
-    or k == "4"
-    or k == "5"
-    or k == "6"
-    or k == "7"
-    or k == "8"
-    or k == "9" then
-        teleport = teleport .. k
-    end
-
-    if #teleport == 4 then
-        local dest = tonumber(teleport)
-        teleport = ""
-
-        global.tx = -dest
     end
 
     inputPressed(k, isRepeat)

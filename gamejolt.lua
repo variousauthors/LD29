@@ -34,7 +34,6 @@ GameJolt = function (game_id, private_key)
             if params then url = base_url .. args.endpoint .. "?" .. params else url = base_url .. args.endpoint end
             local signature = md5.sumhexa(url .. private_key)
             url = url .. "&signature=" .. signature
-            print(url)
 
             client, code, headers, status = http.request{url=url, sink=ltn12.sink.table(resp),
                                                     method=args.method or "GET", headers=args.headers, source=args.source,
@@ -47,7 +46,6 @@ GameJolt = function (game_id, private_key)
     end
 
     local authenticate = function ()
-        inspect({ username, user_token })
         local response = http_request({
             endpoint = "/users/auth/",
             params   = {
