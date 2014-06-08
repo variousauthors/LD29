@@ -1,7 +1,7 @@
 --[[ Cutscene constructor class and Cutscenes object containing instances. ]]
 
 Cutscenes = {}
-local scenes_directory = "assets/scenes/en/"
+local scenes_directory = "assets/scenes/en"
 
 function Cutscenes:scene(options)
     options = options or {}
