@@ -1,6 +1,7 @@
 --[[ Cutscene constructor class and Cutscenes object containing instances. ]]
 
 Cutscenes = {}
+local scenes_directory = "assets/scenes/en/"
 
 function Cutscenes:scene(options)
     options = options or {}
@@ -162,12 +163,12 @@ Cutscenes.blank = Cutscenes.scene() -- blank
 Cutscenes.current = Cutscenes.blank -- placeholder
 
 -- shared images used in a lot of seperate cutscenes
-local imgGlitchScreen = love.graphics.newImage("assets/scenes/glitchscreen.png")
-local imgBlackScreen  = love.graphics.newImage("assets/scenes/10-0finale/10-0finale15.jpg")
+local imgGlitchScreen = love.graphics.newImage(scenes_directory .. "/glitchscreen.png")
+local imgBlackScreen  = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale15.jpg")
 
 -- Start of Game
 
-local imgStartScreen = love.graphics.newImage("assets/scenes/0-1welcomescreen.png")
+local imgStartScreen = love.graphics.newImage(scenes_directory .. "/0-1welcomescreen.png")
 
 Cutscenes.StartScreen = Cutscenes:scene({
     name = "StartScreen",
@@ -178,7 +179,7 @@ Cutscenes.StartScreen = Cutscenes:scene({
 })
 
 -- Plays before 1-1
-local img11Start = love.graphics.newImage("assets/scenes/1-1start.png")
+local img11Start = love.graphics.newImage(scenes_directory .. "/1-1start.png")
 
 Cutscenes.Pre11 = Cutscenes:scene({
     name   = "Pre11",
@@ -190,17 +191,17 @@ Cutscenes.Pre11 = Cutscenes:scene({
 
 -- Plays before 2-1
 
-local img11end01 = love.graphics.newImage("assets/scenes/1-1end/1-1end0001.jpg")
-local img11end02 = love.graphics.newImage("assets/scenes/1-1end/1-1end0002.jpg")
-local img11end03 = love.graphics.newImage("assets/scenes/1-1end/1-1end0003.jpg")
-local img11end04 = love.graphics.newImage("assets/scenes/1-1end/1-1end0004.jpg")
-local img11end05 = love.graphics.newImage("assets/scenes/1-1end/1-1end0005.jpg")
-local img11end06 = love.graphics.newImage("assets/scenes/1-1end/1-1end0006.jpg")
-local img11end07 = love.graphics.newImage("assets/scenes/1-1end/1-1end0007.jpg")
-local img11end08 = love.graphics.newImage("assets/scenes/1-1end/1-1end0008.jpg")
-local img11end09 = love.graphics.newImage("assets/scenes/1-1end/1-1end0009.jpg")
-local img11end10 = love.graphics.newImage("assets/scenes/1-1end/1-1end0010.jpg")
-local img11end11 = love.graphics.newImage("assets/scenes/1-1end/1-1end0011.jpg")
+local img11end01 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0001.jpg")
+local img11end02 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0002.jpg")
+local img11end03 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0003.jpg")
+local img11end04 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0004.jpg")
+local img11end05 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0005.jpg")
+local img11end06 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0006.jpg")
+local img11end07 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0007.jpg")
+local img11end08 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0008.jpg")
+local img11end09 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0009.jpg")
+local img11end10 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0010.jpg")
+local img11end11 = love.graphics.newImage(scenes_directory .. "/1-1end/1-1end0011.jpg")
 
 Cutscenes.Pre21 = Cutscenes:scene({
     name   = "Pre21",
@@ -233,7 +234,7 @@ Cutscenes.Pre21b = Cutscenes:scene({
     nextCutscene = "Pre21c"
 })
 
-local img21Start = love.graphics.newImage("assets/scenes/2-1start.png")
+local img21Start = love.graphics.newImage(scenes_directory .. "/2-1start.png")
 
 Cutscenes.Pre21c = Cutscenes:scene({
     name   = "Pre21c",
@@ -246,11 +247,11 @@ Cutscenes.Pre21c = Cutscenes:scene({
     nextCutscene = "Intro21"
 })
 
-local img21intro01 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro01.jpg")
-local img21intro02 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro02.jpg")
-local img21intro03 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro03.jpg")
-local img21intro04 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro04.jpg")
-local img21intro05 = love.graphics.newImage("assets/scenes/2-1intro/2-1intro05.jpg")
+local img21intro01 = love.graphics.newImage(scenes_directory .. "/2-1intro/2-1intro01.jpg")
+local img21intro02 = love.graphics.newImage(scenes_directory .. "/2-1intro/2-1intro02.jpg")
+local img21intro03 = love.graphics.newImage(scenes_directory .. "/2-1intro/2-1intro03.jpg")
+local img21intro04 = love.graphics.newImage(scenes_directory .. "/2-1intro/2-1intro04.jpg")
+local img21intro05 = love.graphics.newImage(scenes_directory .. "/2-1intro/2-1intro05.jpg")
 
 Cutscenes.Intro21 = Cutscenes:scene({
     name   = "Intro21",
@@ -271,13 +272,13 @@ Cutscenes.Intro21 = Cutscenes:scene({
 })
 
 -- Subsequent 2-1 runs
-local img21end01 = love.graphics.newImage("assets/scenes/2-1end/2-1end01.jpg")
-local img21end02 = love.graphics.newImage("assets/scenes/2-1end/2-1end02.jpg")
-local img21end03 = love.graphics.newImage("assets/scenes/2-1end/2-1end03.jpg")
-local img21end04 = love.graphics.newImage("assets/scenes/2-1end/2-1end04.jpg")
-local img21end05 = love.graphics.newImage("assets/scenes/2-1end/2-1end05.jpg")
-local img21end06 = love.graphics.newImage("assets/scenes/2-1end/2-1end06.jpg")
-local img21end07 = love.graphics.newImage("assets/scenes/2-1end/2-1end07.jpg")
+local img21end01 = love.graphics.newImage(scenes_directory .. "/2-1end/2-1end01.jpg")
+local img21end02 = love.graphics.newImage(scenes_directory .. "/2-1end/2-1end02.jpg")
+local img21end03 = love.graphics.newImage(scenes_directory .. "/2-1end/2-1end03.jpg")
+local img21end04 = love.graphics.newImage(scenes_directory .. "/2-1end/2-1end04.jpg")
+local img21end05 = love.graphics.newImage(scenes_directory .. "/2-1end/2-1end05.jpg")
+local img21end06 = love.graphics.newImage(scenes_directory .. "/2-1end/2-1end06.jpg")
+local img21end07 = love.graphics.newImage(scenes_directory .. "/2-1end/2-1end07.jpg")
 
 Cutscenes.Pre21Sub = Cutscenes:scene({
     name   = "Pre21Sub",
@@ -332,7 +333,7 @@ Cutscenes.Pre51 = Cutscenes:scene({
     nextCutscene = "Pre51b"
 })
 
-local img51Start = love.graphics.newImage("assets/scenes/5-1start.png")
+local img51Start = love.graphics.newImage(scenes_directory .. "/5-1start.png")
 
 Cutscenes.Pre51b = Cutscenes:scene({ -- 5-1 lives screen
     name   = "Pre51b",
@@ -345,11 +346,11 @@ Cutscenes.Pre51b = Cutscenes:scene({ -- 5-1 lives screen
     nextCutscene = "Intro51"
 })
 
-local img51intro01 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro01.jpg")
-local img51intro02 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro02.jpg")
-local img51intro03 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro03.jpg")
-local img51intro04 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro04.jpg")
-local img51intro05 = love.graphics.newImage("assets/scenes/5-1intro/5-1intro05.jpg")
+local img51intro01 = love.graphics.newImage(scenes_directory .. "/5-1intro/5-1intro01.jpg")
+local img51intro02 = love.graphics.newImage(scenes_directory .. "/5-1intro/5-1intro02.jpg")
+local img51intro03 = love.graphics.newImage(scenes_directory .. "/5-1intro/5-1intro03.jpg")
+local img51intro04 = love.graphics.newImage(scenes_directory .. "/5-1intro/5-1intro04.jpg")
+local img51intro05 = love.graphics.newImage(scenes_directory .. "/5-1intro/5-1intro05.jpg")
 
 Cutscenes.Intro51 = Cutscenes:scene({ -- 5-1 Intro Cinematic
     name   = "Intro51",
@@ -370,13 +371,13 @@ Cutscenes.Intro51 = Cutscenes:scene({ -- 5-1 Intro Cinematic
 })
 
 -- Subsequent 5-1 runs
-local img51end01 = love.graphics.newImage("assets/scenes/5-1end/5-1end01.jpg")
-local img51end02 = love.graphics.newImage("assets/scenes/5-1end/5-1end02.jpg")
-local img51end03 = love.graphics.newImage("assets/scenes/5-1end/5-1end03.jpg")
-local img51end04 = love.graphics.newImage("assets/scenes/5-1end/5-1end04.jpg")
-local img51end05 = love.graphics.newImage("assets/scenes/5-1end/5-1end05.jpg")
-local img51end06 = love.graphics.newImage("assets/scenes/5-1end/5-1end06.jpg")
-local img51end07 = love.graphics.newImage("assets/scenes/5-1end/5-1end07.jpg")
+local img51end01 = love.graphics.newImage(scenes_directory .. "/5-1end/5-1end01.jpg")
+local img51end02 = love.graphics.newImage(scenes_directory .. "/5-1end/5-1end02.jpg")
+local img51end03 = love.graphics.newImage(scenes_directory .. "/5-1end/5-1end03.jpg")
+local img51end04 = love.graphics.newImage(scenes_directory .. "/5-1end/5-1end04.jpg")
+local img51end05 = love.graphics.newImage(scenes_directory .. "/5-1end/5-1end05.jpg")
+local img51end06 = love.graphics.newImage(scenes_directory .. "/5-1end/5-1end06.jpg")
+local img51end07 = love.graphics.newImage(scenes_directory .. "/5-1end/5-1end07.jpg")
 
 Cutscenes.Pre51Sub = Cutscenes:scene({
     name   = "Pre51Sub",
@@ -432,7 +433,7 @@ Cutscenes.Pre91 = Cutscenes:scene({
 })
 
 
-local img91Start = love.graphics.newImage("assets/scenes/9-1start.png")
+local img91Start = love.graphics.newImage(scenes_directory .. "/9-1start.png")
 
 Cutscenes.Pre91b = Cutscenes:scene({
     name   = "Pre91b",
@@ -445,10 +446,10 @@ Cutscenes.Pre91b = Cutscenes:scene({
     nextCutscene = "Intro91"
 })
 
-local img91intro01 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro01.jpg")
-local img91intro02 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro02.jpg")
-local img91intro03 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro03.jpg")
-local img91intro04 = love.graphics.newImage("assets/scenes/9-1intro/9-1intro04.jpg")
+local img91intro01 = love.graphics.newImage(scenes_directory .. "/9-1intro/9-1intro01.jpg")
+local img91intro02 = love.graphics.newImage(scenes_directory .. "/9-1intro/9-1intro02.jpg")
+local img91intro03 = love.graphics.newImage(scenes_directory .. "/9-1intro/9-1intro03.jpg")
+local img91intro04 = love.graphics.newImage(scenes_directory .. "/9-1intro/9-1intro04.jpg")
 
 Cutscenes.Intro91 = Cutscenes:scene({ -- 9-1 Intro Cinematic
     name   = "Intro91",
@@ -469,13 +470,13 @@ Cutscenes.Intro91 = Cutscenes:scene({ -- 9-1 Intro Cinematic
 
 -- Subsequent 9-1 runs
 
-local img91end01 = love.graphics.newImage("assets/scenes/9-1end/9-1end01.jpg")
-local img91end02 = love.graphics.newImage("assets/scenes/9-1end/9-1end02.jpg")
-local img91end03 = love.graphics.newImage("assets/scenes/9-1end/9-1end03.jpg")
-local img91end04 = love.graphics.newImage("assets/scenes/9-1end/9-1end04.jpg")
-local img91end05 = love.graphics.newImage("assets/scenes/9-1end/9-1end05.jpg")
-local img91end06 = love.graphics.newImage("assets/scenes/9-1end/9-1end06.jpg")
-local img91end07 = love.graphics.newImage("assets/scenes/9-1end/9-1end07.jpg")
+local img91end01 = love.graphics.newImage(scenes_directory .. "/9-1end/9-1end01.jpg")
+local img91end02 = love.graphics.newImage(scenes_directory .. "/9-1end/9-1end02.jpg")
+local img91end03 = love.graphics.newImage(scenes_directory .. "/9-1end/9-1end03.jpg")
+local img91end04 = love.graphics.newImage(scenes_directory .. "/9-1end/9-1end04.jpg")
+local img91end05 = love.graphics.newImage(scenes_directory .. "/9-1end/9-1end05.jpg")
+local img91end06 = love.graphics.newImage(scenes_directory .. "/9-1end/9-1end06.jpg")
+local img91end07 = love.graphics.newImage(scenes_directory .. "/9-1end/9-1end07.jpg")
 
 Cutscenes.Pre91Sub = Cutscenes:scene({
     name   = "Pre91Sub",
@@ -522,20 +523,20 @@ Cutscenes.Pre91Gb = Cutscenes:scene({
 
 -- 10-0 finale
 
-local img100finale01 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale01.jpg")
-local img100finale02 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale02.jpg")
-local img100finale03 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale03.jpg")
-local img100finale04 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale04.jpg")
-local img100finale05 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale05.jpg")
-local img100finale06 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale06.jpg")
-local img100finale07 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale07.jpg")
-local img100finale08 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale08.jpg")
-local img100finale09 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale09.jpg")
-local img100finale10 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale10.jpg")
-local img100finale11 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale11.jpg")
-local img100finale12 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale12.jpg")
-local img100finale13 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale13.jpg")
-local img100finale14 = love.graphics.newImage("assets/scenes/10-0finale/10-0finale14.jpg")
+local img100finale01 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale01.jpg")
+local img100finale02 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale02.jpg")
+local img100finale03 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale03.jpg")
+local img100finale04 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale04.jpg")
+local img100finale05 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale05.jpg")
+local img100finale06 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale06.jpg")
+local img100finale07 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale07.jpg")
+local img100finale08 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale08.jpg")
+local img100finale09 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale09.jpg")
+local img100finale10 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale10.jpg")
+local img100finale11 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale11.jpg")
+local img100finale12 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale12.jpg")
+local img100finale13 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale13.jpg")
+local img100finale14 = love.graphics.newImage(scenes_directory .. "/10-0finale/10-0finale14.jpg")
 local img100finale15 = imgBlackScreen
 
 Cutscenes.Finale100 = Cutscenes:scene({
@@ -578,11 +579,11 @@ Cutscenes.flower_screen = Cutscenes:scene({
 
 Cutscenes.Shrines = {}
 
-local imgbackwards5101 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5101.jpg")
-local imgbackwards5102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5102.jpg")
-local imgbackwards5102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5102.jpg")
-local imgbackwards5103 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5103.jpg")
-local imgbackwards5105 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards5105.jpg")
+local imgbackwards5101 = love.graphics.newImage(scenes_directory .. "/backwards/shrines_backwards5101.jpg")
+local imgbackwards5102 = love.graphics.newImage(scenes_directory .. "/backwards/shrines_backwards5102.jpg")
+local imgbackwards5102 = love.graphics.newImage(scenes_directory .. "/backwards/shrines_backwards5102.jpg")
+local imgbackwards5103 = love.graphics.newImage(scenes_directory .. "/backwards/shrines_backwards5103.jpg")
+local imgbackwards5105 = love.graphics.newImage(scenes_directory .. "/backwards/shrines_backwards5105.jpg")
 
 Cutscenes.Shrines.Backwards51 = Cutscenes:scene({
     name = "Shrines.Backwards51",
@@ -603,11 +604,11 @@ Cutscenes.Shrines.Backwards51 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgbackwards9101 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9101.jpg")
-local imgbackwards9102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9102.jpg")
-local imgbackwards9102 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9102.jpg")
-local imgbackwards9103 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9103.jpg")
-local imgbackwards9105 = love.graphics.newImage("assets/scenes/backwards/shrines_backwards9105.jpg")
+local imgbackwards9101 = love.graphics.newImage(scenes_directory .. "/backwards/shrines_backwards9101.jpg")
+local imgbackwards9102 = love.graphics.newImage(scenes_directory .. "/backwards/shrines_backwards9102.jpg")
+local imgbackwards9102 = love.graphics.newImage(scenes_directory .. "/backwards/shrines_backwards9102.jpg")
+local imgbackwards9103 = love.graphics.newImage(scenes_directory .. "/backwards/shrines_backwards9103.jpg")
+local imgbackwards9105 = love.graphics.newImage(scenes_directory .. "/backwards/shrines_backwards9105.jpg")
 
 Cutscenes.Shrines.Backwards91 = Cutscenes:scene({
     name = "Shrines.Backwards91",
@@ -628,10 +629,10 @@ Cutscenes.Shrines.Backwards91 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgclouds5101 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds5101.jpg")
-local imgclouds5102 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds5102.jpg")
-local imgclouds5103 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds5103.jpg")
-local imgclouds5105 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds5105.jpg")
+local imgclouds5101 = love.graphics.newImage(scenes_directory .. "/clouds/shrines_clouds5101.jpg")
+local imgclouds5102 = love.graphics.newImage(scenes_directory .. "/clouds/shrines_clouds5102.jpg")
+local imgclouds5103 = love.graphics.newImage(scenes_directory .. "/clouds/shrines_clouds5103.jpg")
+local imgclouds5105 = love.graphics.newImage(scenes_directory .. "/clouds/shrines_clouds5105.jpg")
 
 Cutscenes.Shrines.Clouds51 = Cutscenes:scene({
     name = "Shrines.Clouds51",
@@ -646,10 +647,10 @@ Cutscenes.Shrines.Clouds51 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgclouds9101 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds9101.jpg")
-local imgclouds9102 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds9102.jpg")
-local imgclouds9103 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds9103.jpg")
-local imgclouds9105 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds9105.jpg")
+local imgclouds9101 = love.graphics.newImage(scenes_directory .. "/clouds/shrines_clouds9101.jpg")
+local imgclouds9102 = love.graphics.newImage(scenes_directory .. "/clouds/shrines_clouds9102.jpg")
+local imgclouds9103 = love.graphics.newImage(scenes_directory .. "/clouds/shrines_clouds9103.jpg")
+local imgclouds9105 = love.graphics.newImage(scenes_directory .. "/clouds/shrines_clouds9105.jpg")
 
 Cutscenes.Shrines.Clouds91 = Cutscenes:scene({
     name = "Shrines.Clouds91",
@@ -664,8 +665,8 @@ Cutscenes.Shrines.Clouds91 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgclouds01 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds01.jpg")
-local imgclouds02 = love.graphics.newImage("assets/scenes/clouds/shrines_clouds02.jpg")
+local imgclouds01 = love.graphics.newImage(scenes_directory .. "/clouds/shrines_clouds01.jpg")
+local imgclouds02 = love.graphics.newImage(scenes_directory .. "/clouds/shrines_clouds02.jpg")
 
 Cutscenes.Shrines.Clouds = Cutscenes:scene({
     name = "Shrines.Clouds",
@@ -677,10 +678,10 @@ Cutscenes.Shrines.Clouds = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgdoublejump2101 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump2101.jpg")
-local imgdoublejump2102 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump2102.jpg")
-local imgdoublejump2103 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump2103.jpg")
-local imgdoublejump2105 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump2105.jpg")
+local imgdoublejump2101 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump2101.jpg")
+local imgdoublejump2102 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump2102.jpg")
+local imgdoublejump2103 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump2103.jpg")
+local imgdoublejump2105 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump2105.jpg")
 
 Cutscenes.Shrines.Doublejump21 = Cutscenes:scene({
     name = "Shrines.Doublejump21",
@@ -695,10 +696,10 @@ Cutscenes.Shrines.Doublejump21 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgdoublejump5101 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5101.jpg")
-local imgdoublejump5102 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5102.jpg")
-local imgdoublejump5103 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5103.jpg")
-local imgdoublejump5105 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump5105.jpg")
+local imgdoublejump5101 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump5101.jpg")
+local imgdoublejump5102 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump5102.jpg")
+local imgdoublejump5103 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump5103.jpg")
+local imgdoublejump5105 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump5105.jpg")
 
 Cutscenes.Shrines.Doublejump51 = Cutscenes:scene({
     name = "Shrines.Doublejump21",
@@ -713,10 +714,10 @@ Cutscenes.Shrines.Doublejump51 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgdoublejump9101 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9101.jpg")
-local imgdoublejump9102 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9102.jpg")
-local imgdoublejump9103 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9103.jpg")
-local imgdoublejump9105 = love.graphics.newImage("assets/scenes/doublejump/shrines_doublejump9105.jpg")
+local imgdoublejump9101 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump9101.jpg")
+local imgdoublejump9102 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump9102.jpg")
+local imgdoublejump9103 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump9103.jpg")
+local imgdoublejump9105 = love.graphics.newImage(scenes_directory .. "/doublejump/shrines_doublejump9105.jpg")
 
 Cutscenes.Shrines.Doublejump91 = Cutscenes:scene({
     name = "Shrines.Doublejump21",
@@ -731,10 +732,10 @@ Cutscenes.Shrines.Doublejump91 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgwalljump9101 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9101.jpg")
-local imgwalljump9102 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9102.jpg")
-local imgwalljump9103 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9103.jpg")
-local imgwalljump9105 = love.graphics.newImage("assets/scenes/walljump/shrines_walljump9105.jpg")
+local imgwalljump9101 = love.graphics.newImage(scenes_directory .. "/walljump/shrines_walljump9101.jpg")
+local imgwalljump9102 = love.graphics.newImage(scenes_directory .. "/walljump/shrines_walljump9102.jpg")
+local imgwalljump9103 = love.graphics.newImage(scenes_directory .. "/walljump/shrines_walljump9103.jpg")
+local imgwalljump9105 = love.graphics.newImage(scenes_directory .. "/walljump/shrines_walljump9105.jpg")
 
 Cutscenes.Shrines.Walljump91 = Cutscenes:scene({
     name = "Shrines.Walljump21",
@@ -749,10 +750,10 @@ Cutscenes.Shrines.Walljump91 = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgsecret01 = love.graphics.newImage("assets/scenes/secret/shrines_secret01.jpg")
-local imgsecret02 = love.graphics.newImage("assets/scenes/secret/shrines_secret02.jpg")
-local imgsecret03 = love.graphics.newImage("assets/scenes/secret/shrines_secret03.jpg")
-local imgsecret04 = love.graphics.newImage("assets/scenes/secret/shrines_secret04.jpg")
+local imgsecret01 = love.graphics.newImage(scenes_directory .. "/secret/shrines_secret01.jpg")
+local imgsecret02 = love.graphics.newImage(scenes_directory .. "/secret/shrines_secret02.jpg")
+local imgsecret03 = love.graphics.newImage(scenes_directory .. "/secret/shrines_secret03.jpg")
+local imgsecret04 = love.graphics.newImage(scenes_directory .. "/secret/shrines_secret04.jpg")
 
 Cutscenes.Shrines.Secret = Cutscenes:scene({
     name = "Shrines.Secret",
@@ -778,11 +779,11 @@ Cutscenes.Shrines.Secret = Cutscenes:scene({
     delay = "frames"
 })
 
-local imgtrees01 = love.graphics.newImage("assets/scenes/trees/shrines_trees01.jpg")
-local imgtrees02 = love.graphics.newImage("assets/scenes/trees/shrines_trees02.jpg")
-local imgtrees03 = love.graphics.newImage("assets/scenes/trees/shrines_trees03.jpg")
-local imgtrees04 = love.graphics.newImage("assets/scenes/trees/shrines_trees04.jpg")
-local imgtrees06 = love.graphics.newImage("assets/scenes/trees/shrines_trees06.jpg")
+local imgtrees01 = love.graphics.newImage(scenes_directory .. "/trees/shrines_trees01.jpg")
+local imgtrees02 = love.graphics.newImage(scenes_directory .. "/trees/shrines_trees02.jpg")
+local imgtrees03 = love.graphics.newImage(scenes_directory .. "/trees/shrines_trees03.jpg")
+local imgtrees04 = love.graphics.newImage(scenes_directory .. "/trees/shrines_trees04.jpg")
+local imgtrees06 = love.graphics.newImage(scenes_directory .. "/trees/shrines_trees06.jpg")
 
 Cutscenes.Shrines.Trees = Cutscenes:scene({
     name = "Shrines.Trees",
