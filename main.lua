@@ -27,6 +27,7 @@ local Map            = require("map")
 local HeadsUpDisplay = require("heads_up_display")
 local GameJolt       = require("gamejolt")
 local write_map_data = require("map_data")
+local Menu           = require("menu")
 local maps           = write_map_data()
 
 local num        = 1 -- The map we're currently on
@@ -36,7 +37,7 @@ local fpsCount   = 0 -- FPS count of the current second
 local fpsTime    = 0 -- Keeps track of the elapsed time
 local final_flower = love.graphics.newImage("assets/images/mana_flower.png")
 
-local origin, player, hud, gj
+local origin, player, hud, gj, menu
 
 function init_player (p, s)
     player = Player(p, s)
@@ -57,9 +58,10 @@ function love.load()
     hud.setWorld(maps[num].getName())
     hud.setItemType(maps[num].getItem())
 
+    menu = Menu()
+    menu.show()
+
     gj = GameJolt(global.floor_height, global.side_length)
-    gj.connect_user("arrogant.gamer", "keisatsukan")
-    gj.add_score("test", 0)
 end
 
 local deflower = false
@@ -80,6 +82,7 @@ global.resolveFlower = function ()
 end
 
 function love.update(dt)
+    if menu.isShowing() then return menu.update(dt) end
     collisions = {}
     time = time + dt
 
@@ -243,6 +246,8 @@ function love.update(dt)
 end
 
 local inputPressed = function(k, isRepeat)
+    if menu.isShowing() then return menu.keypressed() end
+
     -- No jumping during cutscenes
     if Cutscenes.current.isRunning() then
         -- in order to ski pa cutscene we just pass in a huge number of seconds
@@ -255,11 +260,17 @@ local inputPressed = function(k, isRepeat)
     if maps[num].keypressed then maps[num].keypressed(k) end
 end
 
+function love.textinput(t)
+    if menu.isShowing() then return menu.textinput(t) end
+end
+
 function love.keypressed(k, isRepeat)
     -- quit
     if k == 'escape' then
         love.event.push("quit")
     end
+
+    if menu.isShowing() then return menu.keypressed(k) end
 
     if k == "0"
     or k == "1"
@@ -289,6 +300,8 @@ function love.gamepadpressed(j, k)
 end
 
 function love.draw()
+    if menu.isShowing() then return menu.draw() end
+
     -- Draw cutscene or map
     if Cutscenes.current.isRunning() then
         Cutscenes.current.draw()
