@@ -5,7 +5,7 @@ USERNAME = 1
 TOKEN    = 2
 
 return function ()
-    local showing     = true
+    local showing     = false
     local cursor_pos  = 0
     local lang        = "en"
     local menu_index  = 0
@@ -54,7 +54,7 @@ return function ()
     local drawCursor = function (x, y)
         local icon = ">"
 
-        love.graphics.print(icon, cursor_pos, y)
+        love.graphics.print(icon, x + cursor_pos, y)
     end
 
     local drawUsername = function (x, y)
@@ -71,11 +71,11 @@ return function ()
         love.graphics.print(token .. icon, x, y)
     end
 
-    local localization = Component(0, 0, Component(0, 0, drawCursor), Component(30, 0, "EN"), Component(130, 0, "JP"))
+    local localization = Component(0, 0, Component(0, 0, "LANG"), Component(200, 0, drawCursor), Component(230, 0, "EN"), Component(330, 0, "JP"))
     local username     = Component(0, 100, Component(0, 0, "USERNAME"), Component(200, 0, drawUsername))
-    local token        = Component(0, 200, Component(0, 0, "TOKEN"), Component(200, 0, drawToken))
+    local token        = Component(0, 200, Component(0, 0, "   TOKEN"), Component(200, 0, drawToken))
 
-    local component = Component(0, 0, localization, username, token)
+    local component = Component(W_WIDTH/2 - 200, W_HEIGHT/2 - 200, localization, username, token)
 
     local draw = function ()
         component.draw(0, 0)
@@ -86,8 +86,20 @@ return function ()
         flash = math.floor(time)%2
     end
 
+    local writeProfile = function ()
+    end
+
+    local findProfile = function ()
+        return false
+    end
+
     local keypressed = function (key)
-        if key == "down" then
+        if menu_index == TOKEN and key == "return" then
+            writeProfile()
+            showing = false
+        end
+
+        if key == "down" or (key == "return" and menu_index < 2) then
             menu_index = (menu_index + 1)%3
             inputs[menu_index + 1].clear()
         end
@@ -97,7 +109,6 @@ return function ()
             inputs[menu_index + 1].clear()
         end
 
-        print(menu_index)
         if inputs[menu_index + 1].keypressed then
             inputs[menu_index + 1].keypressed(key)
         end
@@ -110,7 +121,7 @@ return function ()
     end
 
     local show = function ()
-        showing = true
+        showing = not findProfile()
     end
 
     local hide = function ()
