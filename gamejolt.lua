@@ -46,6 +46,7 @@ GameJolt = function (game_id, private_key)
     end
 
     local authenticate = function ()
+        print("AUTHENTICATING WITH GAMEJOLT")
         local response = http_request({
             endpoint = "/users/auth/",
             params   = {
@@ -55,11 +56,19 @@ GameJolt = function (game_id, private_key)
             }
         }).response
 
-        return string.find(unpack(response), 'success:"true"') -- TODO ha ha ha, until I find a JSON parser I like
+        local result = string.find(unpack(response), 'success:"true"') -- TODO ha ha ha, until I find a JSON parser I like
+
+        if result then
+            print("  YEAH, YOU'RE GOOD")
+        end
+
+        return result
     end
 
     local add_score = function (score, sort)
         if not authenticate() then return end
+
+        print("UPLOADING SCORE...")
 
         return http_request({
             endpoint = "/scores/add/",
