@@ -5,13 +5,14 @@ USERNAME = 1
 TOKEN    = 2
 
 return function ()
-    local showing     = false
-    local cursor_pos  = 0
-    local lang        = "en"
-    local menu_index  = 0
-    local username    = ""
-    local token       = ""
-    local time, flash = 0, 0
+    local showing       = false
+    local hide_callback = function () end
+    local cursor_pos    = 0
+    local lang          = "en"
+    local menu_index    = 0
+    local username      = ""
+    local token         = ""
+    local time, flash   = 0, 0
 
     local inputs = {
         {   -- language_select
@@ -71,11 +72,11 @@ return function ()
         love.graphics.print(token .. icon, x, y)
     end
 
-    local localization = Component(0, 0, Component(0, 0, "LANG"), Component(200, 0, drawCursor), Component(230, 0, "EN"), Component(330, 0, "JP"))
-    local username     = Component(0, 100, Component(0, 0, "USERNAME"), Component(200, 0, drawUsername))
-    local token        = Component(0, 200, Component(0, 0, "   TOKEN"), Component(200, 0, drawToken))
+    local localization  = Component(0, 0, Component(0, 0, "LANG"), Component(200, 0, drawCursor), Component(230, 0, "EN"), Component(330, 0, "JP"))
+    local username_part = Component(0, 100, Component(0, 0, "USERNAME"), Component(200, 0, drawUsername))
+    local token_part    = Component(0, 200, Component(0, 0, "   TOKEN"), Component(200, 0, drawToken))
 
-    local component = Component(W_WIDTH/2 - 200, W_HEIGHT/2 - 200, localization, username, token)
+    local component = Component(100, W_HEIGHT/2 - 200, localization, username_part, token_part)
 
     local draw = function ()
         component.draw(0, 0)
@@ -87,16 +88,50 @@ return function ()
     end
 
     local writeProfile = function ()
+        local hfile = io.open("profile.lua", "w")
+        if hfile == nil then return end
+
+        hfile:write('return { lang = "' .. lang .. '", username = "' .. username .. '", token = "' .. token .. '" }')--bad argument #1 to 'write' (string expected, got nil)
+
+        io.close(hfile)
     end
 
     local findProfile = function ()
-        return false
+        local hfile = io.open("profile.lua", "r")
+        local found = hfile ~= nil
+
+        if found then io.close(hfile) end
+
+        return found
+    end
+
+    local recoverProfile = function ()
+        return require("profile")
+    end
+
+    local show = function (callback)
+        hide_callback = callback
+        showing = not findProfile()
+
+        if not showing then
+            callback()
+        end
+    end
+
+    local hide = function ()
+        hide_callback()
+        showing = false
+    end
+
+    local isShowing = function ()
+        return showing
     end
 
     local keypressed = function (key)
         if menu_index == TOKEN and key == "return" then
             writeProfile()
-            showing = false
+
+            hide()
         end
 
         if key == "down" or (key == "return" and menu_index < 2) then
@@ -120,26 +155,15 @@ return function ()
         end
     end
 
-    local show = function ()
-        showing = not findProfile()
-    end
-
-    local hide = function ()
-        showing = false
-    end
-
-    local isShowing = function ()
-        return showing
-    end
-
     return {
-        draw       = draw,
-        update     = update,
-        keypressed = keypressed,
-        textinput  = textinput,
-        show       = show,
-        hide       = hide,
-        isShowing  = isShowing
+        draw           = draw,
+        update         = update,
+        keypressed     = keypressed,
+        textinput      = textinput,
+        show           = show,
+        hide           = hide,
+        recoverProfile = recoverProfile,
+        isShowing      = isShowing
     }
 
 end

@@ -16,7 +16,6 @@ W_HEIGHT = love.window.getHeight()
 require("sound") -- Sound global object
 require("input")
 
-require("cutscenes")
 require("sprites")
 require("player")
 require("vector")
@@ -37,7 +36,7 @@ local fpsCount   = 0 -- FPS count of the current second
 local fpsTime    = 0 -- Keeps track of the elapsed time
 local final_flower = love.graphics.newImage("assets/images/mana_flower.png")
 
-local origin, player, hud, gj, menu
+local origin, player, hud, gj, menu, profile, locale
 
 function init_player (p, s)
     player = Player(p, s)
@@ -51,17 +50,22 @@ function love.load()
     maps[num].reset()
     init_player(maps[num].getStart(), maps[num].sprite)
     --First cutscene.
-    Cutscenes.current = Cutscenes.StartScreen
-    Cutscenes.current.start()
-
-    hud = HeadsUpDisplay()
-    hud.setWorld(maps[num].getName())
-    hud.setItemType(maps[num].getItem())
-
     menu = Menu()
-    menu.show()
+    menu.show(function ()
+        -- stuff that happens after the menu is hidden
+        profile       = menu.recoverProfile()
+        global.locale = profile.lang
 
-    gj = GameJolt(global.floor_height, global.side_length)
+        require("cutscenes")
+        Cutscenes.current = Cutscenes.StartScreen
+        Cutscenes.current.start()
+
+        hud = HeadsUpDisplay()
+        hud.setWorld(maps[num].getName())
+        hud.setItemType(maps[num].getItem())
+
+        gj = GameJolt(global.floor_height, global.side_length)
+    end)
 end
 
 local deflower = false
@@ -83,6 +87,7 @@ end
 
 function love.update(dt)
     if menu.isShowing() then return menu.update(dt) end
+
     collisions = {}
     time = time + dt
 
@@ -175,7 +180,8 @@ function love.update(dt)
                         --What to do after the final cutscene is done?
                         print("GAME OVER")
 
-                        gj.connect_user("arrogant.gamer", "keisatsukan")
+
+                        gj.connect_user(profile.username, profile.token)
 
                         local plural = ""
                         if global.flowers > 1 or global.flowers == 0 then plural = "s" end
