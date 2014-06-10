@@ -16,7 +16,6 @@ W_HEIGHT = love.window.getHeight()
 require("sound") -- Sound global object
 require("input")
 
-require("cutscenes")
 require("sprites")
 require("player")
 require("vector")
@@ -27,6 +26,7 @@ local Map            = require("map")
 local HeadsUpDisplay = require("heads_up_display")
 local GameJolt       = require("gamejolt")
 local write_map_data = require("map_data")
+local Menu           = require("menu")
 local maps           = write_map_data()
 
 local num        = 1 -- The map we're currently on
@@ -36,7 +36,7 @@ local fpsCount   = 0 -- FPS count of the current second
 local fpsTime    = 0 -- Keeps track of the elapsed time
 local final_flower = love.graphics.newImage("assets/images/mana_flower.png")
 
-local origin, player, hud, gj
+local origin, player, hud, gj, menu, profile, locale
 
 function init_player (p, s)
     player = Player(p, s)
@@ -50,16 +50,22 @@ function love.load()
     maps[num].reset()
     init_player(maps[num].getStart(), maps[num].sprite)
     --First cutscene.
-    Cutscenes.current = Cutscenes.StartScreen
-    Cutscenes.current.start()
+    menu = Menu()
+    menu.show(function ()
+        -- stuff that happens after the menu is hidden
+        profile       = menu.recoverProfile()
+        global.locale = profile.lang
 
-    hud = HeadsUpDisplay()
-    hud.setWorld(maps[num].getName())
-    hud.setItemType(maps[num].getItem())
+        require("cutscenes")
+        Cutscenes.current = Cutscenes.StartScreen
+        Cutscenes.current.start()
 
-    gj = GameJolt(global.floor_height, global.side_length)
-    gj.connect_user("arrogant.gamer", "keisatsukan")
-    gj.add_score("test", 0)
+        hud = HeadsUpDisplay()
+        hud.setWorld(maps[num].getName())
+        hud.setItemType(maps[num].getItem())
+
+        gj = GameJolt(global.floor_height, global.side_length)
+    end)
 end
 
 local deflower = false
@@ -80,6 +86,8 @@ global.resolveFlower = function ()
 end
 
 function love.update(dt)
+    if menu.isShowing() then return menu.update(dt) end
+
     collisions = {}
     time = time + dt
 
@@ -152,8 +160,6 @@ function love.update(dt)
         -- if we "proceed" and the map is still finished, then we move to
         -- the next world
         if maps[num].isFinished() then
-            print("is still finished")
-
             maps[num].setFinished(false)
 
             num = num + 1
@@ -170,9 +176,8 @@ function love.update(dt)
                     --Final map == final cutscene
                     Cutscenes.current.start(function ()
                         --What to do after the final cutscene is done?
-                        print("GAME OVER")
 
-                        gj.connect_user("arrogant.gamer", "keisatsukan")
+                        gj.connect_user(profile.username, profile.token)
 
                         local plural = ""
                         if global.flowers > 1 or global.flowers == 0 then plural = "s" end
@@ -232,17 +237,11 @@ function love.update(dt)
         -- the right character loads
         init_player(maps[num].getStart(), maps[num].sprite)
     end
-
-
-  --if #collisions > 0 then
-  --    print("======================")
-  --    print(time)
-  --    inspect(collisions)
-  --end
-
 end
 
 local inputPressed = function(k, isRepeat)
+    if menu.isShowing() then return menu.keypressed() end
+
     -- No jumping during cutscenes
     if Cutscenes.current.isRunning() then
         -- in order to ski pa cutscene we just pass in a huge number of seconds
@@ -255,31 +254,37 @@ local inputPressed = function(k, isRepeat)
     if maps[num].keypressed then maps[num].keypressed(k) end
 end
 
+function love.textinput(t)
+    if menu.isShowing() then return menu.textinput(t) end
+end
+
 function love.keypressed(k, isRepeat)
     -- quit
     if k == 'escape' then
         love.event.push("quit")
     end
 
-    if k == "0"
-    or k == "1"
-    or k == "2"
-    or k == "3"
-    or k == "4"
-    or k == "5"
-    or k == "6"
-    or k == "7"
-    or k == "8"
-    or k == "9" then
-        teleport = teleport .. k
-    end
+    if menu.isShowing() then return menu.keypressed(k) end
 
-    if #teleport == 4 then
-        local dest = tonumber(teleport)
-        teleport = ""
+--  if k == "0"
+--  or k == "1"
+--  or k == "2"
+--  or k == "3"
+--  or k == "4"
+--  or k == "5"
+--  or k == "6"
+--  or k == "7"
+--  or k == "8"
+--  or k == "9" then
+--      teleport = teleport .. k
+--  end
 
-        global.tx = -dest
-    end
+--  if #teleport == 4 then
+--      local dest = tonumber(teleport)
+--      teleport = ""
+
+--      global.tx = -dest
+--  end
 
     inputPressed(k, isRepeat)
 end
@@ -289,6 +294,8 @@ function love.gamepadpressed(j, k)
 end
 
 function love.draw()
+    if menu.isShowing() then return menu.draw() end
+
     -- Draw cutscene or map
     if Cutscenes.current.isRunning() then
         Cutscenes.current.draw()
