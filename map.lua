@@ -932,8 +932,6 @@ LevelOne = function (tmx, options)
     map.setOrigin(options.origin, options.start)
 
     map.setDeathHandler(function ()
-        print("in death handler")
-
         map.setFinished(true)
         map.resetTimer()
 

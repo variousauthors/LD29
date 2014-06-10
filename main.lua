@@ -160,8 +160,6 @@ function love.update(dt)
         -- if we "proceed" and the map is still finished, then we move to
         -- the next world
         if maps[num].isFinished() then
-            print("is still finished")
-
             maps[num].setFinished(false)
 
             num = num + 1
@@ -178,8 +176,6 @@ function love.update(dt)
                     --Final map == final cutscene
                     Cutscenes.current.start(function ()
                         --What to do after the final cutscene is done?
-                        print("GAME OVER")
-
 
                         gj.connect_user(profile.username, profile.token)
 
@@ -241,14 +237,6 @@ function love.update(dt)
         -- the right character loads
         init_player(maps[num].getStart(), maps[num].sprite)
     end
-
-
-  --if #collisions > 0 then
-  --    print("======================")
-  --    print(time)
-  --    inspect(collisions)
-  --end
-
 end
 
 local inputPressed = function(k, isRepeat)
@@ -278,25 +266,25 @@ function love.keypressed(k, isRepeat)
 
     if menu.isShowing() then return menu.keypressed(k) end
 
-    if k == "0"
-    or k == "1"
-    or k == "2"
-    or k == "3"
-    or k == "4"
-    or k == "5"
-    or k == "6"
-    or k == "7"
-    or k == "8"
-    or k == "9" then
-        teleport = teleport .. k
-    end
+--  if k == "0"
+--  or k == "1"
+--  or k == "2"
+--  or k == "3"
+--  or k == "4"
+--  or k == "5"
+--  or k == "6"
+--  or k == "7"
+--  or k == "8"
+--  or k == "9" then
+--      teleport = teleport .. k
+--  end
 
-    if #teleport == 4 then
-        local dest = tonumber(teleport)
-        teleport = ""
+--  if #teleport == 4 then
+--      local dest = tonumber(teleport)
+--      teleport = ""
 
-        global.tx = -dest
-    end
+--      global.tx = -dest
+--  end
 
     inputPressed(k, isRepeat)
 end

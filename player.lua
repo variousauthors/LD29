@@ -13,9 +13,6 @@ Player = function (point, sprite)
     local double_jump             = false
     local jump_force              = 5 * global.scale
 
-    -- height/width of the sprite's shape
-    inspect({ sprite.width, sprite.height })
-
     local sprite_width  = (sprite.width or 16) * global.scale
     local sprite_height = (sprite.height or 16) * global.scale
     local draw_w        = sprite_width - (sprite_width / 4) -- skinny for collisions
