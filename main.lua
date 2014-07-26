@@ -27,6 +27,11 @@ local HeadsUpDisplay = require("heads_up_display")
 local GameJolt       = require("gamejolt")
 local write_map_data = require("map_data")
 local Menu           = require("menu")
+local viewport       = require("viewport").new({
+    width = global.window_width,
+    height = global.window_height,
+    resizable = false
+})
 local maps           = write_map_data()
 
 local num        = 1 -- The map we're currently on
@@ -242,6 +247,26 @@ end
 local inputPressed = function(k, isRepeat)
     if menu.isShowing() then return menu.keypressed() end
 
+    -- if(k == "r") then
+    --     Cutscenes.current.stop()
+    --     Sound.stopMusic()
+
+    --     Cutscenes.current = Cutscenes.StartScreen
+    --     Cutscenes.current.start()
+
+    --     global.flowers = 0
+    --     hud.setScore(global.flowers * 100)
+    --     hud.setItems(global.flowers)
+
+    --     maps = write_map_data()
+    --     num = 1
+    --     maps[num].reset()
+
+    --     hud.setWorld(maps[num].getName())
+    --     hud.setItemType(maps[num].getItem())
+    --     init_player(maps[num].getStart(), maps[num].sprite)
+    -- end
+
     -- No jumping during cutscenes
     if Cutscenes.current.isRunning() then
         -- in order to ski pa cutscene we just pass in a huge number of seconds
@@ -260,8 +285,11 @@ end
 
 function love.keypressed(k, isRepeat)
     -- quit
-    if k == 'escape' then
+    if (k == 'escape' or k == 'f10') then
         love.event.push("quit")
+    elseif(k == 'f' or k == 'f11') then
+        viewport:setFullscreen()
+        viewport:setupScreen()
     end
 
     if menu.isShowing() then return menu.keypressed(k) end
@@ -294,7 +322,13 @@ function love.gamepadpressed(j, k)
 end
 
 function love.draw()
-    if menu.isShowing() then return menu.draw() end
+    viewport:pushScale()
+
+    if menu.isShowing() then
+        menu.draw()
+        viewport:popScale()
+        return true
+    end
 
     -- Draw cutscene or map
     if Cutscenes.current.isRunning() then
@@ -313,4 +347,6 @@ function love.draw()
     if not Cutscenes.current.isRunning() or Cutscenes.current.showHUD() then
         hud.draw()
     end
+
+    viewport:popScale()
 end
