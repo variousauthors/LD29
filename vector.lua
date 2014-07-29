@@ -106,6 +106,13 @@ Vector = Klass((function ()
             return constructor(x, y)
         end
 
+        p.times = function (s)
+            local x = s*p.getX()
+            local y = s*p.getY()
+
+            return constructor(x, y)
+        end
+
         return p
     end
 

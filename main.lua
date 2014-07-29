@@ -48,6 +48,7 @@ function init_player (p, s)
 end
 
 function love.load()
+
     love.graphics.setFont(MARIO_FONT)
 
     origin = Point(0, 0) -- somehow I just feel safer having a global "origin"
@@ -91,6 +92,7 @@ global.resolveFlower = function ()
 end
 
 function love.update(dt)
+
     if menu.isShowing() then return menu.update(dt) end
 
     collisions = {}

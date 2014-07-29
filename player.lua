@@ -20,7 +20,7 @@ Player = function (point, sprite)
 
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 0.25 * global.scale),
+        gravity    = Vector(0, 16 * global.scale),
         resistance = Vector(0.15 * global.scale, 0.05 * global.scale)
     }
 
@@ -222,7 +222,7 @@ Player = function (point, sprite)
             -- we turn off gravity when the player is not "jumping/falling"
             -- in order to avoid jitter
             if isJumping() then
-                v = v.plus(forces.gravity)
+                v = v.plus(forces.gravity.times(dt))
             end
 
             v = drag(v)
