@@ -289,7 +289,7 @@ function love.keypressed(k, isRepeat)
     -- quit
     if (k == 'escape' or k == 'f10') then
         love.event.push("quit")
-    elseif(k == 'f' or k == 'f11') then
+    elseif(k == 'f11') then
         viewport:setFullscreen()
         viewport:setupScreen()
     end
