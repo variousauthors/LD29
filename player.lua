@@ -11,7 +11,8 @@ Player = function (point, sprite)
     local cur_facing, prev_facing = sprite.base_facing, nil
     local current_quad            = cur_state
     local double_jump             = false
-    local jump_force              = 250
+    local walk_force              = 12
+    local jump_force              = 300
 
     local sprite_width  = (sprite.width or 16)
     local sprite_height = (sprite.height or 16)
@@ -21,7 +22,7 @@ Player = function (point, sprite)
     local forces = {
         key        = Vector(0, 0),
         gravity    = Vector(0, 15),
-        resistance = Vector(9, 0)
+        resistance = Vector(10, 4)
     }
 
     -- these are offsets from the Player's x, y as describe
@@ -123,7 +124,6 @@ Player = function (point, sprite)
     -- this is for "one-off" keypresses. So like, jump,
     -- or throw fireball
     local keypressed = function (key)
-        local fps = love.timer.getFPS()
         if isJumping() and not global.double_jump then return end
 
         if Input.isPressed("jump") then
@@ -150,10 +150,10 @@ Player = function (point, sprite)
             -- Both directions! Do Nothing!
         elseif Input.isPressed("left") then
             setFacing("left")
-            forces.key.setX(-12)
+            forces.key.setX(-walk_force)
         elseif Input.isPressed("right") then
             setFacing("right")
-            forces.key.setX(12)
+            forces.key.setX(walk_force)
         end
     end
 
