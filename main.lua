@@ -185,11 +185,9 @@ function love.update(dt)
                     Cutscenes.current.start(function ()
                         --What to do after the final cutscene is done?
 
-                        gj.connect_user(profile.username, profile.token)
-
                         Cutscenes.current = Cutscenes["flower_screen"]
                         Cutscenes.current.start(function ()
-                            gj.connect_user("arrogant.gamer", "keisatsukan")
+                            gj.connect_user(profile.username, profile.token)
 
                             local plural = ""
                             if global.flowers > 1 or global.flowers == 0 then plural = "s" end
