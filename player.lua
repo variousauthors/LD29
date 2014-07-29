@@ -5,7 +5,7 @@ Player = function (point, sprite)
     local prev                    = nil -- the previous point position
     local speed                   = 100
     local max_horizontal_speed    = 1.5
-    local max_vertical_speed      = 4
+    local max_vertical_speed      = 3
     local sprite                  = sprite
     local cur_state, prev_state   = "stand", nil
     local cur_facing, prev_facing = sprite.base_facing, nil
@@ -21,7 +21,7 @@ Player = function (point, sprite)
 
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 15),
+        gravity    = Vector(0, 17),
         resistance = Vector(10, 4)
     }
 
@@ -124,6 +124,7 @@ Player = function (point, sprite)
     -- this is for "one-off" keypresses. So like, jump,
     -- or throw fireball
     local keypressed = function (key)
+        local fps = love.timer.getFPS()
         if isJumping() and not global.double_jump then return end
 
         if Input.isPressed("jump") then
@@ -132,13 +133,13 @@ Player = function (point, sprite)
 
                 Sound.playSFX("ptooi_big")
                 v.setY(0) -- double jump don't need no bs downwards, biotch!
-                forces.key.setY(-jump_force)
+                forces.key.setY(-jump_force * fps/60)
             elseif isJumping() then
                 -- NOP
 
             else
                 Sound.playSFX("ptooi_big")
-                forces.key.setY(-jump_force)
+                forces.key.setY(-jump_force * fps/60)
                 double_jump = false
             end
         end
