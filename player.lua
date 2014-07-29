@@ -21,7 +21,7 @@ Player = function (point, sprite)
 
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 17),
+        gravity    = Vector(0, 16),
         resistance = Vector(10, 4)
     }
 
