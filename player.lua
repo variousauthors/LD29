@@ -20,7 +20,7 @@ Player = function (point, sprite)
 
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 16 * global.scale),
+        gravity    = Vector(0, 17 * global.scale),
         resistance = Vector(0.15 * global.scale, 0.05 * global.scale)
     }
 
@@ -70,7 +70,7 @@ Player = function (point, sprite)
         return cur_state, prev_state
     end
 
-    local getSpeed = function () 
+    local getSpeed = function ()
         return speed
     end
 
