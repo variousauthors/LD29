@@ -27,7 +27,7 @@ return function ()
                         cursor_pos = 0
                     else
                         lang       = "jp"
-                        cursor_pos = 100
+                        cursor_pos = 40
                     end
                 end
             end
@@ -35,7 +35,7 @@ return function ()
         {   -- username
             clear      = function ()
                 username = ""
-                username_cursor_pos = 200
+                username_cursor_pos = 64
             end,
             textinput = function (key)
                 username = username .. key
@@ -44,7 +44,7 @@ return function ()
         {   -- token
             clear      = function ()
                 token = ""
-                token_cursor_pos = 200
+                token_cursor_pos = 64
             end,
             textinput = function (key)
                 token = token .. key
@@ -72,11 +72,11 @@ return function ()
         love.graphics.print(token .. icon, x, y)
     end
 
-    local localization  = Component(0, 0, Component(0, 0, "LANG"), Component(200, 0, drawCursor), Component(230, 0, "EN"), Component(330, 0, "JP"))
-    local username_part = Component(0, 100, Component(0, 0, "USERNAME"), Component(200, 0, drawUsername))
-    local token_part    = Component(0, 200, Component(0, 0, "   TOKEN"), Component(200, 0, drawToken))
+    local localization  = Component(0, 0, Component(0, 0, "LANG"), Component(64, 0, drawCursor), Component(72, 0, "EN"), Component(112, 0, "JP"))
+    local username_part = Component(0, 32, Component(0, 0, "USERNAME"), Component(72, 0, drawUsername))
+    local token_part    = Component(0, 64, Component(0, 0, "   TOKEN"), Component(72, 0, drawToken))
 
-    local component = Component(100, W_HEIGHT/2 - 200, localization, username_part, token_part)
+    local component = Component(32, W_HEIGHT/2 - 64, localization, username_part, token_part)
 
     local draw = function ()
         component.draw(0, 0)
