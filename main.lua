@@ -92,12 +92,7 @@ global.resolveFlower = function ()
     global.flower_get = false
 end
 
-next_frame = 0
 function love.update(dt)
-    -- local fps = love.timer.getFPS()
-    -- print(fps)
-    next_frame = next_frame + (1 / global.max_fps)
-
     if menu.isShowing() then return menu.update(dt) end
 
     collisions = {}
@@ -355,11 +350,50 @@ function love.draw()
     end
 
     viewport:popScale()
+end
 
-    local cur_time = love.timer.getTime()
-    if next_frame <= cur_time then
-        next_frame = cur_time
-    else
-        love.timer.sleep(next_frame - cur_time)
+-- A custom love.run to fix delta-time problems!
+function love.run()
+
+    love.math.setRandomSeed(os.time())
+    love.event.pump()
+    love.load(arg)
+
+    -- We don't want the first frame's dt to include time taken by love.load.
+    love.timer.step()
+
+
+    local fixed_dt = global.fixed_dt
+    local accumulator = 0
+
+    -- Main loop time.
+    while true do
+        -- Process events.
+        love.event.pump()
+        for e,a,b,c,d in love.event.poll() do
+            if(e == "quit") then
+                if not love.quit or not love.quit() then
+                    love.audio.stop()
+                    return
+                end
+            end
+            love.handlers[e](a,b,c,d)
+        end
+
+        love.timer.step()
+        accumulator = accumulator + love.timer.getDelta()
+        while( accumulator >= fixed_dt ) do
+            love.update(fixed_dt)
+            accumulator = accumulator - fixed_dt
+        end
+
+        if love.window.isCreated() then
+            love.graphics.clear()
+            love.graphics.origin()
+            love.draw()
+            love.graphics.present()
+        end
+
+        love.timer.sleep(0.001)
     end
 end

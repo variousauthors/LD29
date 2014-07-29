@@ -12,7 +12,7 @@ Player = function (point, sprite)
     local current_quad            = cur_state
     local double_jump             = false
     local walk_force              = 12
-    local jump_force              = 300
+    local jump_force              = 5 / global.fixed_dt
 
     local sprite_width  = (sprite.width or 16)
     local sprite_height = (sprite.height or 16)
@@ -22,7 +22,7 @@ Player = function (point, sprite)
     local forces = {
         key        = Vector(0, 0),
         gravity    = Vector(0, 16),
-        resistance = Vector(10, 4)
+        resistance = Vector(10, 2)
     }
 
     -- these are offsets from the Player's x, y as describe
@@ -124,7 +124,6 @@ Player = function (point, sprite)
     -- this is for "one-off" keypresses. So like, jump,
     -- or throw fireball
     local keypressed = function (key)
-        local fps = love.timer.getFPS()
         if isJumping() and not global.double_jump then return end
 
         if Input.isPressed("jump") then
@@ -133,13 +132,13 @@ Player = function (point, sprite)
 
                 Sound.playSFX("ptooi_big")
                 v.setY(0) -- double jump don't need no bs downwards, biotch!
-                forces.key.setY(-jump_force * fps/60)
+                forces.key.setY(-jump_force)
             elseif isJumping() then
                 -- NOP
 
             else
                 Sound.playSFX("ptooi_big")
-                forces.key.setY(-jump_force * fps/60)
+                forces.key.setY(-jump_force)
                 double_jump = false
             end
         end
@@ -273,7 +272,6 @@ Player = function (point, sprite)
     end
 
     local draw = function ()
-
         -- Flip if facing is different
         local sx, sy = 1, 1
         local r, ox, oy = 0, 0, 0
