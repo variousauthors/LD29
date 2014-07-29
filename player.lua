@@ -4,24 +4,24 @@ Player = function (point, sprite)
     local p, v                    = point.copy(), Vector(0, 0)
     local prev                    = nil -- the previous point position
     local speed                   = 100
-    local max_horizontal_speed    = 1.5 * global.scale
-    local max_vertical_speed      = 4 * global.scale
+    local max_horizontal_speed    = 1.5
+    local max_vertical_speed      = 4
     local sprite                  = sprite
     local cur_state, prev_state   = "stand", nil
     local cur_facing, prev_facing = sprite.base_facing, nil
     local current_quad            = cur_state
     local double_jump             = false
-    local jump_force              = 5 * global.scale
+    local jump_force              = 250
 
-    local sprite_width  = (sprite.width or 16) * global.scale
-    local sprite_height = (sprite.height or 16) * global.scale
+    local sprite_width  = (sprite.width or 16)
+    local sprite_height = (sprite.height or 16)
     local draw_w        = sprite_width - (sprite_width / 4) -- skinny for collisions
     local draw_h        = sprite_height - (sprite_height / 8)
 
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 16.75 * global.scale),
-        resistance = Vector(0.15 * global.scale, 0.05 * global.scale)
+        gravity    = Vector(0, 15),
+        resistance = Vector(9, 0)
     }
 
     -- these are offsets from the Player's x, y as describe
@@ -123,6 +123,7 @@ Player = function (point, sprite)
     -- this is for "one-off" keypresses. So like, jump,
     -- or throw fireball
     local keypressed = function (key)
+        local fps = love.timer.getFPS()
         if isJumping() and not global.double_jump then return end
 
         if Input.isPressed("jump") then
@@ -149,19 +150,20 @@ Player = function (point, sprite)
             -- Both directions! Do Nothing!
         elseif Input.isPressed("left") then
             setFacing("left")
-            forces.key.setX(-0.2 * global.scale)
+            forces.key.setX(-12)
         elseif Input.isPressed("right") then
             setFacing("right")
-            forces.key.setX(0.2 * global.scale)
+            forces.key.setX(12)
         end
     end
 
     -- ha ha, naive physics for the win! Without some kind of "drag" the
     -- player would just keep going in whatever direction they pressed,
     -- with no way of stopping!
-    local drag = function (v)
+    local drag = function (v, dt)
+        local res    = forces.resistance.times(dt)
         local x, y   = v.getX(), v.getY()
-        local rx, ry = forces.resistance.getX(), forces.resistance.getY()
+        local rx, ry = res.getX(), res.getY()
 
         -- drag "drags" the x, y values towards 0
         if x > 0 then x = math.max(x - rx, 0)
@@ -217,7 +219,7 @@ Player = function (point, sprite)
         -- and determine their v (what does v stand for? Vector? Velocity?
         -- No clue!)
         if (forces.key ~= nil) then
-            v = v.plus(forces.key)
+            v = v.plus(forces.key.times(dt))
 
             -- we turn off gravity when the player is not "jumping/falling"
             -- in order to avoid jitter
@@ -225,7 +227,7 @@ Player = function (point, sprite)
                 v = v.plus(forces.gravity.times(dt))
             end
 
-            v = drag(v)
+            v = drag(v, dt)
         end
 
         -- clamp speeds
@@ -272,7 +274,7 @@ Player = function (point, sprite)
     local draw = function ()
 
         -- Flip if facing is different
-        local sx, sy = global.scale, global.scale
+        local sx, sy = 1, 1
         local r, ox, oy = 0, 0, 0
         if (getFacing() ~= sprite.base_facing) then
             sx = 0 - sx
@@ -285,13 +287,12 @@ Player = function (point, sprite)
             oy = sprite.height
         end
 
-        local x = p.getX() + draw_w / global.scale
-        local y = p.getY() + draw_h / global.scale
-        local num_tiles = (sprite.height - global.tile_size) / 16 + 1 -- one, or perhaps 2
+        local x = p.getX() + draw_w - sprite.width + 1
+        local y = p.getY() + draw_h - sprite.height + 1
 
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(sprite.image, sprite.namedQuads[current_quad],
-                           x - sprite.width, y - sprite.height - (1 + (num_tiles * 2)), r, sx, sy, ox, oy)
+                           x, y, r, sx, sy, ox, oy)
     end
 
     -- lean public interface of Player is pretty lean

@@ -10,7 +10,7 @@ end
 
 love.filesystem.setIdentity("SuperPlumberBros")
 love.graphics.setDefaultFilter("nearest", "nearest", 0)
-MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 8 * global.scale)
+MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 8)
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
 
@@ -93,7 +93,6 @@ global.resolveFlower = function ()
 end
 
 function love.update(dt)
-
     if menu.isShowing() then return menu.update(dt) end
 
     collisions = {}
@@ -114,19 +113,19 @@ function love.update(dt)
     -- if mario can move backwards
     -- and global.tx > 0
     -- then mario should push the screen
-    if player.getX() > W_WIDTH / 2 + 50 and math.abs(global.tx) < global.max_tx - global.scale then
+    if player.getX() > W_WIDTH / 2 + 50 and math.abs(global.tx) < global.max_tx then
         local v = player.getV()
-        global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
+        global.tx = global.tx - ( v.getX() * dt * player.getSpeed() )
         player.setX(W_WIDTH / 2 + 50)
-    elseif global.backwards and player.getX() < W_WIDTH / 2 - 50 and global.tx < -global.scale then
+    elseif global.backwards and player.getX() < W_WIDTH / 2 - 50 and global.tx < -1 then
         local v = player.getV()
-        global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
+        global.tx = global.tx - ( v.getX() * dt * player.getSpeed() )
         player.setX(W_WIDTH / 2 - 50)
     end
 
     -- the player cannot leave the screen
     if player.getX() < 0 then player.setX(0) end
-    if player.getX() > (global.window_width - global.tile_size * global.scale) then player.setX(global.window_width - global.tile_size * global.scale) end
+    if player.getX() > (global.window_width - global.tile_size) then player.setX(global.window_width - global.tile_size) end
 
     -- if the player is standing on the 12th block (the ground)
     -- the screen should always be centered
@@ -141,12 +140,12 @@ function love.update(dt)
         -- lock the player relative to the window, and scroll the background up
         if global.ty < camera then
             global.ty = global.ty + scroll
-            player.setY(player.getY() + scroll * global.scale)
+            player.setY(player.getY() + scroll)
         end
 
         if global.ty > camera then
             global.ty = global.ty - scroll
-            player.setY(player.getY() - scroll * global.scale)
+            player.setY(player.getY() - scroll)
         end
     end
 
@@ -343,9 +342,8 @@ function love.draw()
     end
 
     if Cutscenes.current.getSceneName() == "flower_screen" and Cutscenes.current.isRunning() then
-        local sx, sy    = global.scale, global.scale
-        love.graphics.draw(final_flower, W_WIDTH / 2 - global.scale * global.tile_size, W_HEIGHT / 2, 0, sx, sy, 0, 0)
-        love.graphics.print("x" .. global.flowers, W_WIDTH / 2 + global.scale * global.tile_size - 20, W_HEIGHT / 2 + 20)
+        love.graphics.draw(final_flower, W_WIDTH / 2 - global.tile_size, W_HEIGHT / 2, 0, 1, 1, 0, 0)
+        love.graphics.print("x" .. global.flowers, W_WIDTH / 2 + global.tile_size - 20, W_HEIGHT / 2 + 20)
     end
 
     if not Cutscenes.current.isRunning() or Cutscenes.current.showHUD() then

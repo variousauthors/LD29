@@ -147,24 +147,24 @@ Map                         = function (tmx)
     -- around these pixels" So for now I'm just converting, but later I
     -- will implement such a lookup.
     local pixel_to_tile = function (pixel_x, pixel_y)
-        local tile_width = map.tileWidth * global.scale;
+        local tile_width = map.tileWidth ;
 
         -- x, y relative to a moving frame
-        local rel_x = pixel_x - global.tx * global.scale
-        local rel_y = pixel_y - global.ty * global.scale
+        local rel_x = pixel_x - global.tx
+        local rel_y = pixel_y - global.ty
 
         return math.floor(rel_x / tile_width), math.floor(rel_y / tile_width)
     end
 
     local tile_to_pixel = function (tx, ty)
-        local tile_width = map.tileWidth * global.scale;
+        local tile_width = map.tileWidth ;
 
         -- x, y relative to a moving frame
         local rel_x = tile_width * tx
         local rel_y = tile_width * ty
 
-        local pixel_x = rel_x + global.tx * global.scale
-        local pixel_y = rel_y + global.ty * global.scale
+        local pixel_x = rel_x + global.tx
+        local pixel_y = rel_y + global.ty
 
         return pixel_x, pixel_y
     end
@@ -475,14 +475,13 @@ Map                         = function (tmx)
         -- Scale and translate the game screen for map drawing
         local ftx, fty = math.floor(global.tx), math.floor(global.ty)
         love.graphics.push()
-        love.graphics.scale(global.scale)
         love.graphics.translate(ftx, fty)
 
         -- Limit the draw range
         if global.limitDrawing then
-            map:autoDrawRange(ftx, fty, global.scale, -0)
+            map:autoDrawRange(ftx, fty, 1, -0)
         else
-            map:autoDrawRange(ftx, fty, global.scale, 50)
+            map:autoDrawRange(ftx, fty, 1, 50)
         end
 
         -- draw the sky
@@ -673,9 +672,9 @@ Map                         = function (tmx)
 
         -- TODO these should all also incorporate global.ty
         -- the earlier point should be the current point minus the vector
-        local px_0       = px - v.getX() * global.scale - global.tx * global.scale
-        local py_0       = py - v.getY() * global.scale
-        local px_1       = px - global.tx * global.scale
+        local px_0       = px - v.getX()  - global.tx
+        local py_0       = py - v.getY()
+        local px_1       = px - global.tx
         local py_1       = py
 
         -- distance from y = 0 to the line
@@ -696,11 +695,11 @@ Map                         = function (tmx)
             -- pixel coords of this tile
             local ox, oy = tile_to_pixel(tx, ty)
 
-            local tx_0       = ox + x_0 * (global.tile_width  * global.scale) - global.tx * global.scale
-            local ty_0       = oy + y_0 * (global.tile_height * global.scale)
+            local tx_0       = ox + x_0 * (global.tile_width  ) - global.tx
+            local ty_0       = oy + y_0 * (global.tile_height )
 
-            local tx_1       = ox + x_1 * (global.tile_width  * global.scale) - global.tx * global.scale
-            local ty_1       = oy + y_1 * (global.tile_height * global.scale)
+            local tx_1       = ox + x_1 * (global.tile_width  ) - global.tx
+            local ty_1       = oy + y_1 * (global.tile_height )
 
 
             local side = Vector(tx_0 - tx_1, ty_0 - ty_1)

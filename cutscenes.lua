@@ -130,8 +130,7 @@ function Cutscenes:scene(options)
 
         -- Then draw frame
         if current_frame then
-            love.graphics.draw( current_frame, frameX, frameY, 0,
-                global.scale, global.scale)
+            love.graphics.draw( current_frame, frameX, frameY, 0)
         end
     end
 
@@ -151,7 +150,7 @@ end
 love.graphics.setDefaultFilter("nearest", "nearest")
 
 local centerX = function (image)
-    return (W_WIDTH / 2 ) - (image:getWidth() * global.scale / 2)
+    return (W_WIDTH / 2 ) - (image:getWidth() / 2)
 end
 
 --[[

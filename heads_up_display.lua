@@ -2,8 +2,8 @@ local Component = require("component")
 
 local HeadsUpDisplay = function ()
     -- this needs to account for global.scale
-    local x = 70
-    local y = 44
+    local x = 20
+    local y = 8
 
     local data = {
         score = "00000",
@@ -28,14 +28,13 @@ local HeadsUpDisplay = function ()
     local drawItems = function (x, y)
         image:setFilter("nearest", "nearest")
 
-        local sx, sy    = global.scale, global.scale
         local r, ox, oy = 0, 0, 0
         local width     = image:getWidth()
         local height    = image:getHeight()
 
 
-        love.graphics.draw(image, x + 5, y + 4, r, sx, sy, ox, oy)
-        love.graphics.print("x" .. data["items"], x + 23, y)
+        love.graphics.draw(image, x + 1, y + 1, r, 1, 1, ox, oy)
+        love.graphics.print("x" .. data["items"], x + 8, y)
     end
 
     local setScore = function (score)
@@ -66,10 +65,10 @@ local HeadsUpDisplay = function ()
     end
 
     local component = Component(x, y,
-        Component(-1, 0, Component(0, 0, Component(0, 0, "MARIO"), Component(0, 24, drawScore))),
-        Component(194, 0, Component(0, 0, Component(0, 0, ""), Component(-2, 24, drawItems))),
-        Component(359, 0, Component(0, 0, Component(0, 0, "WORLD"), Component(24, 24, drawWorld))),
-        Component(527, 0, Component(0, 0, Component(0, 0, "TIME"), Component(25, 24, drawTimer)))
+        Component(0, 0, Component(0, 0, Component(0, 0, "MARIO"), Component(0, 8, drawScore))),
+        Component(64, 0, Component(0, 0, Component(0, 0, ""), Component(0, 8, drawItems))),
+        Component(124, 0, Component(0, 0, Component(0, 0, "WORLD"), Component(8, 8, drawWorld))),
+        Component(176, 0, Component(0, 0, Component(0, 0, "TIME"), Component(8, 8, drawTimer)))
     )
 
     local current_component = component
