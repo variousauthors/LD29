@@ -341,7 +341,7 @@ function love.draw()
 
         if Cutscenes.current.getSceneName() == "flower_screen" and Cutscenes.current.isRunning() then
             love.graphics.draw(final_flower, W_WIDTH / 2 - global.tile_size, W_HEIGHT / 2, 0, 1, 1, 0, 0)
-            love.graphics.print("x" .. global.flowers, W_WIDTH / 2 + global.tile_size - 20, W_HEIGHT / 2 + 20)
+            love.graphics.print("x" .. global.flowers, W_WIDTH / 2 + global.tile_size - 8, W_HEIGHT / 2 + 4)
         end
 
         if not Cutscenes.current.isRunning() or Cutscenes.current.showHUD() then
