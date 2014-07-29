@@ -8,6 +8,7 @@ function math.round(val, decimal)
   return math.ceil(val * exp - 0.5) / exp
 end
 
+love.filesystem.setIdentity("SuperPlumberBros")
 love.graphics.setDefaultFilter("nearest", "nearest", 0)
 MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 8 * global.scale)
 W_WIDTH  = love.window.getWidth()
