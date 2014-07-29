@@ -36,6 +36,7 @@ global.double_jump   = false -- EVERYTHING IS GLOBAL NOW...  prorgamming!
 global.walljump      = false -- arbitrary shrine, no gamplay effect
 global.backwards     = false -- HOOK IN HERE ZIGGY, this doesn't actually have gameplay yet
 global.secret        = false
+global.max_fps       = 60
 global.window_height = global.tile_size * global.tile_height
 global.window_width  = global.tile_size * global.tile_width
 
@@ -57,5 +58,5 @@ function love.conf(t)
     t.window.width  = global.window_width
     t.window.title = "Super Plumber Bros."
     t.modules.physics = false
-    t.window.vsync = false
+    t.window.vsync = true
 end

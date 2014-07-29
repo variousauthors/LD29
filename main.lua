@@ -92,7 +92,12 @@ global.resolveFlower = function ()
     global.flower_get = false
 end
 
+next_frame = 0
 function love.update(dt)
+    -- local fps = love.timer.getFPS()
+    -- print(fps)
+    next_frame = next_frame + (1 / global.max_fps)
+
     if menu.isShowing() then return menu.update(dt) end
 
     collisions = {}
@@ -329,26 +334,32 @@ function love.draw()
 
     if menu.isShowing() then
         menu.draw()
-        viewport:popScale()
-        return true
-    end
-
-    -- Draw cutscene or map
-    if Cutscenes.current.isRunning() then
-        Cutscenes.current.draw()
     else
-        maps[num].draw()
-        player.draw()
-    end
 
-    if Cutscenes.current.getSceneName() == "flower_screen" and Cutscenes.current.isRunning() then
-        love.graphics.draw(final_flower, W_WIDTH / 2 - global.tile_size, W_HEIGHT / 2, 0, 1, 1, 0, 0)
-        love.graphics.print("x" .. global.flowers, W_WIDTH / 2 + global.tile_size - 20, W_HEIGHT / 2 + 20)
-    end
+        -- Draw cutscene or map
+        if Cutscenes.current.isRunning() then
+            Cutscenes.current.draw()
+        else
+            maps[num].draw()
+            player.draw()
+        end
 
-    if not Cutscenes.current.isRunning() or Cutscenes.current.showHUD() then
-        hud.draw()
+        if Cutscenes.current.getSceneName() == "flower_screen" and Cutscenes.current.isRunning() then
+            love.graphics.draw(final_flower, W_WIDTH / 2 - global.tile_size, W_HEIGHT / 2, 0, 1, 1, 0, 0)
+            love.graphics.print("x" .. global.flowers, W_WIDTH / 2 + global.tile_size - 20, W_HEIGHT / 2 + 20)
+        end
+
+        if not Cutscenes.current.isRunning() or Cutscenes.current.showHUD() then
+            hud.draw()
+        end
     end
 
     viewport:popScale()
+
+    local cur_time = love.timer.getTime()
+    if next_frame <= cur_time then
+        next_frame = cur_time
+    else
+        love.timer.sleep(next_frame - cur_time)
+    end
 end
