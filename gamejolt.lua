@@ -57,10 +57,16 @@ GameJolt = function (game_id, private_key)
             }
         }).response
 
-        local result = string.find(unpack(response), 'success:"true"') -- TODO ha ha ha, until I find a JSON parser I like
+        local response_data = unpack(response)
 
-        if result then
-            print("  YEAH, YOU'RE GOOD")
+        if response_data ~= nil then
+            local result = string.find(response_data, 'success:"true"') -- TODO ha ha ha, until I find a JSON parser I like
+
+            if result then
+                print("  YEAH, YOU'RE GOOD")
+            end
+        else
+            print("  FAILED TO DO THAT OK")
         end
 
         return result
