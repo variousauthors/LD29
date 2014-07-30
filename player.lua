@@ -11,8 +11,9 @@ Player = function (point, sprite)
     local cur_facing, prev_facing = sprite.base_facing, nil
     local current_quad            = cur_state
     local double_jump             = false
+    local do_jump                 = false
     local walk_force              = 12
-    local jump_force              = 5 / global.fixed_dt
+    local jump_force              = 5
 
     local sprite_width  = (sprite.width or 16)
     local sprite_height = (sprite.height or 16)
@@ -21,8 +22,8 @@ Player = function (point, sprite)
 
     local forces = {
         key        = Vector(0, 0),
-        gravity    = Vector(0, 16),
-        resistance = Vector(10, 2)
+        gravity    = Vector(0, 17),
+        resistance = Vector(10, 0)
     }
 
     -- these are offsets from the Player's x, y as describe
@@ -129,23 +130,27 @@ Player = function (point, sprite)
         if Input.isPressed("jump") then
             if isJumping() and not double_jump then
                 double_jump = true
-
                 Sound.playSFX("ptooi_big")
                 v.setY(0) -- double jump don't need no bs downwards, biotch!
-                forces.key.setY(-jump_force)
+                do_jump = true
             elseif isJumping() then
                 -- NOP
-
             else
                 Sound.playSFX("ptooi_big")
-                forces.key.setY(-jump_force)
                 double_jump = false
+                do_jump = true
             end
         end
     end
 
     -- this is for forces that get set continuously while the key is down
-    local setKeyForces = function ()
+    local setKeyForces = function (dt)
+        if do_jump then
+            forces.key.setY(-jump_force / dt)
+            setState("jump")
+            do_jump = false
+        end
+
         if Input.isPressed("left") and Input.isPressed("right") then
             -- Both directions! Do Nothing!
         elseif Input.isPressed("left") then
@@ -213,7 +218,7 @@ Player = function (point, sprite)
 
     local update = function (dt, map)
         prev = p.copy()
-        setKeyForces()
+        setKeyForces(dt)
 
         -- here is where we sum up all the forces acting on the player
         -- and determine their v (what does v stand for? Vector? Velocity?

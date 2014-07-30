@@ -37,7 +37,7 @@ global.double_jump   = false -- EVERYTHING IS GLOBAL NOW...  prorgamming!
 global.walljump      = false -- arbitrary shrine, no gamplay effect
 global.backwards     = false -- HOOK IN HERE ZIGGY, this doesn't actually have gameplay yet
 global.secret        = false
-global.fixed_dt      = (1/120)
+global.max_dt        = (1/60)
 global.window_height = global.tile_size * global.tile_height
 global.window_width  = global.tile_size * global.tile_width
 

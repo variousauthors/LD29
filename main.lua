@@ -363,8 +363,7 @@ function love.run()
     love.timer.step()
 
 
-    local fixed_dt = global.fixed_dt
-    local accumulator = 0
+    local max_dt = global.max_dt
 
     -- Main loop time.
     while true do
@@ -381,10 +380,11 @@ function love.run()
         end
 
         love.timer.step()
-        accumulator = accumulator + love.timer.getDelta()
-        while( accumulator >= fixed_dt ) do
-            love.update(fixed_dt)
-            accumulator = accumulator - fixed_dt
+        local dt = love.timer.getDelta()
+        while(dt > 0.0) do
+            local computed_dt = math.min(dt, max_dt)
+            love.update(computed_dt)
+            dt = dt - computed_dt
         end
 
         if love.window.isCreated() then
