@@ -113,14 +113,14 @@ function love.update(dt)
     -- if mario can move backwards
     -- and global.tx > 0
     -- then mario should push the screen
-    if player.getX() > W_WIDTH / 2 + 50 and math.abs(global.tx) < global.max_tx then
+    if player.getX() > W_WIDTH / 2 + global.tile_size and math.abs(global.tx) < global.max_tx then
         local v = player.getV()
         global.tx = global.tx - ( v.getX() * dt * player.getSpeed() )
-        player.setX(W_WIDTH / 2 + 50)
-    elseif global.backwards and player.getX() < W_WIDTH / 2 - 50 and global.tx < -1 then
+        player.setX(W_WIDTH / 2 + global.tile_size)
+    elseif global.backwards and player.getX() < W_WIDTH / 2 - global.tile_size and global.tx < -1 then
         local v = player.getV()
         global.tx = global.tx - ( v.getX() * dt * player.getSpeed() )
-        player.setX(W_WIDTH / 2 - 50)
+        player.setX(W_WIDTH / 2 - global.tile_size)
     end
 
     -- the player cannot leave the screen
