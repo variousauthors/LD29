@@ -21,7 +21,7 @@ for i, v in ipairs(sides) do
     global.side_length = global.side_length .. DEC_HEX(v)
 end
 
-global.version       = "v2.4"
+global.version       = "v2.5"
 global.limitDrawing  = true  -- If true then the drawing range example is shown
 global.benchmark     = false -- If true the map is drawn 20 times instead of 1
 global.useBatch      = false -- If true then the layers are rendered with sprite batches
