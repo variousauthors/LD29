@@ -21,6 +21,7 @@ for i, v in ipairs(sides) do
     global.side_length = global.side_length .. DEC_HEX(v)
 end
 
+global.version       = "v2.3!"
 global.limitDrawing  = true  -- If true then the drawing range example is shown
 global.benchmark     = false -- If true the map is drawn 20 times instead of 1
 global.useBatch      = false -- If true then the layers are rendered with sprite batches
@@ -56,7 +57,7 @@ function love.conf(t)
     -- tile height * scale factor * layer height
     t.window.height = global.window_height
     t.window.width  = global.window_width
-    t.window.title = "Super Plumber Bros."
+    t.window.title = "Super Plumber Bros. " .. global.version
     t.modules.physics = false
     t.window.vsync = true
 end
