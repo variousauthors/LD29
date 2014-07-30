@@ -40,10 +40,10 @@ function Viewport:setupScreen()
                             self.height * self.r_scale,
                             {resizable = self.resizable})
     end
-    self.r_width  = self.width * self.r_scale
-    self.r_height = self.height * self.r_scale
-    self.draw_ox  = (love.graphics.getWidth() -  (self.r_width)) / 2
-    self.draw_oy  = (love.graphics.getHeight() - (self.r_height)) / 2
+    self.r_width  = math.floor(self.width * self.r_scale)
+    self.r_height = math.floor(self.height * self.r_scale)
+    self.draw_ox  = math.floor((love.graphics.getWidth() -  (self.r_width)) / 2)
+    self.draw_oy  = math.floor((love.graphics.getHeight() - (self.r_height)) / 2)
 end
 
 function Viewport:setScale(scale)

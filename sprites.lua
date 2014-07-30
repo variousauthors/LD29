@@ -16,7 +16,7 @@ local gen_spriteset = function(image, gridW, gridH, base_facing, names)
     for y = 0, height / gridH - 1 do
         for x = 0, width / gridW - 1 do
             local num = #quads + 1
-            quads[num] = love.graphics.newQuad(x * gridW, y * gridH, gridW, gridH, width, height)
+            quads[num] = love.graphics.newQuad(x * gridW +0.002, y * gridH, gridW - 0.004, gridH, width, height)
             if (names and names[num]) then namedQuads[names[num]] = quads[num] end
         end
     end

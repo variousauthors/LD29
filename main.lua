@@ -10,7 +10,7 @@ end
 
 love.filesystem.setIdentity("SuperPlumberBros")
 love.graphics.setDefaultFilter("nearest", "nearest", 0)
-MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 8 * global.scale)
+MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 8)
 W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
 
@@ -93,7 +93,6 @@ global.resolveFlower = function ()
 end
 
 function love.update(dt)
-
     if menu.isShowing() then return menu.update(dt) end
 
     collisions = {}
@@ -114,19 +113,19 @@ function love.update(dt)
     -- if mario can move backwards
     -- and global.tx > 0
     -- then mario should push the screen
-    if player.getX() > W_WIDTH / 2 + 50 and math.abs(global.tx) < global.max_tx - global.scale then
+    if player.getX() > W_WIDTH / 2 + global.tile_size and math.abs(global.tx) < global.max_tx then
         local v = player.getV()
-        global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
-        player.setX(W_WIDTH / 2 + 50)
-    elseif global.backwards and player.getX() < W_WIDTH / 2 - 50 and global.tx < -global.scale then
+        global.tx = global.tx - ( v.getX() * dt * player.getSpeed() )
+        player.setX(W_WIDTH / 2 + global.tile_size)
+    elseif global.backwards and player.getX() < W_WIDTH / 2 - global.tile_size and global.tx < -1 then
         local v = player.getV()
-        global.tx = global.tx - ( v.getX() * dt * player.getSpeed() ) / global.scale
-        player.setX(W_WIDTH / 2 - 50)
+        global.tx = global.tx - ( v.getX() * dt * player.getSpeed() )
+        player.setX(W_WIDTH / 2 - global.tile_size)
     end
 
     -- the player cannot leave the screen
     if player.getX() < 0 then player.setX(0) end
-    if player.getX() > (global.window_width - global.tile_size * global.scale) then player.setX(global.window_width - global.tile_size * global.scale) end
+    if player.getX() > (global.window_width - global.tile_size) then player.setX(global.window_width - global.tile_size) end
 
     -- if the player is standing on the 12th block (the ground)
     -- the screen should always be centered
@@ -135,18 +134,18 @@ function love.update(dt)
     band            = maps[num].getBand(tile_y)
 
     if band ~= nil then
-        local scroll = 8
         camera = maps[num].getCameraForBand(band)
+        local scroll = math.floor(math.min(math.abs(global.ty - camera), 480 * dt))
 
         -- lock the player relative to the window, and scroll the background up
         if global.ty < camera then
             global.ty = global.ty + scroll
-            player.setY(player.getY() + scroll * global.scale)
+            player.setY(player.getY() + scroll)
         end
 
         if global.ty > camera then
             global.ty = global.ty - scroll
-            player.setY(player.getY() - scroll * global.scale)
+            player.setY(player.getY() - scroll)
         end
     end
 
@@ -330,27 +329,71 @@ function love.draw()
 
     if menu.isShowing() then
         menu.draw()
-        viewport:popScale()
-        return true
-    end
-
-    -- Draw cutscene or map
-    if Cutscenes.current.isRunning() then
-        Cutscenes.current.draw()
     else
-        maps[num].draw()
-        player.draw()
-    end
 
-    if Cutscenes.current.getSceneName() == "flower_screen" and Cutscenes.current.isRunning() then
-        local sx, sy    = global.scale, global.scale
-        love.graphics.draw(final_flower, W_WIDTH / 2 - global.scale * global.tile_size, W_HEIGHT / 2, 0, sx, sy, 0, 0)
-        love.graphics.print("x" .. global.flowers, W_WIDTH / 2 + global.scale * global.tile_size - 20, W_HEIGHT / 2 + 20)
-    end
+        -- Draw cutscene or map
+        if Cutscenes.current.isRunning() then
+            Cutscenes.current.draw()
+        else
+            maps[num].draw()
+            player.draw()
+        end
 
-    if not Cutscenes.current.isRunning() or Cutscenes.current.showHUD() then
-        hud.draw()
+        if Cutscenes.current.getSceneName() == "flower_screen" and Cutscenes.current.isRunning() then
+            love.graphics.draw(final_flower, W_WIDTH / 2 - global.tile_size, W_HEIGHT / 2, 0, 1, 1, 0, 0)
+            love.graphics.print("x" .. global.flowers, W_WIDTH / 2 + global.tile_size - 8, W_HEIGHT / 2 + 4)
+        end
+
+        if not Cutscenes.current.isRunning() or Cutscenes.current.showHUD() then
+            hud.draw()
+        end
     end
 
     viewport:popScale()
+end
+
+-- A custom love.run to fix delta-time problems!
+function love.run()
+
+    love.math.setRandomSeed(os.time())
+    love.event.pump()
+    love.load(arg)
+
+    -- We don't want the first frame's dt to include time taken by love.load.
+    love.timer.step()
+
+
+    local max_dt = global.max_dt
+
+    -- Main loop time.
+    while true do
+        -- Process events.
+        love.event.pump()
+        for e,a,b,c,d in love.event.poll() do
+            if(e == "quit") then
+                if not love.quit or not love.quit() then
+                    love.audio.stop()
+                    return
+                end
+            end
+            love.handlers[e](a,b,c,d)
+        end
+
+        love.timer.step()
+        local dt = love.timer.getDelta()
+        while(dt > 0.0) do
+            local computed_dt = math.min(dt, max_dt)
+            love.update(computed_dt)
+            dt = dt - computed_dt
+        end
+
+        if love.window.isCreated() then
+            love.graphics.clear()
+            love.graphics.origin()
+            love.draw()
+            love.graphics.present()
+        end
+
+        love.timer.sleep(0.001)
+    end
 end

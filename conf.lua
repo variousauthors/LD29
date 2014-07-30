@@ -21,13 +21,13 @@ for i, v in ipairs(sides) do
     global.side_length = global.side_length .. DEC_HEX(v)
 end
 
+global.version       = "v2.5"
 global.limitDrawing  = true  -- If true then the drawing range example is shown
 global.benchmark     = false -- If true the map is drawn 20 times instead of 1
 global.useBatch      = false -- If true then the layers are rendered with sprite batches
 global.tx            = 0     -- X translation of the screen
 global.ty            = 0     -- Y translation of the screen
 global.max_tx        = nil   -- how big map is map even?
-global.scale         = 3     -- Scale of the screen
 global.tile_size     = 16    -- the pixels in a tile square
 global.tile_height   = 15    -- the tile squares in a window
 global.tile_width    = 16    -- the tile squares in a window
@@ -36,9 +36,10 @@ global.flowers       = 0     -- the number of flowers collected so far
 global.double_jump   = false -- EVERYTHING IS GLOBAL NOW...  prorgamming!
 global.walljump      = false -- arbitrary shrine, no gamplay effect
 global.backwards     = false -- HOOK IN HERE ZIGGY, this doesn't actually have gameplay yet
-global.secret        = false 
-global.window_height = global.tile_size * global.scale * global.tile_height
-global.window_width  = global.tile_size * global.scale * global.tile_width
+global.secret        = false
+global.max_dt        = (1/60)
+global.window_height = global.tile_size * global.tile_height
+global.window_width  = global.tile_size * global.tile_width
 
 
 -- debugging stuff
@@ -56,6 +57,7 @@ function love.conf(t)
     -- tile height * scale factor * layer height
     t.window.height = global.window_height
     t.window.width  = global.window_width
-    t.window.title = "Super Plumber Bros."
+    t.window.title = "Super Plumber Bros. " .. global.version
     t.modules.physics = false
+    t.window.vsync = true
 end
