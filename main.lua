@@ -11,8 +11,8 @@ end
 love.filesystem.setIdentity("SuperPlumberBros")
 love.graphics.setDefaultFilter("nearest", "nearest", 0)
 MARIO_FONT = love.graphics.newFont("assets/images/emulogic.ttf", 8 * global.scale)
-W_WIDTH  = love.window.getWidth()
-W_HEIGHT = love.window.getHeight()
+W_WIDTH  = global.window_width
+W_HEIGHT = global.window_height
 
 require("sound") -- Sound global object
 require("input")

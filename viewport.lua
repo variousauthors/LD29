@@ -51,11 +51,14 @@ function Viewport:setScale(scale)
     self.scale = scale
 
     local screen_w, screen_h = love.window.getDesktopDimensions()
+    local pixel_scale = love.window.getPixelScale()
+    screen_w = screen_w * pixel_scale
+    screen_h = screen_h * pixel_scale
     if (not self.fs) then
         -- subtract some height so that windowed mode doesn't scale
         -- beyond titlebar + application bar height in windows
-        screen_w = screen_w - 64
-        screen_h = screen_h - 96
+        screen_w = screen_w - (64 * pixel_scale)
+        screen_h = screen_h - (96 * pixel_scale)
     end
 
     local max_scale = math.min(roundDownToNearest(screen_w / self.width, self.multiple),
@@ -72,11 +75,14 @@ end
 
 function Viewport:fixSize(w, h)
     local screen_w, screen_h = love.window.getDesktopDimensions()
+    local pixel_scale = love.window.getPixelScale()
+    screen_w = screen_w * pixel_scale
+    screen_h = screen_h * pixel_scale
     if (not self.fs) then
         -- subtract some height so that windowed mode doesn't scale
         -- beyond titlebar + application bar height in windows
-        screen_w = screen_w - 64
-        screen_h = screen_h - 96
+        screen_w = screen_w - (64 * pixel_scale)
+        screen_h = screen_h - (96 * pixel_scale)
     end
 
     local cur_scale = math.max(roundDownToNearest(w / self.width, self.multiple),
@@ -104,6 +110,9 @@ end
 
 function Viewport:setWidth(width)
     local screen_w, screen_h = love.window.getDesktopDimensions()
+    local pixel_scale = love.window.getPixelScale()
+    screen_w = screen_w * pixel_scale
+    screen_h = screen_h * pixel_scale
     self.width = math.floor(math.min(width, screen_w))
     return self.width
 end
@@ -114,6 +123,9 @@ end
 
 function Viewport:setHeight(height)
     local screen_w, screen_h = love.window.getDesktopDimensions()
+    local pixel_scale = love.window.getPixelScale()
+    screen_w = screen_w * pixel_scale
+    screen_h = screen_h * pixel_scale
     self.height = math.floor(math.min(height, screen_h))
     return self.height
 end
