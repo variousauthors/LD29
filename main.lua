@@ -248,10 +248,10 @@ function love.update(dt)
     end
 end
 
-local inputPressed = function(k, isRepeat)
+local inputPressed = function(k, scancode, isRepeat)
     if menu.isShowing() then return menu.keypressed() end
 
-    -- if(k == "r") then
+    -- if(scancode == "r") then
     --     Cutscenes.current.stop()
     --     Sound.stopMusic()
 
@@ -287,28 +287,28 @@ function love.textinput(t)
     if menu.isShowing() then return menu.textinput(t) end
 end
 
-function love.keypressed(k, isRepeat)
+function love.keypressed(k, scancode, isRepeat)
     -- quit
-    if (k == 'escape' or k == 'f10') then
+    if (scancode == 'escape' or scancode == 'f10') then
         love.event.push("quit")
-    elseif(k == 'f11') then
+    elseif(scancode == 'f11') then
         viewport:setFullscreen()
         viewport:setupScreen()
     end
 
     if menu.isShowing() then return menu.keypressed(k) end
 
---  if k == "0"
---  or k == "1"
---  or k == "2"
---  or k == "3"
---  or k == "4"
---  or k == "5"
---  or k == "6"
---  or k == "7"
---  or k == "8"
---  or k == "9" then
---      teleport = teleport .. k
+--  if scancode == "0"
+--  or scancode == "1"
+--  or scancode == "2"
+--  or scancode == "3"
+--  or scancode == "4"
+--  or scancode == "5"
+--  or scancode == "6"
+--  or scancode == "7"
+--  or scancode == "8"
+--  or scancode == "9" then
+--      teleport = teleport .. scancode
 --  end
 
 --  if #teleport == 4 then
@@ -318,7 +318,7 @@ function love.keypressed(k, isRepeat)
 --      global.tx = -dest
 --  end
 
-    inputPressed(k, isRepeat)
+    inputPressed(scancode, isRepeat)
 end
 
 function love.gamepadpressed(j, k)
