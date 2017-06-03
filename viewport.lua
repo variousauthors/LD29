@@ -64,6 +64,10 @@ function Viewport:setScale(scale)
     local max_scale = math.min(roundDownToNearest(screen_w / self.width, self.multiple),
                                roundDownToNearest(screen_h / self.height, self.multiple))
 
+    if (max_scale < 1) then
+        max_scale = 1
+    end
+
     if (self.fs or (scale or 0) <= 0 or (scale or 0) > max_scale) then
         self.r_scale = max_scale
     else
