@@ -19,7 +19,7 @@ Input.mappings = {
     },
 
     jump = {
-        {"k", " "},
+        {"k", "space"},
         {"k", "up"},
         {"j", "a"},
         {"j", "x"}

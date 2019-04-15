@@ -54,6 +54,8 @@ teleport      = ""
 
 function love.conf(t)
     -- tile height * scale factor * layer height
+    t.window.highdpi = true
+    t.window.vsync = true
     t.window.height = global.window_height
     t.window.width  = global.window_width
     t.window.title = "Super Plumber Bros."
